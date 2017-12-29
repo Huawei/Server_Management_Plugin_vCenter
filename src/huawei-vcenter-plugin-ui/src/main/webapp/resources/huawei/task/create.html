@@ -79,11 +79,13 @@
                 <el-tabs type="card" v-model="activeTab">
                     <el-tab-pane :label="i18ns.serverList.serverBlade" name="bladeTab" v-loading="loading" element-loading-text="Loading">
                         <el-row>
-                            <el-col :span="8" class="title div-center">{{i18ns.serverList.serverName}}</el-col>
+                            <el-col :span="8" class="title div-center">
+                                <el-checkbox v-model="serverBladeAllChecked" @change="serverBladeAllChange"></el-checkbox>
+                                {{i18ns.serverList.serverName}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.task.dn}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.serverList.serverIPAddress}}</el-col>
                         </el-row>
-                        <el-tree :data="blade.listData" :props="defaultProps" ref="bladeTree" show-checkbox node-key="dn" default-expand-all :expand-on-click-node="false" :render-content="renderContent" @check-change="handleServerChange1" id="blade">
+                        <el-tree :data="blade.listData" :props="defaultProps" ref="bladeTree" show-checkbox node-key="dn" default-expand-all :expand-on-click-node="false" :render-content="renderContent1" @check-change="handleServerChange1" :check-strictly="true" id="blade">
                         </el-tree>
                         <el-row>
                             <el-col v-bind:span="24" style="text-align: left;  margin-top: 10px; padding-bottom: 10px; position: relative;">
@@ -94,7 +96,8 @@
                     </el-tab-pane>
                     <el-tab-pane :label="i18ns.serverList.serverRack" name="rackTab" v-loading="loading" element-loading-text="Loading">
                         <el-row>
-                            <el-col :span="8" class="title div-center">{{i18ns.serverList.serverName}}</el-col>
+                            <el-col :span="8" class="title div-center">
+                                <el-checkbox v-model="serverRackAllChecked" @change="serverRackAllChange"></el-checkbox>{{i18ns.serverList.serverName}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.task.dn}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.serverList.serverIPAddress}}</el-col>
                         </el-row>
@@ -109,11 +112,13 @@
                     </el-tab-pane>
                     <el-tab-pane :label="i18ns.serverList.serverHighdensity" name="highdensityTab" v-loading="loading" element-loading-text="Loading">
                         <el-row>
-                            <el-col :span="8" class="title div-center">{{i18ns.serverList.serverName}}</el-col>
+                            <el-col :span="8" class="title div-center">
+                                <el-checkbox v-model="serverHighdensityAllChecked" @change="serverHighdensityAllChange"></el-checkbox>{{i18ns.serverList.serverName}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.task.dn}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.serverList.serverIPAddress}}</el-col>
                         </el-row>
-                        <el-tree :data="highdensity.listData" :props="defaultProps" ref="highdensityTree" show-checkbox node-key="dn" default-expand-all :expand-on-click-node="false" :render-content="renderContent" @check-change="handleServerChange3" id="highdensity">
+                        <el-tree :data="highdensity.listData" :props="defaultProps" ref="highdensityTree" show-checkbox node-key="dn" default-expand-all :expand-on-click-node="false" :render-content="renderContent1" @check-change="handleServerChange3" :check-strictly="true"
+                            id="highdensity">
                         </el-tree>
                         <el-row class="pagination-row">
                             <el-col v-bind:span="24">
@@ -169,7 +174,8 @@
             tempDeleteKeys: [], //临时记录非当前页的删除记录
             defaultProps: {
                 children: 'childBlades',
-                label: 'dn'
+                label: 'dn',
+                disabled: 'disabled'
             },
             blade: {
                 listData: [],
@@ -209,6 +215,12 @@
             },
             curEsightHostIp: getCurrentEsight(),
             templateOptions: [],
+            serverHighdensityAllChecked: false,
+            serverBladeAllChecked: false,
+            serverRackAllChecked: false,
+            serverBladeNum: 0,
+            serverRackNum: 0,
+            serverHighdensityNum: 0
         },
         computed: {
             bladeParams: function() {
@@ -267,6 +279,45 @@
             }, 0);
         },
         methods: {
+            serverBladeAllChange: function() {
+                if (this.serverBladeAllChecked) {
+                    var keys = [];
+                    for (var i = 0; i < this.blade.listData.length; i++) {
+                        var item = this.blade.listData[i];
+                        for (var j = 0; j < item.childBlades.length; j++) {
+                            keys.push(item.childBlades[j].dn);
+                        }
+                    }
+                    this.$refs['bladeTree'].setCheckedKeys(keys);
+                } else {
+                    this.$refs['bladeTree'].setCheckedKeys([]);
+                }
+            },
+            serverRackAllChange: function() {
+                if (this.serverRackAllChecked) {
+                    var keys = [];
+                    for (var i = 0; i < this.rack.listData.length; i++) {
+                        keys.push(this.rack.listData[i].dn);
+                    }
+                    this.$refs['rackTree'].setCheckedKeys(keys);
+                } else {
+                    this.$refs['rackTree'].setCheckedKeys([]);
+                }
+            },
+            serverHighdensityAllChange: function() {
+                if (this.serverHighdensityAllChecked) {
+                    var keys = [];
+                    for (var i = 0; i < this.highdensity.listData.length; i++) {
+                        var item = this.highdensity.listData[i];
+                        for (var j = 0; j < item.childBlades.length; j++) {
+                            keys.push(item.childBlades[j].dn);
+                        }
+                    }
+                    this.$refs['highdensityTree'].setCheckedKeys(keys);
+                } else {
+                    this.$refs['highdensityTree'].setCheckedKeys([]);
+                }
+            },
             /**
              * 完成相关必填项后 提交操作
              * 
@@ -334,7 +385,15 @@
                     app.blade.listData = [];
                     app.blade.totalCount = data.totalCount;
                     _.forEach(data.data, function(x) {
-                        app.blade.listData.push(x);
+                        app.blade.listData.push({
+                            dn: x.dn,
+                            ipAddress: x.ipAddress,
+                            serverName: x.serverName,
+                            serverModel: x.serverModel,
+                            childBlades: x.childBlades,
+                            disabled: true
+                        });
+                        app.serverBladeNum += x.childBlades.length;
                     })
                     app.setCurrentPageChecked();
 
@@ -363,6 +422,7 @@
                     app.rack.totalCount = data.totalCount;
                     _.forEach(data.data, function(x) {
                         app.rack.listData.push(x);
+                        app.serverRackNum += 1;
                     })
                     app.setCurrentPageChecked();
                     setTimeout(function() {
@@ -382,7 +442,16 @@
                     app.highdensity.listData = [];
                     app.highdensity.totalCount = data.totalCount;
                     _.forEach(data.data, function(x) {
-                        app.highdensity.listData.push(x);
+                        app.highdensity.listData.push({
+                            dn: x.dn,
+                            ipAddress: x.ipAddress,
+                            serverName: x.serverName,
+                            serverModel: x.serverModel,
+                            childBlades: x.childBlades,
+                            disabled: true
+                        });
+                        // app.serverHighdensityNum += 1;
+                        app.serverHighdensityNum += x.childBlades.length;
                     })
                     app.setCurrentPageChecked();
                     app.loading = false;
@@ -495,6 +564,32 @@
              * @returns 
              */
             renderContent: function(h, node) {
+                return h('span', [
+                    h('span', node.data.serverName || node.data.name || '--'),
+                    h('div', {
+                        class: {
+                            'line-row': true
+                        }
+                    }, [h('el-col', {
+                        props: {
+                            span: 12
+                        }
+                    }, node.data["dn"]), h('el-col', {
+                        props: {
+                            span: 12
+                        }
+                    }, node.data["ipAddress"])])
+                ])
+            },
+
+            /**
+             * 自定义服务器下树节点内容
+             * 
+             * @param {any} h 
+             * @param {any} node 
+             * @returns 
+             */
+            renderContent1: function(h, node) {
                 if (node.data.childBlades) {
                     return h('span', {
                         class: 'pcc'
@@ -550,12 +645,15 @@
                             dn: data.dn,
                             ipAddress: data.ipAddress,
                             servertype: this.ChoiceServerType('blade')
-
                         });
+                        if (this.$refs['bladeTree'].getCheckedKeys().length == this.serverBladeNum) {
+                            this.serverBladeAllChecked = true;
+                        }
                     } else {
                         var index = _.findIndex(this.taskForm.selectServers, function(x) {
                             return x.dn == data.dn
                         });
+                        this.serverBladeAllChecked = false;
                         this.taskForm.selectServers.splice(index, 1);
                     }
                 }
@@ -576,12 +674,15 @@
                             dn: data.dn,
                             ipAddress: data.ipAddress,
                             servertype: this.ChoiceServerType('rack')
-
                         });
+                        if (this.$refs['rackTree'].getCheckedKeys().length == this.serverRackNum) {
+                            this.serverRackAllChecked = true;
+                        }
                     } else {
                         var index = _.findIndex(this.taskForm.selectServers, function(x) {
                             return x.dn == data.dn
                         });
+                        this.serverRackAllChecked = false;
                         this.taskForm.selectServers.splice(index, 1);
                     }
                 }
@@ -602,12 +703,15 @@
                             dn: data.dn,
                             ipAddress: data.ipAddress,
                             servertype: this.ChoiceServerType('highdensity')
-
                         });
+                        if (this.$refs['highdensityTree'].getCheckedKeys().length == this.serverHighdensityNum) {
+                            this.serverHighdensityAllChecked = true;
+                        }
                     } else {
                         var index = _.findIndex(this.taskForm.selectServers, function(x) {
                             return x.dn == data.dn
                         });
+                        this.serverHighdensityAllChecked = false;
                         this.taskForm.selectServers.splice(index, 1);
                     }
                 }

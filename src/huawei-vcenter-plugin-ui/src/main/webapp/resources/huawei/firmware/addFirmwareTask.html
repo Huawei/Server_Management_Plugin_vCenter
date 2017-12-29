@@ -76,24 +76,37 @@
                 <h4>{{i18ns.firmware.selectFirmware}}</h4>
             </el-row>
             <el-form label-width="80px" label-position="left">
-                <el-row>
-                    <el-form-item label="">
-                        <el-checkbox :label="firmwareTypeList[0].label" :key="firmwareTypeList[0].value" v-model="checkAll" @change="firmwareTypeChangeAll">{{firmwareTypeList[0].label}}</el-checkbox>
-                    </el-form-item>
-                </el-row>
                 <el-checkbox-group v-model="firmwareTypes" @change="firmwareTypeChange">
+                    <el-row class="el-alert--info">
+                        <el-alert v-bind:title="i18ns.firmware.deivceFirmwareTips" show-icon :closable="false"></el-alert>
+                        <el-alert v-bind:title="i18ns.firmware.selectFirmwareTips" show-icon :closable="false"></el-alert>
+                    </el-row>
                     <el-row class="row-checkbox">
                         <el-form-item v-bind:label="i18ns.firmware.driver_firm">
-                            <el-checkbox :label="firmwareTypeList[1].value" :key="firmwareTypeList[1].value" name="firmwareTypes">{{firmwareTypeList[1].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[2].value" :key="firmwareTypeList[2].value" name="firmwareTypes">{{firmwareTypeList[2].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[0].value" :key="firmwareTypeList[0].value" name="firmwareTypes" :disabled="driverBandBool">{{firmwareTypeList[0].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[1].value" :key="firmwareTypeList[1].value" name="firmwareTypes" :disabled="driverBandBool">{{firmwareTypeList[1].label}}</el-checkbox>
+
                         </el-form-item>
                     </el-row>
                     <el-row class="row-checkbox">
                         <el-form-item v-bind:label="i18ns.firmware.outBand_firm">
-                            <el-checkbox :label="firmwareTypeList[3].label" :key="firmwareTypeList[3].value" name="firmwareTypes">{{firmwareTypeList[3].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[4].label" :key="firmwareTypeList[4].value" name="firmwareTypes">{{firmwareTypeList[4].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[5].label" :key="firmwareTypeList[5].value" name="firmwareTypes">{{firmwareTypeList[5].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[6].label" :key="firmwareTypeList[6].value" name="firmwareTypes">{{firmwareTypeList[6].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[2].value" :key="firmwareTypeList[2].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[2].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[3].label" :key="firmwareTypeList[3].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[3].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[4].label" :key="firmwareTypeList[4].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[4].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[5].label" :key="firmwareTypeList[5].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[5].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[6].label" :key="firmwareTypeList[6].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[6].label}}</el-checkbox>
+
+                        </el-form-item>
+                    </el-row>
+                    <el-row class="row-checkbox">
+                        <el-form-item v-bind:label="i18ns.firmware.inBand_firm">
+                            <el-checkbox :label="firmwareTypeList[7].value" :key="firmwareTypeList[7].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[7].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[8].value" :key="firmwareTypeList[8].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[8].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[9].label" :key="firmwareTypeList[9].value" :value="firmwareTypeList[9].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[9].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[10].label" :key="firmwareTypeList[10].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[10].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[11].label" :key="firmwareTypeList[11].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[11].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[12].label" :key="firmwareTypeList[12].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[12].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[13].value" :key="firmwareTypeList[13].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[13].label}}</el-checkbox>
                         </el-form-item>
                     </el-row>
                 </el-checkbox-group>
@@ -106,7 +119,10 @@
                 <el-tabs type="card" v-model="activeTab">
                     <el-tab-pane :label="i18ns.serverList.serverBlade" name="bladeTab" v-loading="loading" element-loading-text="Loading">
                         <el-row>
-                            <el-col :span="8" class="title div-center">{{i18ns.serverList.serverName}}</el-col>
+                            <el-col :span="8" class="title div-center">
+                                <el-checkbox v-model="serverBladeAllChecked" @change="serverBladeAllChange"></el-checkbox>
+                                {{i18ns.serverList.serverName}}
+                            </el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.task.dn}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.serverList.serverIPAddress}}</el-col>
                         </el-row>
@@ -121,7 +137,9 @@
                     </el-tab-pane>
                     <el-tab-pane :label="i18ns.serverList.serverRack" name="rackTab" v-loading="loading" element-loading-text="Loading">
                         <el-row>
-                            <el-col :span="8" class="title div-center">{{i18ns.serverList.serverName}}</el-col>
+                            <el-col :span="8" class="title div-center">
+                                <el-checkbox v-model="serverRackAllChecked" @change="serverRackAllChange"></el-checkbox> {{i18ns.serverList.serverName}}
+                            </el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.task.dn}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.serverList.serverIPAddress}}</el-col>
                         </el-row>
@@ -136,7 +154,9 @@
                     </el-tab-pane>
                     <el-tab-pane :label="i18ns.serverList.serverHighdensity" name="highdensityTab" v-loading="loading" element-loading-text="Loading">
                         <el-row>
-                            <el-col :span="8" class="title div-center">{{i18ns.serverList.serverName}}</el-col>
+                            <el-col :span="8" class="title div-center">
+                                <el-checkbox v-model="serverHighdensityAllChecked" @change="serverHighdensityAllChange"></el-checkbox> {{i18ns.serverList.serverName}}
+                            </el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.task.dn}}</el-col>
                             <el-col :span="8" class="title div-center">{{i18ns.serverList.serverIPAddress}}</el-col>
                         </el-row>
@@ -252,6 +272,9 @@
         var app = new Vue({
             el: '#app',
             data: {
+                driverBandBool: false,
+                inBandBool: false,
+                outBandBool: false,
                 currentPage: 1,
                 pageSize: 10,
                 pageSizes: [10, 20, 50, 100],
@@ -312,7 +335,13 @@
                     pageSizes: [5, 10, 20],
                     totalCount: 0
                 },
-                selectServers: []
+                selectServers: [],
+                serverHighdensityAllChecked: false,
+                serverBladeAllChecked: false,
+                serverRackAllChecked: false,
+                serverBladeNum: 0,
+                serverRackNum: 0,
+                serverHighdensityNum: 0
             },
             computed: {
                 bladeParams: function() {
@@ -349,6 +378,49 @@
                 }, 0);
             },
             methods: {
+                serverBladeAllChange: function() {
+                    if (this.serverBladeAllChecked) {
+                        var keys = [];
+                        for (var i = 0; i < this.blade.listData.length; i++) {
+                            var item = this.blade.listData[i];
+                            keys.push(item.dn);
+                            for (var j = 0; j < item.childBlades.length; j++) {
+                                keys.push(item.childBlades[j].dn);
+                            }
+                        }
+                        this.$refs['bladeTree'].setCheckedKeys(keys);
+                    } else {
+                        this.$refs['bladeTree'].setCheckedKeys([]);
+                    }
+                },
+                serverRackAllChange: function() {
+                    if (this.serverRackAllChecked) {
+                        var keys = [];
+                        for (var i = 0; i < this.rack.listData.length; i++) {
+                            keys.push(this.rack.listData[i].dn);
+                        }
+                        this.$refs['rackTree'].setCheckedKeys(keys);
+                    } else {
+                        this.$refs['rackTree'].setCheckedKeys([]);
+                    }
+                },
+                serverHighdensityAllChange: function() {
+                    if (this.serverHighdensityAllChecked) {
+                        var keys = [];
+                        for (var i = 0; i < this.highdensity.listData.length; i++) {
+                            var item = this.highdensity.listData[i];
+                            for (var j = 0; j < item.childBlades.length; j++) {
+                                keys.push(item.childBlades[j].dn);
+                            }
+                        }
+                        this.$refs['highdensityTree'].setCheckedKeys(keys);
+                    } else {
+                        this.$refs['highdensityTree'].setCheckedKeys([]);
+                    }
+                },
+                checkboxChange: function(val) {
+
+                },
                 /**
                  * 设置一页显示的数据总条数
                  * 
@@ -476,7 +548,26 @@
                 firmwareTypeChange: function(value) {
                     var checkedCount = value.length - 1;
                     this.checkAll = checkedCount === this.firmwareTypeList.length - 1;
-
+                    if (value.length > 0) {
+                        _.forEach(value, function(x) {
+                            if (x == 'CNA_DRIVE' || x == 'RAID_DRIVE') {
+                                app.inBandBool = true;
+                                app.outBandBool = true;
+                            } else if (x == 'HMM' || x == 'iBMC' ||
+                                x == 'BIOS' || x == 'CPLD' ||
+                                x == 'LCD') {
+                                app.driverBandBool = true;
+                                app.inBandBool = true;
+                            } else {
+                                app.driverBandBool = true;
+                                app.outBandBool = true;
+                            }
+                        }, this);
+                    } else {
+                        this.driverBandBool = false;
+                        this.inBandBool = false;
+                        this.outBandBool = false;
+                    }
                 },
                 /**
                  * 获取刀片服务器列表
@@ -490,7 +581,10 @@
                         app.blade.totalCount = data.totalNum;
                         _.forEach(data.data, function(x) {
                             app.blade.listData.push(x);
+                            app.serverBladeNum += 1;
+                            app.serverBladeNum += x.childBlades.length;
                         })
+
                         app.setCurrentPageChecked();
                         app.loading = false;
                     });
@@ -506,7 +600,8 @@
                         app.rack.listData = [];
                         app.rack.totalCount = data.totalNum;
                         _.forEach(data.data, function(x) {
-                            return app.rack.listData.push(x);
+                            app.rack.listData.push(x);
+                            app.serverRackNum += 1;
                         })
                         app.setCurrentPageChecked();
                         app.loading = false;
@@ -533,6 +628,7 @@
                                 childBlades: x.childBlades,
                                 disabled: true
                             });
+                            app.serverHighdensityNum += x.childBlades.length;
                         });
                         app.setCurrentPageChecked();
                         app.loading = false;
@@ -778,10 +874,14 @@
                             ipAddress: data.ipAddress,
                             servertype: this.ChoiceServerType('blade')
                         });
+                        if (this.$refs['bladeTree'].getCheckedKeys().length == this.serverBladeNum) {
+                            this.serverBladeAllChecked = true;
+                        }
                     } else {
                         var index = _.findIndex(this.selectServers, function(x) {
                             return x.dn == data.dn
                         });
+                        this.serverBladeAllChecked = false;
                         this.selectServers.splice(index, 1);
                     }
                 },
@@ -800,10 +900,14 @@
                             ipAddress: data.ipAddress,
                             servertype: this.ChoiceServerType('rack')
                         });
+                        if (this.$refs['rackTree'].getCheckedKeys().length == this.serverRackNum) {
+                            this.serverRackAllChecked = true;
+                        }
                     } else {
                         var index = _.findIndex(this.selectServers, function(x) {
                             return x.dn == data.dn
                         });
+                        this.serverRackAllChecked = false;
                         this.selectServers.splice(index, 1);
                     }
                 },
@@ -822,10 +926,14 @@
                             ipAddress: data.ipAddress,
                             servertype: this.ChoiceServerType('highdensity')
                         });
+                        if (this.$refs['highdensityTree'].getCheckedKeys().length == this.serverHighdensityNum) {
+                            this.serverHighdensityAllChecked = true;
+                        }
                     } else {
                         var index = _.findIndex(this.selectServers, function(x) {
                             return x.dn == data.dn
                         });
+                        this.serverHighdensityAllChecked = false;
                         this.selectServers.splice(index, 1);
                     }
                 },

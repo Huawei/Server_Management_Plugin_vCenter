@@ -76,9 +76,9 @@
     var app = new Vue({
         el: "#mainapp",
         data: {
-            activeIndex: 'huawei/eSight/eSightConfig.html',
+            activeIndex: '',
             i18ns: {}, //国际化
-            iframeSrc: here + 'huawei/eSight/eSightConfig.html',
+            iframeSrc: '',
             iframeHeight: 400
         }, created: function () {
         	if (navigator.languages != undefined) {
@@ -89,11 +89,20 @@
         	this.i18ns = getVCenterIn18();
         	var eSightListUrl = com_huawei_vcenterpluginui.webContextPath + "/rest/services/esight/version?"+Math.random();
             //通过API获取数据
-            $.get(eSightListUrl, function(data, textStatus, jqXHR){
-            	console.log(jqXHR.getAllResponseHeaders());
-            	localStorage.setItem('lang', jqXHR.getResponseHeader("accept-language").slice(0, 2));
-            	app.i18ns = getVCenterIn18();
-              },"json");
+            $.ajax({  
+	            type: 'GET',
+	            contentType : 'application/json;charset=utf-8',
+	            url: eSightListUrl,  
+	            dataType: "json",
+	            async: "false",
+	            success: function(data, textStatus, jqXHR){  
+	            	console.log(jqXHR.getAllResponseHeaders());
+	            	localStorage.setItem('lang', jqXHR.getResponseHeader("accept-language").slice(0, 2));
+	            	app.i18ns = getVCenterIn18();
+	            	app.activeIndex = "huawei/eSight/eSightConfig.html";
+	            	app.iframeSrc = here + "huawei/eSight/eSightConfig.html";
+	            }
+	        });
         }, methods: {
             handleSelect: function (key, keyPath) {
                 activeIndex = key;

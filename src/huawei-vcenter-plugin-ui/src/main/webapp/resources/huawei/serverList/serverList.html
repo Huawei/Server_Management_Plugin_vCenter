@@ -86,27 +86,28 @@
                 <div>
 
                     <!--刀片服务器显示的table-->
-                    <el-table v-show="searchKey=='blade'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" @expand="expandShow">
+                    <el-table v-show="searchKey=='blade'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading"
+                        @expand="expandShow">
                         <el-table-column type="expand">
                             <template scope="props">
                                 <el-table :data="props.row.childBlades" style="width: 100%">
-                                    <el-table-column width="48"> 
+                                    <el-table-column width="48">
                                     </el-table-column>
-                                     <el-table-column  v-bind:label="i18ns.serverList.serverIPAddress" prop="ipAddress">
+                                    <el-table-column v-bind:label="i18ns.serverList.serverIPAddress" prop="ipAddress">
                                     </el-table-column>
                                     <el-table-column v-bind:label="i18ns.deviceInfo.name" prop="name">
-                                        </el-table-column>
+                                    </el-table-column>
                                     <el-table-column v-bind:label="i18ns.deviceInfo.status" prop="status">
-                                          <template scope="scope">
-                                <template v-if="scope.row.status=='0'">
-                                   <div class="serverStatusImage" style="background-color:limegreen"></div>&nbsp;<span>{{i18ns.serverList.serverNormal}}</span>
-                                </template>
+                                        <template scope="scope">
+                                            <template v-if="scope.row.status=='0'">
+                                                <div class="serverStatusImage" style="background-color:limegreen"></div>&nbsp;<span>{{i18ns.serverList.serverNormal}}</span>
+                                            </template>
             <template v-else-if="scope.row.status=='-2'">
-                                   <div class="serverStatusImage" style="background-color:royalblue"></div>&nbsp;<span>{{i18ns.serverList.serverUnknown}}</span>
-                                </template>
+                                                <div class="serverStatusImage" style="background-color:royalblue"></div>&nbsp;<span>{{i18ns.serverList.serverUnknown}}</span>
+                                            </template>
             <template v-else>
-                                   <div class="serverStatusImage" style="background-color:red"></div>&nbsp;<span>{{i18ns.serverList.serverFault}}</span>
-                                </template>
+                                                <div class="serverStatusImage" style="background-color:red"></div>&nbsp;<span>{{i18ns.serverList.serverFault}}</span>
+                                            </template>
             </template>
             </el-table-column>
             <el-table-column v-bind:label="i18ns.deviceInfo.mode" prop="mode">
@@ -171,32 +172,57 @@
 
 
             <!--高密服务器服务器显示的table-->
-            <el-table v-show="searchKey=='highdensity'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading">
-                <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
+            <el-table v-show="searchKey=='highdensity'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" @expand="expandShow1">
+                <el-table-column type="expand">
+                    <template scope="props">
+                                <el-table v-bind:data="props.row.childBlades" style="width: 100%">
+                                    <el-table-column width="48">
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.serverList.serverIPAddress" prop="ipAddress">
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.deviceInfo.name" prop="name">
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.deviceInfo.status" prop="status">
+                                        <template scope="scope">
+                                            <template v-if="scope.row.status=='0'">
+                                                <span>{{i18ns.serverList.serverNormal}}</span>
+                                            </template>
+                    <template v-else-if="scope.row.status=='-2'">
+                                                <span>{{i18ns.serverList.serverUnknown}}</span>
+                                            </template>
+                    <template v-else>
+                                                <span>{{i18ns.serverList.serverFault}}</span>
+                                            </template>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
+                <el-table-column v-bind:label="i18ns.deviceInfo.mode" prop="type">
                 </el-table-column>
-                <el-table-column prop="serverStatus" v-bind:label="i18ns.serverList.serverStatus">
-                    <template scope="scope">
+            </el-table>
+            </template>
+            </el-table-column>
+            <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
+            </el-table-column>
+            <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
+            </el-table-column>
+            <el-table-column prop="serverStatus" v-bind:label="i18ns.serverList.serverStatus">
+                <template scope="scope">
                                 <template v-if="scope.row.status=='0'">
                                     <span>{{i18ns.serverList.serverNormal}}</span>
                                 </template>
-                    <template v-else-if="scope.row.status=='-1'">
+                <template v-else-if="scope.row.status=='-1'">
                                     <span>{{i18ns.serverList.serverOffline}}</span>
                                 </template>
-                    <template v-else-if="scope.row.status=='-2'">
+                <template v-else-if="scope.row.status=='-2'">
                                     <span>{{i18ns.serverList.serverUnknown}}</span>
                                 </template>
-                    <template v-else>
+                <template v-else>
                                     <span>{{i18ns.serverList.serverFault}}</span>
                                 </template>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
-                </el-table-column>
-
+                </template>
+            </el-table-column>
+            <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
+            </el-table-column>
             </el-table>
-
         </div>
         </template>
 
@@ -253,10 +279,15 @@
         methods: {
             expandShow: function(row, expanded) {
                 if (row.childBlades) {
-                    this.getUnitsInfo(row, expanded);
+                    this.getUnitsInfo(row, expanded, '1');
                 }
             },
-            getUnitsInfo: function(v, bl) {
+            expandShow1: function(row, expanded) {
+                if (row.childBlades) {
+                    this.getUnitsInfo(row, expanded, '2');
+                }
+            },
+            getUnitsInfo: function(v, bl, type) {
                 if (!bl) {
                     return;
                 }
@@ -274,15 +305,31 @@
                                     dn: data.dn
                                 });
                                 if (_index > -1) {
-                                    _.assign(app.listData[index].childBlades[_index], {
-                                        mode: '',
-                                        status: ''
-                                    })
-                                    Vue.delete(app.listData[index].childBlades[_index], 'mode');
-                                    Vue.set(app.listData[index].childBlades[_index], 'mode', data.mode)
-                                    Vue.delete(app.listData[index].childBlades[_index], 'status');
-                                    Vue.set(app.listData[index].childBlades[_index], 'status', data.status)
-                                    console.log(app.listData[index].childBlades[_index].mode);
+                                    if (type == '1') {
+                                        _.assign(app.listData[index].childBlades[_index], {
+                                            mode: '',
+                                            status: ''
+                                        });
+                                        Vue.delete(app.listData[index].childBlades[_index], 'mode');
+                                        Vue.set(app.listData[index].childBlades[_index], 'mode',
+                                            data.mode);
+                                        Vue.delete(app.listData[index].childBlades[_index],
+                                            'status');
+                                        Vue.set(app.listData[index].childBlades[_index], 'status',
+                                            data.status);
+                                    } else {
+                                        _.assign(app.listData[index].childBlades[_index], {
+                                            type: '',
+                                            status: ''
+                                        });
+                                        Vue.delete(app.listData[index].childBlades[_index], 'type');
+                                        Vue.set(app.listData[index].childBlades[_index], 'type',
+                                            data.type);
+                                        Vue.delete(app.listData[index].childBlades[_index],
+                                            'status');
+                                        Vue.set(app.listData[index].childBlades[_index], 'status',
+                                            data.status);
+                                    }
                                 }
                             }
                         });

@@ -75,9 +75,14 @@
             <el-form-item>
                 <el-button @click="refresh();">{{i18ns.common.refresh}}</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button @click="batchDelete()" :disabled="listData.length===0||multipleSelection.length===0">{{i18ns.eSight.batchDelete}}</el-button>
+            </el-form-item>
         </el-form>
         <div>
-            <el-table v-bind:data="listData" @sort-change="sortChange" border style="width: 100%" v-loading="fullscreenLoading" element-loading-text="Loading">
+            <el-table v-bind:data="listData" @sort-change="sortChange" border style="width: 100%" v-loading="fullscreenLoading" element-loading-text="Loading" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55" :selectable="selectable">
+                </el-table-column>
                 <el-table-column prop="softwareSourceName" sortable v-bind:label="i18ns.task.taskName">
                 </el-table-column>
                 <el-table-column prop="taskName" sortable v-bind:label="i18ns.task.taskIdenty">
@@ -121,7 +126,7 @@
                         {{scope.row.deviceProgress+'%'}}
                     </template>
                 </el-table-column>
-                <el-table-column v-bind:label="i18ns.task.errorDetail" min-width="100">
+                <el-table-column v-bind:label="i18ns.task.errorDetail" min-width="100" :show-overflow-tooltip="true">
                     <template scope="scope">
                                 <el-popover trigger="hover" placement="top">
                                         <div v-for="item in getErrorDetailTxt(scope.row.errorCode).split('</br>')">
@@ -163,6 +168,13 @@
                 order: "",
                 orderDesc: ""
             },
+            multipleSelection: [],
+            selectable: function(row, index) {
+                if (row.syncStatus == 'CREATED') {
+                    return false;
+                }
+                return true;
+            }
         },
         computed: {
             curEsightText: function() {
@@ -204,6 +216,93 @@
                 onSearch: function() {
                     this.pageNo = 1;
                     this.getListData();
+                },
+                /**
+                 * 全选事件
+                 * 
+                 * @param {any} val 
+                 */
+                handleSelectionChange: function(val) {
+                    console.log(val);
+                    this.multipleSelection = val;
+                },
+                /**
+                 * 批量删除事件
+                 * 
+                 * @returns 
+                 */
+                batchDelete: function() {
+                    if (this.multipleSelection.length === 0) {
+                        return false;
+                    }
+                    this.$confirm(app.i18ns.common.confirmDelete1, app.i18ns.common.prompt, {
+                        confirmButtonText: app.i18ns.common.confirm,
+                        cancelButtonText: app.i18ns.common.cancel,
+                        closeOnClickModal: false,
+                        type: 'warning'
+                    }).then(function() {
+                        app.fullscreenLoading = true;
+                        var k = app.multipleSelection.length;
+                        var errorInfo = []; //错误信息
+                        for (var i = 0; i < app.multipleSelection.length; i++) {
+                            (function(id, taskName) {
+                                manager.delete({
+                                        esight: app.curEsightHostIp,
+                                        param: {
+                                            taskId: id
+                                        }
+                                    },
+                                    function(ret) {
+                                        k--;
+                                        if (ret.code != 0) {
+                                            errorInfo.push({
+                                                msg: getErrorMsg(ret.code),
+                                                name: taskName
+                                            });
+                                        }
+                                    });
+                            })(app.multipleSelection[i].id, app.multipleSelection[i].taskName)
+                        }
+                        var mysetInterval = setInterval(function() {
+                            if (k == 0) {
+                                app.fullscreenLoading = false;
+                                app.getListData();
+                                if (errorInfo.length > 0) {
+                                    var h = app.$createElement;
+                                    var nodes = [];
+                                    nodes.push(h('span', {
+                                        type: "circle",
+                                        style: {
+                                            'font-size': '14px',
+                                            'margin-top': '-20px',
+                                            'display': 'block',
+                                            'margin-bottom': '5px'
+                                        },
+                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                    for (var i = 0; i < errorInfo.length; i++) {
+                                        nodes.push(h('tr', null, [
+                                            h('td', {
+                                                type: "circle"
+                                            }, errorInfo[i].name + ':'),
+                                            h('td', {
+                                                type: "circle"
+                                            }, errorInfo[i].msg)
+                                        ]));
+
+                                    }
+                                    var context = h('ul', null, nodes);
+                                    app.$msgbox({
+                                        title: app.i18ns.common.prompt,
+                                        message: context,
+                                        confirmButtonText: app.i18ns.common.confirm,
+                                    }).then(function() {});
+                                } else {
+                                    alertMsg(app.i18ns.template.delSuccessMsg);
+                                }
+                                window.clearInterval(mysetInterval);
+                            }
+                        }, 100)
+                    }).catch(function() {});
                 },
                 /**
                  * 重置搜索输入数据

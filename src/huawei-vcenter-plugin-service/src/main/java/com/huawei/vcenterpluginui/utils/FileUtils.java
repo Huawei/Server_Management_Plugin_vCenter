@@ -31,7 +31,7 @@ public class FileUtils {
 
 	private static final String OS = System.getProperty("os.name").toLowerCase(Locale.US);
 
-	private static final String VMWARE_LINUX_DIR = "/home/vsphere-client/base";
+	private static final String VMWARE_LINUX_DIR = "/home/vsphere-client/base";    
 
 	private static final String VMWARE_WINDOWS_DIR = "C:/ProgramData/VMware/vCenterServer/runtime/base";
 
@@ -44,9 +44,13 @@ public class FileUtils {
 		createFile(file);
 		String line = null;
 		StringBuffer result = new StringBuffer();
+		FileInputStream f= null;
+		InputStreamReader in = null;
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+			f = new FileInputStream(file);
+			in = new InputStreamReader(f, "utf-8");
+			br = new BufferedReader(in);
 			while ((line = br.readLine()) != null) {
 				result.append(line);
 			}
@@ -64,6 +68,20 @@ public class FileUtils {
 					LOGGER.error(e.getMessage());
 				}
 			}
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					LOGGER.error(e.getMessage());
+				}
+			}
+			if (f != null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					LOGGER.error(e.getMessage());
+				}
+			}
 		}
 		return null;
 	}
@@ -71,16 +89,34 @@ public class FileUtils {
 	public static void saveKey(String key,String fileName) {
 		File file = new File(getPath() + File.separator + fileName);
 		createFile(file);
+		FileOutputStream f= null;
+		OutputStreamWriter out = null;
 		BufferedWriter bw = null;
 		try {
-			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "utf-8"));
+			f = new FileOutputStream(file, false);
+			out = new OutputStreamWriter(f, "utf-8");
+			bw = new BufferedWriter(out);
 			bw.write(key);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage() + " svae key have an error:" + key);
+			LOGGER.error(e.getMessage() + " save key have an error:" + key);
 		} finally {
 			if (bw != null) {
 				try {
 					bw.close();
+				} catch (IOException e) {
+					LOGGER.error(e.getMessage());
+				}
+			}
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					LOGGER.error(e.getMessage());
+				}
+			}
+			if (f != null) {
+				try {
+					f.close();
 				} catch (IOException e) {
 					LOGGER.error(e.getMessage());
 				}

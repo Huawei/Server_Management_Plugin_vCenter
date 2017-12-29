@@ -80,8 +80,9 @@ public class TemplateApiServiceImpl extends ESightOpenApiService implements Temp
 	@Override
 	public Map<String, Object> templateTaskList(String esightIp, String taskName, String taskStatus, int pageNo, int pageSize, String order, String orderDesc, HttpSession session) throws SQLException {
 		Map<String, Object> taskParam = new HashMap<String, Object>();
-		taskParam.put("incompleted", true);
+//		taskParam.put("incompleted", true);
 		taskParam.put("taskType", TaskType.TASK_TYPE_DEPLOY.name());
+		taskParam.put("esightIp", esightIp);
 
 		List<Task> taskList = taskDao.getIncompletedTaskList(taskParam);
 
@@ -146,7 +147,8 @@ public class TemplateApiServiceImpl extends ESightOpenApiService implements Temp
 					taskDao.saveTaskStatus(task);
 				}
 			} catch (RuntimeException e) {
-			    throw e;
+				LOGGER.error(e.getMessage());
+				throw e;
 			}  catch (Exception e) {
 				LOGGER.error(e.getMessage());
 			}
@@ -164,9 +166,9 @@ public class TemplateApiServiceImpl extends ESightOpenApiService implements Temp
 			taskParam.put("order", order);
 			taskParam.put("orderDesc", orderDesc);
 		}
-		taskParam.remove("incompleted");
+//		taskParam.remove("incompleted");
 
-		taskParam.put("esightIp", esightIp);
+		
 		List<Task> data = taskDao.getIncompletedTaskList(taskParam);
 
 		int count = taskDao.getCountTaskList(taskParam);

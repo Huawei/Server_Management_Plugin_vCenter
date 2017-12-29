@@ -42,6 +42,10 @@
         .el-table .cell {
             white-space: pre-wrap;
         }
+        
+        .el-input__inner {
+            height: 30px !important;
+        }
     </style>
 </head>
 
@@ -66,11 +70,14 @@
                     </el-option>
                 </el-select>
             </template>
+            <el-button @click="batchDelete()" :disabled="listData.length===0||multipleSelection.length===0">{{i18ns.eSight.batchDelete}}</el-button>
         </el-row>
         <div style="margin-top:23px;">
             <template>
                 <div>
-                    <el-table v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" v-loading.fullscreen.lock="fullscreenLoading" >
+                    <el-table v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" v-loading.fullscreen.lock="fullscreenLoading" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" width="55">
+                        </el-table-column>
                         <el-table-column  v-bind:label="i18ns.template.templateName" width="300px">
                             <template scope="scope">
                                 <el-button type="text" size="small" :disabled="scope.row.templateType=='NETWORK'" v-on:click="showDetailed(scope.row)" >{{scope.row.templateName}}</el-button>
@@ -95,7 +102,6 @@
             </el-col>
         </el-row>
     </div>
-
     <el-dialog v-bind:title="i18ns.template.viewDetail" v-bind:visible.sync="templateDetailDialog">
         <iframe id="iframe" v-bind:src="htmlString" style="width:100%;min-height:490px; border-width:0px">
         </iframe>
@@ -124,7 +130,8 @@
                 pageSize: 10,
                 total: 0,
                 templateDetailDialog: false,
-                htmlString: ''
+                htmlString: '',
+                multipleSelection: []
             },
             created: function() {
                 this.i18ns = getIn18();
@@ -433,6 +440,91 @@
                 closeDilog: function() {
                     this.templateDetailDialog = false;
                     this.htmlString = "";
+                },
+                /**
+                 * 全选事件
+                 * 
+                 * @param {any} val 
+                 */
+                handleSelectionChange: function(val) {
+                    console.log(val);
+                    this.multipleSelection = val;
+                },
+                /**
+                 * 批量删除事件
+                 * 
+                 * @returns 
+                 */
+                batchDelete: function() {
+                    if (this.multipleSelection.length === 0) {
+                        return false;
+                    }
+                    this.$confirm(app.i18ns.common.confirmDelete1, app.i18ns.common.prompt, {
+                        confirmButtonText: app.i18ns.common.confirm,
+                        cancelButtonText: app.i18ns.common.cancel,
+                        closeOnClickModal: false,
+                        type: 'warning'
+                    }).then(function() {
+                        app.fullscreenLoading = true;
+                        var k = app.multipleSelection.length;
+                        var errorInfo = []; //错误信息
+                        for (var i = 0; i < app.multipleSelection.length; i++) {
+                            (function(templateName) {
+                                var param = {
+                                    esight: app.menuKey,
+                                    templateName: templateName
+                                };
+                                templateManage.delete(param, function(ret) {
+                                    k--;
+                                    if (ret.code != 0) {
+                                        errorInfo.push({
+                                            msg: getErrorMsg(ret.code),
+                                            templateName: templateName
+                                        });
+                                    }
+                                });
+                            })(app.multipleSelection[i].templateName)
+                        }
+                        var mysetInterval = setInterval(function() {
+                            if (k == 0) {
+                                app.fullscreenLoading = false;
+                                app.getListData();
+                                if (errorInfo.length > 0) {
+                                    var h = app.$createElement;
+                                    var nodes = [];
+                                    nodes.push(h('span', {
+                                        type: "circle",
+                                        style: {
+                                            'font-size': '14px',
+                                            'margin-top': '-20px',
+                                            'display': 'block',
+                                            'margin-bottom': '5px'
+                                        },
+                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                    for (var i = 0; i < errorInfo.length; i++) {
+                                        nodes.push(h('tr', null, [
+                                            h('td', {
+                                                type: "circle"
+                                            }, errorInfo[i].templateName + ':'),
+                                            h('td', {
+                                                type: "circle"
+                                            }, errorInfo[i].msg)
+                                        ]));
+
+                                    }
+                                    var context = h('ul', null, nodes);
+                                    app.$msgbox({
+                                        title: app.i18ns.common.prompt,
+                                        message: context,
+                                        confirmButtonText: app.i18ns.common.confirm,
+                                    }).then(function() {});
+                                } else {
+                                    app.alertMsg(app.i18ns.template.delSuccessMsg);
+                                }
+                                window.clearInterval(mysetInterval);
+                            }
+                        }, 100)
+                    }).catch(function() {});
                 }
             }
         });

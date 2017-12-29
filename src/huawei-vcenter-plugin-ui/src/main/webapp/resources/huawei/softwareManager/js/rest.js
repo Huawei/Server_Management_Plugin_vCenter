@@ -346,7 +346,7 @@ var softManager = {
             	console.log(response);
                 if (typeof callback === "function") {
                     var ret = {code: response.code, msg: response.description,data: response.data};
-                    dealResult(ret, callback);
+                    callback(ret);
                 }
             }
         });

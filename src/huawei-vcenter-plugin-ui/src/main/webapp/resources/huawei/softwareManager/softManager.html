@@ -108,7 +108,7 @@
                         </el-table-column>
                         <el-table-column prop="syncStatusTxt" v-bind:label="i18ns.software.taskState">
                         </el-table-column>
-                        <el-table-column prop="errorDetail" v-bind:label="i18ns.software.detail_soft">
+                        <el-table-column prop="errorDetail" v-bind:label="i18ns.software.detail_soft" :show-overflow-tooltip="true">
                                 <template scope="scope">
                                         <el-popover trigger="hover" placement="top">
                                                 <div v-for="item in getErrorDetailTxt(scope.row.taskCode)">
@@ -137,15 +137,18 @@
                         <el-dropdown-item v-for="item in esights" v-bind:command="item.name" v-bind:key="item.name">{{item.label}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <span style="margin-left:50px; font-size:12px;">{{i18ns.software.inputName}}</span>
+                <span style="margin-left:10px; font-size:12px;">{{i18ns.software.inputName}}</span>
                 <el-input v-model.lazy="keyword" v-on:change="search(keyword)" placeholder="" style="margin-left:10px; width:240px;"></el-input>
+                <el-button @click="batchDelete()" :disabled="doneListData.length===0||multipleSelection.length===0" style="margin-left:10px; font-size:12px;">{{i18ns.eSight.batchDelete}}</el-button>
             </el-col>
         </el-row>
     </div>
     <div>
         <template>
                 <div>
-                    <el-table v-bind:data="doneListData" border style="width: 100%;" v-loading="secondloading"> 
+                    <el-table v-bind:data="doneListData" border style="width: 100%;" v-loading="secondloading" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" width="55">
+                        </el-table-column>
                         <el-table-column prop="softwareName" v-bind:label="i18ns.software.name">
                         </el-table-column>
                         <el-table-column prop="softwareDescription" v-bind:label="i18ns.software.desc">
@@ -442,8 +445,8 @@
                         max: 64,
                         trigger: 'change'
                     }]
-                }
-
+                },
+                multipleSelection: []
             },
             created: function() {
                 this.i18ns = getIn18();
@@ -960,6 +963,90 @@
                     }
                     return '';
 
+                },
+                /**
+                 * 全选事件
+                 * 
+                 * @param {any} val 
+                 */
+                handleSelectionChange: function(val) {
+                    console.log(val);
+                    this.multipleSelection = val;
+                },
+                /**
+                 * 批量删除事件
+                 * 
+                 * @returns 
+                 */
+                batchDelete: function() {
+                    if (this.multipleSelection.length === 0) {
+                        return false;
+                    }
+                    this.$confirm(app.i18ns.common.confirmDelete1, app.i18ns.common.prompt, {
+                        confirmButtonText: app.i18ns.common.confirm,
+                        cancelButtonText: app.i18ns.common.cancel,
+                        closeOnClickModal: false,
+                        type: 'warning'
+                    }).then(function() {
+                        app.fullscreenLoading = true;
+                        var k = app.multipleSelection.length;
+                        var errorInfo = []; //错误信息
+                        for (var i = 0; i < app.multipleSelection.length; i++) {
+                            (function(softwareName) {
+                                softManager.delete({
+                                        esight: app.menuKey,
+                                        param: softwareName
+                                    },
+                                    function(ret) {
+                                        k--;
+                                        if (ret.code != 0) {
+                                            errorInfo.push({
+                                                msg: getErrorMsg(ret.code),
+                                                name: softwareName
+                                            });
+                                        }
+                                    });
+                            })(app.multipleSelection[i].softwareName)
+                        }
+                        var mysetInterval = setInterval(function() {
+                            if (k == 0) {
+                                app.fullscreenLoading = false;
+                                app.getDoneListData();
+                                if (errorInfo.length > 0) {
+                                    var h = app.$createElement;
+                                    var nodes = [];
+                                    nodes.push(h('span', {
+                                        type: "circle",
+                                        style: {
+                                            'font-size': '14px',
+                                            'margin-top': '-20px',
+                                            'display': 'block',
+                                            'margin-bottom': '5px'
+                                        },
+                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                    for (var i = 0; i < errorInfo.length; i++) {
+                                        nodes.push(h('tr', null, [
+                                            h('td', {
+                                                type: "circle"
+                                            }, errorInfo[i].name + ':'),
+                                            h('td', {
+                                                type: "circle"
+                                            }, errorInfo[i].msg)
+                                        ]));
+                                    }
+                                    var context = h('ul', null, nodes);
+                                    app.$msgbox({
+                                        title: app.i18ns.common.prompt,
+                                        message: context,
+                                        confirmButtonText: app.i18ns.common.confirm,
+                                    }).then(function() {});
+                                } else {
+                                    alertMsg(app.i18ns.template.delSuccessMsg);
+                                }
+                                window.clearInterval(mysetInterval);
+                            }
+                        }, 100)
+                    }).catch(function() {});
                 }
             }
         });
