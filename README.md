@@ -18,7 +18,7 @@ II. Description
 III. Supported Software Version
 
     vCenter Server 6.5u1 for Linux 
-    vCenter  Server 6.5 or Windows 
+    vCenter Server 6.5 for Windows 
     eSight V300R008C00SPC201 
 
 IV. Supported Device
