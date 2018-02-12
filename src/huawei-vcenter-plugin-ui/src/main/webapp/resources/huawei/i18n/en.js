@@ -325,7 +325,10 @@ var i18n_en = {
         getDNInfoTips: 'Getting the upgrade details for the device',
         serverName: 'Name',
         deivceFirmwareTips: 'If the device firmware or driver does not have a matching upgrade package, the firmware information is not displayed on the task upgrade list.',
-        selectFirmwareTips: 'Please select firmware with the same upgrade mode.'
+        selectFirmwareTips: 'Please select firmware with the same upgrade mode.',
+        highRisk: 'High Risk',
+        highRiskTips1: 'Automatic restart may cause service interruption. Manual restart requires you to manually restart the server after the update for the update to take effect.',
+        agreeTip: 'I have read the warning message carefully.'
     },
     task: {
         taskName: "Name",

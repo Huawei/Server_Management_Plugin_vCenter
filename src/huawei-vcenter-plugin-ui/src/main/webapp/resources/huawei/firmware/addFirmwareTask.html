@@ -210,6 +210,18 @@
                 <el-button @click="goBack">{{i18ns.common.back}}</el-button>
             </el-row>
         </div>
+        <el-dialog :title="i18ns.firmware.highRisk" :visible.sync="highRiskdialogVisible" class="highRisk-tip" @close="isAgree=false">
+            <div>
+                {{i18ns.firmware.highRiskTips1}}
+            </div>
+            <div style="margin-top:10px;    margin-bottom: -10px;">
+                <el-checkbox v-model="isAgree">{{i18ns.firmware.agreeTip}}</el-checkbox>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" :disabled ="!isAgree" @click="save">{{i18ns.common.confirm}}</el-button>
+                <el-button @click="highRiskdialogVisible = false">{{i18ns.common.cancel}}</el-button>
+            </span>
+        </el-dialog>
 
     </div>
     <style>
@@ -265,6 +277,10 @@
         
         .el-input {
             max-width: 500px;
+        }
+        
+        .el-dialog {
+            width: 400px;
         }
     </style>
     <script src="js/rest.js"></script>
@@ -341,7 +357,9 @@
                 serverRackAllChecked: false,
                 serverBladeNum: 0,
                 serverRackNum: 0,
-                serverHighdensityNum: 0
+                serverHighdensityNum: 0,
+                highRiskdialogVisible: false,
+                isAgree: false
             },
             computed: {
                 bladeParams: function() {
@@ -754,11 +772,19 @@
                         alertMsg(app.i18ns.firmware.dntips);
                         return;
                     }
+                    this.highRiskdialogVisible = true;
+                },
+                /**
+                 * 保存数据
+                 * 
+                 * @returns 
+                 */
+                save: function() {
                     var param = {
                         esight: this.currentESight,
                         param: {
                             basepackageName: this.firmwareName,
-                            firmwareList: _firmwareList,
+                            firmwareList: this.firmwareTypes.join(';'),
                             isforceupgrade: this.isforceupgrade,
                             effectiveMethod: parseInt(this.effectiveMethod),
                             dn: this.selectServers.map(function(i) {
@@ -769,6 +795,7 @@
                     this.fullscreenLoading = true;
                     firmwareTaskManage.addFirmwareTask(param, function(ret) {
                         app.fullscreenLoading = false;
+                        app.highRiskdialogVisible = false;
                         if (ret.code === '0') {
                             alertMsg(app.i18ns.firmware.addSuccessMsg, function() {
                                 window.location.href = 'listFirmwareTask.html?s=' + Math.random();

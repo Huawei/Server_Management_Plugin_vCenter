@@ -25,38 +25,38 @@
         [v-cloak] {
             display: none;
         }
-        
+
         body {
             font-size: 12px;
             min-width: 900px;
         }
-        
+
         #tableName {
             width: 150px;
             height: 30px;
             border: 1px solid #dfe6ec;
             background-color: lightgray;
         }
-        
+
         #serverDesc {
             width: 758px;
             height: 30px;
             border: 1px solid #dfe6ec;
         }
-        
+
         #content {
             width: 300px;
             height: 30px;
             border: 1px solid #dfe6ec;
         }
-        
+
         #desc {
             width: 150px;
             height: 30px;
             border: 1px solid #dfe6ec;
             background-color: lightgray;
         }
-        
+
         #cpu,
         #memory,
         #fan,
@@ -69,49 +69,49 @@
             height: 15px;
             background-color: limegreen
         }
-        
+
         #serverStatusImage {
             width: 15px;
             height: 15px;
             display: inline-block;
             border-radius: 50%;
         }
-        
+
         .units {
             max-width: 100px;
             text-align: center;
         }
-        
+
         .status {
             width: 15px;
             height: 15px;
         }
-        
+
         .table1,
         .table1 tr th,
         .table1 tr td {
             border: 1px solid #dfe6ec;
         }
-        
+
         .table1 td {
             height: 30px;
         }
-        
+
         .table1 {
             min-width: 700px;
             border-collapse: collapse;
             padding: 2px;
         }
-        
+
         .td1 {
             background-color: #eef1f6;
             width: 150px;
         }
-        
+
         .el-collapse-item__header {
             font-size: 12px;
         }
-        
+
         .whiteClass {
             width: 10px;
             height: 10px;
@@ -120,7 +120,7 @@
             -webkit-border-radius: 8px;
             border-radius: 8px;
         }
-        
+
         .limegreenClass {
             width: 10px;
             height: 10px;
@@ -129,7 +129,7 @@
             -webkit-border-radius: 8px;
             border-radius: 8px;
         }
-        
+
         .redClass {
             width: 10px;
             height: 10px;
@@ -138,7 +138,7 @@
             -webkit-border-radius: 8px;
             border-radius: 8px;
         }
-        
+
         .royalblueClass {
             width: 10px;
             height: 10px;
@@ -702,19 +702,19 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                         <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                         <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                         <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                         <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                        </template>
+                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
+                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 在位信息 -->
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
-                                         <span  v-if="scope.row.presentState==0">{{i18ns.deviceInfo.notInstalled}}</span>
-                                         <span  v-else-if="scope.row.presentState==2||scope.row.presentState==2">{{i18ns.deviceInfo.unknown}}</span>
-                                         <span v-else>{{i18ns.deviceInfo.installed}}</span>
-                                        </template>
+                                    <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
+                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.installed}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 型号 -->
                             <el-table-column prop="model" v-bind:label="i18ns.deviceInfo.model">
@@ -738,19 +738,19 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                            <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                            <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                            <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                        </template>
+                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
+                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 在位信息 -->
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
-                                    <span  v-if="scope.row.presentState==0">{{i18ns.deviceInfo.notInstalled}}</span>
-                                    <span  v-else-if="scope.row.presentState==2||scope.row.presentState==2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
+                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                     <span v-else>{{i18ns.deviceInfo.installed}}</span>
-                                        </template>
+                                </template>
                             </el-table-column>
                             <!-- 容量 -->
                             <el-table-column prop="capacity" v-bind:label="i18ns.deviceInfo.capacity">
@@ -774,18 +774,19 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                            <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                            <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                            <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                        </template>
+                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
+                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 在位信息 -->
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
-                                            <span v-if="scope.row.presentState==0">{{i18ns.deviceInfo.notInstalled}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.installed}}</span>
-                                        </template>
+                                    <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
+                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.installed}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 槽位号 -->
                             <el-table-column prop="location" v-bind:label="i18ns.deviceInfo.location">
@@ -803,18 +804,19 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                            <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                            <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                            <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                       </template>
+                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
+                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 在位信息 -->
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
-                                            <span v-if="scope.row.presentState==0">{{i18ns.deviceInfo.notInstalled}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.installed}}</span>
-                                       </template>
+                                    <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
+                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.installed}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 输入功率 -->
                             <el-table-column prop="inputPower" v-bind:label="i18ns.deviceInfo.inputPower">
@@ -825,10 +827,10 @@
                             <!-- 输入模式 -->
                             <el-table-column prop="inputMode" v-bind:label="i18ns.deviceInfo.inputMode">
                                 <template scope="scope">
-                                            <span v-if="scope.row.inputMode==1">{{i18ns.deviceInfo.acInput}}</span>
-                                            <span v-else-if="scope.row.inputMode==2">{{i18ns.deviceInfo.dcInput}}</span>
-                                            <span v-else-if="scope.row.inputMode==3">{{i18ns.deviceInfo.acInputDcInput}}</span>
-                                        </template>
+                                    <span v-if="scope.row.inputMode==1">{{i18ns.deviceInfo.acInput}}</span>
+                                    <span v-else-if="scope.row.inputMode==2">{{i18ns.deviceInfo.dcInput}}</span>
+                                    <span v-else-if="scope.row.inputMode==3">{{i18ns.deviceInfo.acInputDcInput}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 型号 -->
                             <el-table-column prop="model" v-bind:label="i18ns.deviceInfo.model">
@@ -839,9 +841,10 @@
                             <!-- 协议 -->
                             <el-table-column prop="powerProtocol" v-bind:label="i18ns.deviceInfo.protocol">
                                 <template scope="scope">
-                                            <span v-if="scope.row.powerProtocol==0">PSMI</span>
-                                            <span v-else-if="scope.row.powerProtocol==1">PMBUS</span>
-                                        </template>
+                                    <span v-if="scope.row.powerProtocol==='0'">PSMI</span>
+                                    <span v-else-if="scope.row.powerProtocol==='1'">PMBUS</span>
+                                    <span v-else>--</span>
+                                </template>
                             </el-table-column>
                             <!-- 厂商 -->
                             <el-table-column prop="manufacture" v-bind:label="i18ns.deviceInfo.manufacture">
@@ -859,32 +862,33 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                            <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                            <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                            <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                        </template>
+                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
+                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 在位信息 -->
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
-                                        <span v-if="scope.row.presentState==0">{{i18ns.deviceInfo.notInstalled}}</span>
-                                        <span v-else>{{i18ns.deviceInfo.installed}}</span>
-                                        </template>
+                                    <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
+                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.installed}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 控制模式 -->
                             <el-table-column prop="controlModel" v-bind:label="i18ns.deviceInfo.controlModel">
                                 <template scope="scope">
-                                            <span v-if="scope.row.controlModel=='0'">{{i18ns.deviceInfo.auto}}</span>
-                                            <span v-else-if="scope.row.controlModel=='1'">{{i18ns.deviceInfo.manual}}</span>
-                                          </template>
+                                    <span v-if="scope.row.controlModel=='0'">{{i18ns.deviceInfo.auto}}</span>
+                                    <span v-else-if="scope.row.controlModel=='1'">{{i18ns.deviceInfo.manual}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 转速百分比 -->
                             <el-table-column v-bind:label="i18ns.deviceInfo.rotatePercent">
                                 <template scope="scope">
                                     <span v-if="scope.row.controlModel=='0'">--</span>
                                     <span v-else>{{scope.row.rotatePercent}}</span>
-                                          </template>
+                                </template>
                             </el-table-column>
                             <!-- 转速 -->
                             <el-table-column prop="rotate" v-bind:label="i18ns.deviceInfo.rotate">
@@ -902,11 +906,11 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                            <span v-if="scope.row.healthState==1">{{i18ns.deviceInfo.normal}}</span>
-                                            <span v-else-if="scope.row.healthState==0">{{i18ns.deviceInfo.offline}}</span>
-                                            <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.unknown}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                       </template>
+                                    <span v-if="scope.row.healthState==1">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.healthState==0">{{i18ns.deviceInfo.offline}}</span>
+                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- RAID类型 -->
                             <el-table-column prop="raidType" v-bind:label="i18ns.deviceInfo.raidType">
@@ -914,14 +918,14 @@
                             <!-- 接口类型 -->
                             <el-table-column prop="interfaceType" v-bind:label="i18ns.deviceInfo.interfaceType">
                                 <template scope="scope">
-                                            <span v-if="scope.row.interfaceType==1">SPI</span>
-                                            <span v-else-if="scope.row.interfaceType==2">SAS-3G</span>
-                                            <span v-else-if="scope.row.interfaceType==3">SATA-1.5G</span>
-                                            <span v-else-if="scope.row.interfaceType==4">SATA-3G</span>
-                                            <span v-else-if="scope.row.interfaceType==5">SAS-6G</span>
-                                            <span v-else-if="scope.row.interfaceType==6">SAS-12G</span>
-                                            <span v-else>{{i18ns.deviceInfo.unknown}}</span>
-                                       </template>
+                                    <span v-if="scope.row.interfaceType==1">SPI</span>
+                                    <span v-else-if="scope.row.interfaceType==2">SAS-3G</span>
+                                    <span v-else-if="scope.row.interfaceType==3">SATA-1.5G</span>
+                                    <span v-else-if="scope.row.interfaceType==4">SATA-3G</span>
+                                    <span v-else-if="scope.row.interfaceType==5">SAS-6G</span>
+                                    <span v-else-if="scope.row.interfaceType==6">SAS-12G</span>
+                                    <span v-else>{{i18ns.deviceInfo.unknown}}</span>
+                                </template>
                             </el-table-column>
                             <!-- BBU类型 -->
                             <el-table-column prop="bbuType" v-bind:label="i18ns.deviceInfo.bbuType">
@@ -952,10 +956,10 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="pcieSsdCardHealthStatus" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                            <span v-if="scope.row.pcieSsdCardHealthStatus==0">{{i18ns.deviceInfo.normal}}</span>
-                                            <span v-else-if="scope.row.pcieSsdCardHealthStatus==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
-                                        </template>
+                                    <span v-if="scope.row.pcieSsdCardHealthStatus==0">{{i18ns.deviceInfo.normal}}</span>
+                                    <span v-else-if="scope.row.pcieSsdCardHealthStatus==-2">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                </template>
                             </el-table-column>
                             <!-- 设备寿命 -->
                             <el-table-column prop="pcieSsdCardLifeLeft" v-bind:label="i18ns.deviceInfo.pcieSsdCardLifeLeft">
@@ -1040,13 +1044,13 @@
                 },
                 screenWidth: document.body.clientWidth
             },
-            created: function() {
+            created: function () {
                 /* 国际化方法 */
                 this.i18ns = getIn18();
                 this.name = localStorage.getItem('nameStr');
             },
-            mounted: function() {
-                setTimeout(function() {
+            mounted: function () {
+                setTimeout(function () {
                     app.getUnitsInfo();
                 }, 0);
 
@@ -1055,7 +1059,7 @@
                 /**
                  * 绘制饼状图的方法
                  * **/
-                draw: function(id, normal, fault, unknown) {
+                draw: function (id, normal, fault, unknown) {
                     var ctx = document.getElementById(id);
                     var myPieChart = new Chart(ctx, {
                         type: 'doughnut',
@@ -1093,11 +1097,11 @@
                 /**
                  *  返回按钮方法 
                  * **/
-                back: function() {
+                back: function () {
                     window.location.href = '../serverList/VServerList.html?s=' + Math.random()
                 },
                 /* 获取服务器状态方法，根据返回值判断服务器状态，0为正常，-1为离线，-2为未知，其他为故障 */
-                getRackServerStatus: function() {
+                getRackServerStatus: function () {
                     var obj = document.getElementById('serverStatusImage');
                     if (this.serverInfos.status == 0) {
                         obj.style.backgroundColor = "limegreen";
@@ -1114,7 +1118,7 @@
                 /**
                  *  获取cpu状态方法，根据返回值判断cpu状态*
                  **/
-                getCpuStatus: function() {
+                getCpuStatus: function () {
                     var obj = document.getElementById('Cpu');
                     var cpuHealthState = [];
                     var normalCpus = [];
@@ -1144,7 +1148,7 @@
                     }
                 },
                 /* 获取内存状态 */
-                getMemoryStatus: function() {
+                getMemoryStatus: function () {
                     var obj = document.getElementById('Memory');
                     var MemoryHealthState = [];
                     var normalMemorys = [];
@@ -1175,7 +1179,7 @@
 
                 },
                 /* 获取硬盘状态 */
-                getDiskStatus: function() {
+                getDiskStatus: function () {
                     var obj = document.getElementById('disk');
                     var diskHealthState = [];
                     var normalDisks = [];
@@ -1205,7 +1209,7 @@
                     }
                 },
                 /* 获取风扇状态 */
-                getFanStatus: function() {
+                getFanStatus: function () {
                     var fanHealthState = [];
                     var normalFans = [];
                     var faultFans = [];
@@ -1234,7 +1238,7 @@
                     }
                 },
                 /* 获取电源状态 */
-                getPowerStatus: function() {
+                getPowerStatus: function () {
                     var powerHealthState = [];
                     var normalPSUS = [];
                     var faultPSUS = [];
@@ -1265,19 +1269,19 @@
 
 
                 /* 获取所有设备信息 */
-                getUnitsInfo: function() {
+                getUnitsInfo: function () {
                     var dn = localStorage.getItem('dn')
                     var ip = getCurrentEsight();
                     deviceInfo.getUnits({
                         dn: dn,
                         ip: ip,
-                    }, function(ret) {
+                    }, function (ret) {
                         if (ret.data.data.length > 0) {
                             var data = ret.data.data[0];
                             //电源在位信息判断
                             if (data.PSU) {
                                 for (var i = 0; i < data.PSU.length; i++) {
-                                    if (data.PSU[i].presentState == 1) {
+                                    if (data.PSU[i].presentState != '0') {
                                         app.deviceInfos.PSU.push(data.PSU[i])
                                     }
                                 }
@@ -1286,7 +1290,7 @@
                             //内存在位信息判断
                             if (data.Memory) {
                                 for (var i = 0; i < data.Memory.length; i++) {
-                                    if (data.Memory[i].presentState != 0 && data.Memory[i].presentState != 2 && data.Memory[i].presentState != -2) {
+                                    if (data.Memory[i].presentState != "0") {
                                         app.deviceInfos.Memory.push(data.Memory[i])
                                     }
                                 }
@@ -1294,7 +1298,7 @@
                             //cpu在位信息判断
                             if (data.CPU) {
                                 for (var i = 0; i < data.CPU.length; i++) {
-                                    if (data.CPU[i].presentState != 0 && data.CPU[i].presentState != 2 && data.CPU[i].presentState != -2) {
+                                    if (data.CPU[i].presentState != "0") {
                                         app.deviceInfos.CPU.push(data.CPU[i])
                                     }
                                 }
@@ -1302,7 +1306,7 @@
                             //硬盘在位信息判断
                             if (data.Disk) {
                                 for (var i = 0; i < data.Disk.length; i++) {
-                                    if (data.Disk[i].presentState == 1) {
+                                    if (data.Disk[i].presentState != '0') {
                                         app.deviceInfos.Disk.push(data.Disk[i])
                                     }
                                 }
@@ -1311,7 +1315,7 @@
                             //风扇在位信息判断
                             if (data.Fan) {
                                 for (var i = 0; i < data.Fan.length; i++) {
-                                    if (data.Fan[i].presentState == 1) {
+                                    if (data.Fan[i].presentState != '0') {
                                         app.deviceInfos.Fan.push(data.Fan[i])
                                     }
                                 }

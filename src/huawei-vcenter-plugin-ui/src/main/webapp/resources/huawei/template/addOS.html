@@ -25,32 +25,32 @@
         [v-cloak] {
             display: none;
         }
-        
+
         body {
             min-width: 985px;
         }
-        
+
         form input {
             max-width: 217px;
         }
-        
+
         .select input {
             width: 287px;
         }
-        
+
         .cdkey input {
             max-width: 80px;
         }
-        
+
         .margin-top-8 {
             margin-top: 8px;
         }
-        
+
         .el-form-item__error {
             z-index: 2;
             background-color: #FFFFFF;
         }
-        
+
         .el-dialog {
             min-width: 820px;
             max-width: 1300px;
@@ -72,7 +72,8 @@
         </template>
         <template>
             <div>
-                <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" v-bind:label-width="labelWidth" label-position="left" label-suffix=":">
+                <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" v-bind:label-width="labelWidth" label-position="left"
+                    label-suffix=":">
                     <el-form-item v-bind:label="i18ns.template.templateName" prop="name">
                         <el-input v-model="ruleForm.name" class="form-input"></el-input>
                     </el-form-item>
@@ -81,7 +82,8 @@
                     </el-form-item>
                     <el-form-item v-bind:label="i18ns.template.osType" prop="osType">
                         <el-select v-model="ruleForm.osType" v-on:change="osChange">
-                            <el-option v-for="item in ruleForm.options" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                            <el-option v-for="item in ruleForm.options" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                     <os-item-windows v-if="ruleForm.osType=='1'" v-bind:class_data="classData" v-bind:form_data="ruleForm" v-on:show-software="showDialog"></os-item-windows>
@@ -90,7 +92,7 @@
                     <os-item-centos v-else-if="ruleForm.osType=='4'" v-bind:class_data="classData" v-bind:form_data="ruleForm" v-on:show-software="showDialog"></os-item-centos>
                     <os-item-vmware1 v-else-if="ruleForm.osType=='5'" v-bind:class_data="classData" v-bind:form_data="ruleForm" v-on:show-software="showDialog"></os-item-vmware1>
                     <os-item-vmware2 v-else-if="ruleForm.osType=='6'" v-bind:class_data="classData" v-bind:form_data="ruleForm" v-on:show-software="showDialog"></os-item-vmware2>
-                      <os-item-ubuntu v-else-if="ruleForm.osType=='7'" v-bind:class_data="classData" v-bind:form_data="ruleForm" v-on:show-software="showDialog"></os-item-ubuntu>
+                    <os-item-ubuntu v-else-if="ruleForm.osType=='7'" v-bind:class_data="classData" v-bind:form_data="ruleForm" v-on:show-software="showDialog"></os-item-ubuntu>
                     <el-form-item label="eSight" prop="esight">
                         <el-checkbox-group v-model="ruleForm.esight">
                             <el-checkbox v-for="item in esightList" v-bind:label="item.name" v-bind:key="item.name" name="esight" disabled>{{item.label}}</el-checkbox>
@@ -106,7 +108,8 @@
 
 
         <el-dialog v-bind:title="i18ns.template.choiceSoftware" v-bind:visible.sync="dialogSoftwareVisible" size="small">
-            <el-table ref="softwareTable" v-bind:data="softwareData" v-loading="softwareLoading" element-loading-text="Loading" highlight-current-row border @row-dblclick="doubleRow">
+            <el-table ref="softwareTable" v-bind:data="softwareData" v-loading="softwareLoading" element-loading-text="Loading" highlight-current-row
+                border @row-dblclick="doubleRow">
                 <el-table-column width="55">
                     <template scope="scope">
                         <el-checkbox v-model="scope.row.isChecked" @change="softwareChange(scope.$index)"></el-checkbox>
@@ -119,7 +122,9 @@
             </el-table>
             <el-row class="pagination-row">
                 <el-col v-bind:span="24" style="text-align:left;">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes" v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" v-bind:total="total">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes"
+                        v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
+                        <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
                     </el-pagination>
                 </el-col>
             </el-row>
@@ -778,7 +783,7 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letter: ['D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:', 'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:', 'V:', 'W:', 'X:', 'Y:', 'Z:'], //盘符
@@ -790,7 +795,7 @@
                     focusStatus5: false,
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -803,10 +808,10 @@
                      * @param {any} el  指令所绑定的元素，可以用来直接操作 DOM 
                      * @param {any} binding  一个对象 value: 指令的绑定值
                      */
-                    inserted: function(el, binding) {
+                    inserted: function (el, binding) {
                         if (binding.value) {
                             if (el.childNodes.length > 0) {
-                                _.forEach(el.childNodes, function(element) {
+                                _.forEach(el.childNodes, function (element) {
                                     if (element.nodeName == "INPUT") {
                                         element.focus();
                                     }
@@ -821,10 +826,10 @@
                      * @param {any} el 指令所绑定的元素，可以用来直接操作 DOM 
                      * @param {any} binding 一个对象 value: 指令的绑定值
                      */
-                    update: function(el, binding) {
+                    update: function (el, binding) {
                         if (binding.value) {
                             if (el.childNodes.length > 0) {
-                                _.forEach(el.childNodes, function(element) {
+                                _.forEach(el.childNodes, function (element) {
                                     if (element.nodeName == "INPUT") {
                                         element.focus();
                                     }
@@ -842,7 +847,7 @@
                  * 
                  * @param {any} key 
                  */
-                changeUpper: function(key) {
+                changeUpper: function (key) {
                     this.form_data.CDKey['key' + key + ''] = this.form_data.CDKey['key' + key + ''].toUpperCase();
                     if (this.form_data.CDKey['key' + key + ''].length === 5) {
                         this.focusStatus1 = false;
@@ -857,7 +862,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 },
@@ -866,12 +871,12 @@
                  * 
                  * @returns 
                  */
-                addDisk: function() {
+                addDisk: function () {
                     //判断硬盘组是否超过18个
                     if (this.letterIndex === 18) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg1, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -892,7 +897,7 @@
                  * 删除一组硬盘组（从后向前删除）
                  * 
                  */
-                deleteDisk: function() {
+                deleteDisk: function () {
                     //硬盘组总长度
                     var diskLength = this.form_data.disk.length;
                     //如果硬盘组总长度大于1
@@ -921,12 +926,12 @@
                  * @param {any} rowIndex   硬盘组内索引
                  * @returns 
                  */
-                addDriver: function(diskIndex, rowIndex) {
+                addDriver: function (diskIndex, rowIndex) {
                     //判断硬盘组是否超过18个
                     if (this.letterIndex === 18) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg1, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -950,7 +955,7 @@
                  * @param {any} diskIndex 硬盘组索引
                  * @param {any} row 硬盘组数据
                  */
-                deleteDriver: function(diskIndex, row) {
+                deleteDriver: function (diskIndex, row) {
                     //得到要删除索引
                     var _index = _.findIndex(this.form_data.disk[diskIndex].partitioninfo, {
                         driver: row.driver
@@ -974,7 +979,7 @@
                     }
                     this.letterIndex -= 1;
                 },
-                cdkeyinput: function() {
+                cdkeyinput: function () {
 
                 },
                 /**
@@ -984,12 +989,12 @@
                  * @param {any} rowIndex 
                  * @param {any} val 
                  */
-                validateCapacity: function(index, rowIndex, val) {
+                validateCapacity: function (index, rowIndex, val) {
                     if (val) {
                         if (val.split('.').length > 2) {
                             var v = val.substring(0, val.length - 1);
 
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 app.ruleForm.disk[index].partitioninfo[rowIndex].capacity = v;
                             }, 0);
                         }
@@ -1005,13 +1010,13 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letterIndex: 0
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -1020,7 +1025,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 },
@@ -1029,12 +1034,12 @@
                  * 
                  * @returns 
                  */
-                addDisk: function() {
+                addDisk: function () {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1055,7 +1060,7 @@
                  * 删除一组硬盘组（从后向前删除）
                  * 
                  */
-                deleteDisk: function() {
+                deleteDisk: function () {
                     //硬盘组总长度
                     var diskLength = this.form_data.disk.length;
                     //如果硬盘组总长度大于1
@@ -1072,12 +1077,12 @@
                  * @param {any} rowIndex   硬盘组内索引
                  * @returns 
                  */
-                addDriver: function(diskIndex, rowIndex) {
+                addDriver: function (diskIndex, rowIndex) {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1103,7 +1108,7 @@
                  * @param {any} diskIndex 硬盘组索引
                  * @param {any} row 硬盘组数据
                  */
-                deleteDriver: function(diskIndex, row) {
+                deleteDriver: function (diskIndex, row) {
                     //得到要删除索引
                     var _index = _.findIndex(this.form_data.disk[diskIndex].partitioninfo, {
                         driver: row.driver
@@ -1114,7 +1119,7 @@
                     //盘符索引-1
                     this.letterIndex -= 1;
                 },
-                cdkeyinput: function() {
+                cdkeyinput: function () {
 
                 },
                 /**
@@ -1124,12 +1129,12 @@
                  * @param {any} rowIndex 
                  * @param {any} val 
                  */
-                validateCapacity: function(index, rowIndex, val) {
+                validateCapacity: function (index, rowIndex, val) {
                     if (val) {
                         if (val.split('.').length > 2) {
                             var v = val.substring(0, val.length - 1);
 
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 app.ruleForm.disk[index].partitioninfo[rowIndex].capacity = v;
                             }, 0);
                         }
@@ -1144,13 +1149,13 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letterIndex: 0
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -1159,7 +1164,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 },
@@ -1168,12 +1173,12 @@
                  * 
                  * @returns 
                  */
-                addDisk: function() {
+                addDisk: function () {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1194,7 +1199,7 @@
                  * 删除一组硬盘组（从后向前删除）
                  * 
                  */
-                deleteDisk: function() {
+                deleteDisk: function () {
                     //硬盘组总长度
                     var diskLength = this.form_data.disk.length;
                     //如果硬盘组总长度大于1
@@ -1211,12 +1216,12 @@
                  * @param {any} rowIndex   硬盘组内索引
                  * @returns 
                  */
-                addDriver: function(diskIndex, rowIndex) {
+                addDriver: function (diskIndex, rowIndex) {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1242,7 +1247,7 @@
                  * @param {any} diskIndex 硬盘组索引
                  * @param {any} row 硬盘组数据
                  */
-                deleteDriver: function(diskIndex, row) {
+                deleteDriver: function (diskIndex, row) {
                     //得到要删除索引
                     var _index = _.findIndex(this.form_data.disk[diskIndex].partitioninfo, {
                         driver: row.driver
@@ -1253,7 +1258,7 @@
                     //盘符索引-1
                     this.letterIndex -= 1;
                 },
-                cdkeyinput: function() {
+                cdkeyinput: function () {
 
                 },
                 /**
@@ -1262,12 +1267,12 @@
                  * @param {any} rowIndex 
                  * @param {any} val 
                  */
-                validateCapacity: function(index, rowIndex, val) {
+                validateCapacity: function (index, rowIndex, val) {
                     if (val) {
                         if (val.split('.').length > 2) {
                             var v = val.substring(0, val.length - 1);
 
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 app.ruleForm.disk[index].partitioninfo[rowIndex].capacity = v;
                             }, 0);
                         }
@@ -1282,13 +1287,13 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letterIndex: 0
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -1297,7 +1302,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 },
@@ -1306,12 +1311,12 @@
                  * 
                  * @returns 
                  */
-                addDisk: function() {
+                addDisk: function () {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1332,7 +1337,7 @@
                  * 删除一组硬盘组（从后向前删除）
                  * 
                  */
-                deleteDisk: function() {
+                deleteDisk: function () {
                     //硬盘组总长度
                     var diskLength = this.form_data.disk.length;
                     //如果硬盘组总长度大于1
@@ -1349,12 +1354,12 @@
                  * @param {any} rowIndex   硬盘组内索引
                  * @returns 
                  */
-                addDriver: function(diskIndex, rowIndex) {
+                addDriver: function (diskIndex, rowIndex) {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1380,7 +1385,7 @@
                  * @param {any} diskIndex 硬盘组索引
                  * @param {any} row 硬盘组数据
                  */
-                deleteDriver: function(diskIndex, row) {
+                deleteDriver: function (diskIndex, row) {
                     //得到要删除索引
                     var _index = _.findIndex(this.form_data.disk[diskIndex].partitioninfo, {
                         driver: row.driver
@@ -1391,7 +1396,7 @@
                     //盘符索引-1
                     this.letterIndex -= 1;
                 },
-                cdkeyinput: function() {
+                cdkeyinput: function () {
 
                 },
                 /**
@@ -1401,12 +1406,12 @@
                  * @param {any} rowIndex 
                  * @param {any} val 
                  */
-                validateCapacity: function(index, rowIndex, val) {
+                validateCapacity: function (index, rowIndex, val) {
                     if (val) {
                         if (val.split('.').length > 2) {
                             var v = val.substring(0, val.length - 1);
 
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 app.ruleForm.disk[index].partitioninfo[rowIndex].capacity = v;
                             }, 0);
                         }
@@ -1421,13 +1426,13 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letterIndex: 0
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -1436,7 +1441,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 }
@@ -1448,13 +1453,13 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letterIndex: 0
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -1467,10 +1472,10 @@
                      * @param {any} el  指令所绑定的元素，可以用来直接操作 DOM 
                      * @param {any} binding  一个对象 value: 指令的绑定值
                      */
-                    inserted: function(el, binding) {
+                    inserted: function (el, binding) {
                         if (binding.value) {
                             if (el.childNodes.length > 0) {
-                                _.forEach(el.childNodes, function(element) {
+                                _.forEach(el.childNodes, function (element) {
                                     if (element.nodeName == "INPUT") {
                                         element.focus();
                                     }
@@ -1485,10 +1490,10 @@
                      * @param {any} el 指令所绑定的元素，可以用来直接操作 DOM 
                      * @param {any} binding 一个对象 value: 指令的绑定值
                      */
-                    update: function(el, binding) {
+                    update: function (el, binding) {
                         if (binding.value) {
                             if (el.childNodes.length > 0) {
-                                _.forEach(el.childNodes, function(element) {
+                                _.forEach(el.childNodes, function (element) {
                                     if (element.nodeName == "INPUT") {
                                         element.focus();
                                     }
@@ -1506,7 +1511,7 @@
                  * 
                  * @param {any} key 
                  */
-                changeUpper: function(key) {
+                changeUpper: function (key) {
                     this.form_data.CDKey['key' + key + ''] = this.form_data.CDKey['key' + key + ''].toUpperCase();
                     if (this.form_data.CDKey['key' + key + ''].length === 5) {
                         this.focusStatus1 = false;
@@ -1521,7 +1526,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 },
@@ -1533,13 +1538,13 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     letterIndex: 0
                 };
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
             },
@@ -1548,7 +1553,7 @@
                  * 弹出选择选软件源窗口
                  * 
                  */
-                showSoftware: function() {
+                showSoftware: function () {
                     //触发父组件弹出选择选软件源窗口
                     this.$emit('show-software');
                 },
@@ -1557,12 +1562,12 @@
                  * 
                  * @returns 
                  */
-                addDisk: function() {
+                addDisk: function () {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1583,7 +1588,7 @@
                  * 删除一组硬盘组（从后向前删除）
                  * 
                  */
-                deleteDisk: function() {
+                deleteDisk: function () {
                     //硬盘组总长度
                     var diskLength = this.form_data.disk.length;
                     //如果硬盘组总长度大于1
@@ -1600,12 +1605,12 @@
                  * @param {any} rowIndex   硬盘组内索引
                  * @returns 
                  */
-                addDriver: function(diskIndex, rowIndex) {
+                addDriver: function (diskIndex, rowIndex) {
                     //判断硬盘组是否超过12个
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function() {}
+                            callback: function () { }
                         });
                         return;
                     }
@@ -1631,7 +1636,7 @@
                  * @param {any} diskIndex 硬盘组索引
                  * @param {any} row 硬盘组数据
                  */
-                deleteDriver: function(diskIndex, row) {
+                deleteDriver: function (diskIndex, row) {
                     //得到要删除索引
                     var _index = _.findIndex(this.form_data.disk[diskIndex].partitioninfo, {
                         driver: row.driver
@@ -1642,7 +1647,7 @@
                     //盘符索引-1
                     this.letterIndex -= 1;
                 },
-                cdkeyinput: function() {
+                cdkeyinput: function () {
 
                 },
                 /**
@@ -1652,11 +1657,11 @@
                  * @param {any} rowIndex 
                  * @param {any} val 
                  */
-                validateCapacity: function(index, rowIndex, val) {
+                validateCapacity: function (index, rowIndex, val) {
                     if (val) {
                         if (val.split('.').length > 2) {
                             var v = val.substring(0, val.length - 1);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 app.ruleForm.disk[index].partitioninfo[rowIndex].capacity = v;
                             }, 0);
                         }
@@ -1735,7 +1740,7 @@
                 },
                 rules: {
                     desc: {
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (/[\u4E00-\u9FA5\uF900-\uFA2D]/.test(value)) {
                                     callback(new Error(app.i18ns.template.templateDescErrorMsg));
@@ -1751,7 +1756,7 @@
                         trigger: 'change'
                     },
                     CDKey: {
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             var key1 = value.key1;
                             var key2 = value.key2;
                             var key3 = value.key3;
@@ -1769,7 +1774,7 @@
                     },
                     name: {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (!/^[a-zA-Z0-9_\-\u4e00-\u9fa5]{6,32}$/.test(value)) {
                                     callback(new Error(app.i18ns.template.templateNameErrorMsg));
@@ -1789,7 +1794,7 @@
                     },
                     passWord: {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (!value) {
                                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
                             }
@@ -1825,7 +1830,7 @@
                     },
                     checkPassWord: {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value === '') {
                                 callback(new Error(app.i18ns.common.requiredErrorMsg));
                             } else if (value.length < 8 || value.length > 32) {
@@ -1864,7 +1869,7 @@
                 pageSize: 10,
                 total: 0
             },
-            created: function() {
+            created: function () {
                 //国际化信息
                 this.i18ns = getIn18();
                 //根据中英文设置labelWidth
@@ -1885,7 +1890,7 @@
                 //设置当前esight选中
                 this.ruleForm.esight.push(getCurrentEsight());
                 var that = this;
-                getEsightList(function(ret) {
+                getEsightList(function (ret) {
                     if (ret.code === '0') {
                         var data = ret.data;
                         for (var i = 0; i < data.length; i++) {
@@ -1912,7 +1917,7 @@
                  * 
                  * @param {any} val 
                  */
-                templateChange: function(val) {
+                templateChange: function (val) {
                     select_templateChange(val);
                 },
                 /**
@@ -1920,7 +1925,7 @@
                  * 
                  * @param {any} val 
                  */
-                osChange: function(val) {
+                osChange: function (val) {
                     this.ruleForm.software = '';
                     this.ruleForm.CDKey = {
                         key1: '',
@@ -2006,12 +2011,12 @@
                             this.ruleForm.softSourceVersion = '';
                             break;
                         case '5':
-                            this.ruleForm.osDeployPolicyOption = _.filter(getOSDeployPolicys(), function(n) {
+                            this.ruleForm.osDeployPolicyOption = _.filter(getOSDeployPolicys(), function (n) {
                                 return n.value == 1;
                             });
                             break;
                         case '6':
-                            this.ruleForm.osDeployPolicyOption = _.filter(getOSDeployPolicys(), function(n) {
+                            this.ruleForm.osDeployPolicyOption = _.filter(getOSDeployPolicys(), function (n) {
                                 return n.value < 2;
                             });
                             break;
@@ -2026,9 +2031,9 @@
                  * 
                  * @param {any} formName 
                  */
-                submitForm: function(formName) {
+                submitForm: function (formName) {
                     //表单验证
-                    this.$refs[formName].validate(function(valid) {
+                    this.$refs[formName].validate(function (valid) {
                         if (valid) {
                             //验证硬盘组
                             if (app.validateDisk()) {
@@ -2079,11 +2084,11 @@
                                     }
                                 };
                                 //调用api提交
-                                templateManage.addOneOS(param, function(ret) {
+                                templateManage.addOneOS(param, function (ret) {
                                     app.fullscreenLoading = false;
                                     //成功
                                     if (ret.code === '0') {
-                                        app.alertMsg(app.i18ns.template.addSuccessMsg, function() {
+                                        app.alertMsg(app.i18ns.template.addSuccessMsg, function () {
                                             window.location.href = 'List.html?s=' + Math.random();
                                         })
                                     } else {
@@ -2103,14 +2108,14 @@
                  * 
                  * @param {any} formName 
                  */
-                resetForm: function(formName) {
+                resetForm: function (formName) {
                     goBack('List.html');
                 },
                 /**
                  * 弹出选择软件源窗口
                  * 
                  */
-                showDialog: function() {
+                showDialog: function () {
                     this.dialogSoftwareVisible = true;
                     this.softwareLoading = true;
                     //绑定软件源数据
@@ -2121,7 +2126,7 @@
                  * 
                  * @param {any} val 
                  */
-                handleSizeChange: function(val) {
+                handleSizeChange: function (val) {
                     this.pageSize = val;
                     //绑定软件源数据
                     this.bindSoftwareList(this.currentPage, this.pageSize);
@@ -2131,7 +2136,7 @@
                  * 
                  * @param {any} val 
                  */
-                handleCurrentChange: function(val) {
+                handleCurrentChange: function (val) {
                     this.currentPage = val;
                     //绑定软件源数据
                     this.bindSoftwareList(this.currentPage, this.pageSize);
@@ -2142,7 +2147,7 @@
                  * @param {any} pageIndex 
                  * @param {any} pageSize 
                  */
-                bindSoftwareList: function(pageIndex, pageSize) {
+                bindSoftwareList: function (pageIndex, pageSize) {
                     this.softwareData = [];
                     templateManage.getSoftwareList({
                         esight: getCurrentEsight(),
@@ -2150,7 +2155,7 @@
                             pageNo: pageIndex,
                             pageSize: pageSize
                         }
-                    }, function(ret) {
+                    }, function (ret) {
                         app.total = ret.data.totalNum;
                         if (ret.code === '0') {
                             var data = ret.data.data;
@@ -2173,7 +2178,7 @@
                  * 
                  * @param {any} index 
                  */
-                softwareChange: function(index) {
+                softwareChange: function (index) {
                     var lg = this.softwareData.length;
                     for (var i = 0; i < lg; i++) {
                         if (index != i) {
@@ -2186,7 +2191,7 @@
                  * 
                  * @returns 
                  */
-                choiceSoftware: function() {
+                choiceSoftware: function () {
                     var index = _.findIndex(this.softwareData, {
                         isChecked: true
                     });
@@ -2202,7 +2207,7 @@
                  * 
                  * @param {any} row 
                  */
-                doubleRow: function(row) {
+                doubleRow: function (row) {
                     var index = _.findIndex(this.softwareData, row);
                     var lg = this.softwareData.length;
                     for (var i = 0; i < lg; i++) {
@@ -2221,10 +2226,10 @@
                  * @param {any} msg 
                  * @param {any} callback 
                  */
-                alertMsg: function(msg, callback) {
+                alertMsg: function (msg, callback) {
                     this.$alert(msg, this.i18ns.common.prompt, {
                         confirmButtonText: this.i18ns.common.confirm,
-                        callback: function() {
+                        callback: function () {
                             callback && callback()
                         }
                     });
@@ -2234,7 +2239,7 @@
                  * 
                  * @returns 
                  */
-                validateDisk: function() {
+                validateDisk: function () {
                     //windows os
                     if (app.ruleForm.osType == 1) {
                         //循环硬盘组

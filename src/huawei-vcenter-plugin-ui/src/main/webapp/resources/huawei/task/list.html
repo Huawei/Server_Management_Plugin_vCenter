@@ -24,11 +24,11 @@
         [v-cloak] {
             display: none;
         }
-        
+
         body {
             min-width: 900px;
         }
-        
+
         .el-tooltip__popper.is-dark {
             background: #fbfdff;
             color: #1f2d3d;
@@ -36,7 +36,7 @@
             word-wrap: break-word;
             border: 1px solid rgb(31, 45, 61);
         }
-        
+
         .el-dialog {
             min-width: 830px;
             max-width: 1000px;
@@ -80,7 +80,8 @@
             </el-form-item>
         </el-form>
         <div>
-            <el-table v-bind:data="listData" @sort-change="sortChange" border style="width: 100%" v-loading="fullscreenLoading" element-loading-text="Loading" @selection-change="handleSelectionChange">
+            <el-table v-bind:data="listData" @sort-change="sortChange" border style="width: 100%" v-loading="fullscreenLoading" element-loading-text="Loading"
+                @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" :selectable="selectable">
                 </el-table-column>
                 <el-table-column prop="softwareSourceName" sortable v-bind:label="i18ns.task.taskName">
@@ -91,8 +92,8 @@
                 </el-table-column>
                 <el-table-column sortable v-bind:label="i18ns.task.taskStatus">
                     <template scope="scope">
-                                <el-button type="text" size="small" v-on:click="showDetail(scope.row.deviceDetails,scope.$index)">{{scope.row.syncStatusText}}</el-button>
-                        </template>
+                        <el-button type="text" size="small" v-on:click="showDetail(scope.row.deviceDetails,scope.$index)">{{scope.row.syncStatusText}}</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="createTime" sortable v-bind:label="i18ns.task.createTime">
                 </el-table-column>
@@ -107,7 +108,9 @@
         </div>
         <el-row class="pagination-row">
             <el-col v-bind:span="24">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo" :page-sizes="pageSizes"
+                    :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper,slot" :total="totalCount">
+                    <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
                 </el-pagination>
             </el-col>
         </el-row>
@@ -118,7 +121,7 @@
                 <el-table-column prop="dn" v-bind:label="i18ns.task.dn" width="130"></el-table-column>
                 <el-table-column prop="deviceResult" v-bind:label="i18ns.task.deviceResult" width="130">
                     <template scope="scope">
-                                {{getDeviceResult(scope.row.deviceResult)}}
+                        {{getDeviceResult(scope.row.deviceResult)}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="deviceProgress" v-bind:label="i18ns.task.deviceProgress" width="150">
@@ -128,15 +131,15 @@
                 </el-table-column>
                 <el-table-column v-bind:label="i18ns.task.errorDetail" min-width="100" :show-overflow-tooltip="true">
                     <template scope="scope">
-                                <el-popover trigger="hover" placement="top">
-                                        <div v-for="item in getErrorDetailTxt(scope.row.errorCode).split('</br>')">
-                                            <span>{{item}}</span>
-                                        </div>
-                                  <div slot="reference" class="name-wrapper">
-                                    <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ getErrorDetailTxt1(scope.row.errorCode) }}</div>
-                                  </div>
-                                </el-popover>
-                              </template>
+                        <el-popover trigger="hover" placement="top">
+                            <div v-for="item in getErrorDetailTxt(scope.row.errorCode).split('</br>')">
+                                <span>{{item}}</span>
+                            </div>
+                            <div slot="reference" class="name-wrapper">
+                                <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ getErrorDetailTxt1(scope.row.errorCode) }}</div>
+                            </div>
+                        </el-popover>
+                    </template>
                 </el-table-column>
             </el-table>
         </el-dialog>
@@ -169,7 +172,7 @@
                 orderDesc: ""
             },
             multipleSelection: [],
-            selectable: function(row, index) {
+            selectable: function (row, index) {
                 if (row.syncStatus == 'CREATED') {
                     return false;
                 }
@@ -177,14 +180,14 @@
             }
         },
         computed: {
-            curEsightText: function() {
+            curEsightText: function () {
                 var cur = this.esights[this.esightIndex];
                 if (cur) {
                     return cur.label;
                 }
                 return "";
             },
-            queryParams: function() {
+            queryParams: function () {
                 return {
                     esight: this.curEsightHostIp,
                     param: _.assign({}, this.param, {
@@ -194,366 +197,366 @@
                 }
             }
         },
-        created: function() {
+        created: function () {
             this.i18ns = getIn18();
             var _pageSize = localStorage.getItem("taskListPageSize");
             if (_pageSize) {
                 this.pageSize = parseInt(_pageSize);
             };
         },
-        mounted: function() {
-            setTimeout(function() {
-                getEsightList(function(ret) {
+        mounted: function () {
+            setTimeout(function () {
+                getEsightList(function (ret) {
                     app.bindEsight(ret);
                 })
             }, 0);
         },
         methods: _.assign({
-                /**
-                 * 搜索功能
-                 * 
-                 */
-                onSearch: function() {
-                    this.pageNo = 1;
-                    this.getListData();
-                },
-                /**
-                 * 全选事件
-                 * 
-                 * @param {any} val 
-                 */
-                handleSelectionChange: function(val) {
-                    console.log(val);
-                    this.multipleSelection = val;
-                },
-                /**
-                 * 批量删除事件
-                 * 
-                 * @returns 
-                 */
-                batchDelete: function() {
-                    if (this.multipleSelection.length === 0) {
-                        return false;
-                    }
-                    this.$confirm(app.i18ns.common.confirmDelete1, app.i18ns.common.prompt, {
-                        confirmButtonText: app.i18ns.common.confirm,
-                        cancelButtonText: app.i18ns.common.cancel,
-                        closeOnClickModal: false,
-                        type: 'warning'
-                    }).then(function() {
-                        app.fullscreenLoading = true;
-                        var k = app.multipleSelection.length;
-                        var errorInfo = []; //错误信息
-                        for (var i = 0; i < app.multipleSelection.length; i++) {
-                            (function(id, taskName) {
-                                manager.delete({
-                                        esight: app.curEsightHostIp,
-                                        param: {
-                                            taskId: id
-                                        }
-                                    },
-                                    function(ret) {
-                                        k--;
-                                        if (ret.code != 0) {
-                                            errorInfo.push({
-                                                msg: getErrorMsg(ret.code),
-                                                name: taskName
-                                            });
-                                        }
-                                    });
-                            })(app.multipleSelection[i].id, app.multipleSelection[i].taskName)
-                        }
-                        var mysetInterval = setInterval(function() {
-                            if (k == 0) {
-                                app.fullscreenLoading = false;
-                                app.getListData();
-                                if (errorInfo.length > 0) {
-                                    var h = app.$createElement;
-                                    var nodes = [];
-                                    nodes.push(h('span', {
-                                        type: "circle",
-                                        style: {
-                                            'font-size': '14px',
-                                            'margin-top': '-20px',
-                                            'display': 'block',
-                                            'margin-bottom': '5px'
-                                        },
-                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
-                                    for (var i = 0; i < errorInfo.length; i++) {
-                                        nodes.push(h('tr', null, [
-                                            h('td', {
-                                                type: "circle"
-                                            }, errorInfo[i].name + ':'),
-                                            h('td', {
-                                                type: "circle"
-                                            }, errorInfo[i].msg)
-                                        ]));
-
-                                    }
-                                    var context = h('ul', null, nodes);
-                                    app.$msgbox({
-                                        title: app.i18ns.common.prompt,
-                                        message: context,
-                                        confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function() {});
-                                } else {
-                                    alertMsg(app.i18ns.template.delSuccessMsg);
-                                }
-                                window.clearInterval(mysetInterval);
-                            }
-                        }, 100)
-                    }).catch(function() {});
-                },
-                /**
-                 * 重置搜索输入数据
-                 * 
-                 */
-                resetSearch: function() {
-                    this.param.taskSourceName = '';
-                    this.param.taskStatus = '';
-                },
-                /**
-                 * 获取任务列表 回调函数
-                 * 
-                 * @param {any} res 
-                 */
-                bindList: function(res) {
-                    var data = res.data;
-                    if (res.code == "0") {
-                        var _listData = [];
-                        this.totalCount = data.totalCount;
-                        _.forEach(data.data, function(x) {
-                            var status = _.find(app.taskStatusList, function(y) {
-                                return y.value == x.syncStatus
-                            });
-                            x.syncStatusText = status && status.label;
-                            x.taskProgress = x.taskProgress + '%';
-                            _listData.push(x);
-                        });
-                        this.listData = _listData;
-                    } else {
-                        this.listData = [];
-                    }
-                    app.loading = false; //隐藏loading提示
-                },
-                /**
-                 * 获取任务列表
-                 * 
-                 */
-                getListData: function() {
-                    if (!this.curEsightHostIp) {
-                        var msg = getErrorMsg('-90002');
-                        alertMsg(msg);
-                    }
-                    console.log(this.queryParams);
-                    manager.getList(this.queryParams, this.bindList);
-                },
-                /**
-                 * 刷新
-                 * 
-                 */
-                refresh: function() {
-                    this.getListData();
-                },
-                /**
-                 * 获取eSight列表 回调函数
-                 * 
-                 * @param {any} ret 
-                 */
-                bindEsight: function(ret) {
-                    var that = this;
-                    if (ret.code == '0') {
-                        _.forEach(ret.data, function(x) {
-                            app.esights.push({
-                                label: x.aliasName || x.hostIp,
-                                hostIp: x.hostIp
-                            });
-                        })
-                        var tempEsight = getCurrentEsight();
-                        if (tempEsight) {
-                            that.curEsightHostIp = tempEsight;
-                            that.esightIndex = _.findIndex(that.esights, function(x) {
-                                return x.hostIp == tempEsight
-                            })
-                            if (!that.esightIndex) {
-                                setCurrentEsight(that.esights[0].hostIp)
-                            }
-                        } else {
-                            that.curEsightHostIp = that.esights[0].hostIp;
-                            setCurrentEsight(that.esights[0].hostIp)
-                        }
-                        that.getListData();
-                    } else {
-                        var msg = getErrorMsg(ret.code);
-                        alertMsg(msg);
-                    }
-                },
-                /**
-                 * 跳转到创建任务页面
-                 * 
-                 */
-                redirectCreate: function() {
-                    if (!this.curEsightHostIp) {
-                        var msg = getErrorMsg('-90002');
-                        alertMsg(msg);
-                    }
-                    location.href = 'create.html';
-                },
-                /**
-                 * eSight下拉框 切换事件
-                 * 
-                 * @param {any} hostIp 
-                 */
-                esightChange: function(hostIp) {
-                    this.param.taskSourceName = "";
-                    this.param.taskStatus = "";
-                    this.esightIndex = _.findIndex(this.esights, function(x) {
-                        return x.hostIp == hostIp
-                    });
-                    this.curEsightHostIp = hostIp;
-                    setCurrentEsight(hostIp)
-                    this.getListData();
-                },
-                /**
-                 * 删除上传完成的任务
-                 * 
-                 * @param {any} index 
-                 * @param {any} row 
-                 * @returns 
-                 */
-                confirmDelete: function(index, row) {
-                    if (row.syncStatus == "CREATED") { //运行中不能删除
-                        return;
-                    }
-                    confirm(app.i18ns.task.confirmDelete)
-                        .then(function() {
-                            app.fullscreenLoading = true;
+            /**
+             * 搜索功能
+             * 
+             */
+            onSearch: function () {
+                this.pageNo = 1;
+                this.getListData();
+            },
+            /**
+             * 全选事件
+             * 
+             * @param {any} val 
+             */
+            handleSelectionChange: function (val) {
+                console.log(val);
+                this.multipleSelection = val;
+            },
+            /**
+             * 批量删除事件
+             * 
+             * @returns 
+             */
+            batchDelete: function () {
+                if (this.multipleSelection.length === 0) {
+                    return false;
+                }
+                this.$confirm(app.i18ns.common.confirmDelete1, app.i18ns.common.prompt, {
+                    confirmButtonText: app.i18ns.common.confirm,
+                    cancelButtonText: app.i18ns.common.cancel,
+                    closeOnClickModal: false,
+                    type: 'warning'
+                }).then(function () {
+                    app.fullscreenLoading = true;
+                    var k = app.multipleSelection.length;
+                    var errorInfo = []; //错误信息
+                    for (var i = 0; i < app.multipleSelection.length; i++) {
+                        (function (id, taskName) {
                             manager.delete({
                                 esight: app.curEsightHostIp,
                                 param: {
-                                    taskId: row.id
+                                    taskId: id
                                 }
-                            }, function(ret) {
-                                alertMsg(app.i18ns.task.delSuccessMsg);
-                                app.getListData(); //删除成功刷新当前页
-                            })
-                        }).catch(console.log)
-                },
-                /**
-                 * 列表排序功能
-                 * 
-                 * @param {any} info 
-                 */
-                sortChange: function(info) {
-                    if (info.prop == 'syncStatusText') {
-                        this.param.order = 'syncStatus';
-                    } else {
-                        this.param.order = info.prop;
-                    }
-                    this.param.pageNo = 1;
-                    this.param.orderDesc = info.order == 'descending' ? true : false;
-                    this.getListData();
-                },
-                /**
-                 * 显示部署设备的细节
-                 * 
-                 * @param {any} data 
-                 */
-                showDetail: function(data, index) {
-                    this.Loading1 = true;
-                    this.deviceDetailsData = [];
-                    if (data) {
-                        var k = 0;
-                        var l = data.length;
-                        var errorInfo = [];
-                        for (var i = 0; i < data.length; i++) {
-                            (function(agr, _index, dn) {
-                                manager.getServerInfo({
-                                    dn: encodeURI(dn),
-                                    ip: app.curEsightHostIp
-                                }, function(ret) {
-                                    k++;
-                                    if (ret.code == '0') {
-                                        if (ret.data.data.length > 0) {
-                                            var _data = ret.data.data[0];
-                                            _.assign(app.listData[_index].deviceDetails[agr], {
-                                                name: _data.name
-                                            })
-                                        }
-                                    } else {
+                            },
+                                function (ret) {
+                                    k--;
+                                    if (ret.code != 0) {
                                         errorInfo.push({
                                             msg: getErrorMsg(ret.code),
-                                            dn: data[agr].dn
+                                            name: taskName
                                         });
                                     }
                                 });
-                            })(i, index, data[i].dn)
-                        }
-                        var mysetInterval = setInterval(function() {
-                            if (k == l) {
-                                app.Loading1 = false;
-                                app.deviceDetailsData = app.listData[index].deviceDetails;
-                                if (errorInfo.length > 0) {
-                                    var h = app.$createElement;
-                                    var nodes = [];
-                                    for (var i = 0; i < errorInfo.length; i++) {
-                                        nodes.push(h('li', {
+                        })(app.multipleSelection[i].id, app.multipleSelection[i].taskName)
+                    }
+                    var mysetInterval = setInterval(function () {
+                        if (k == 0) {
+                            app.fullscreenLoading = false;
+                            app.getListData();
+                            if (errorInfo.length > 0) {
+                                var h = app.$createElement;
+                                var nodes = [];
+                                nodes.push(h('span', {
+                                    type: "circle",
+                                    style: {
+                                        'font-size': '14px',
+                                        'margin-top': '-20px',
+                                        'display': 'block',
+                                        'margin-bottom': '5px'
+                                    },
+                                }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                for (var i = 0; i < errorInfo.length; i++) {
+                                    nodes.push(h('tr', null, [
+                                        h('td', {
                                             type: "circle"
-                                        }, errorInfo[i].dn + ':' + errorInfo[i].msg));
-                                    }
-                                    var context = h('ul', null, nodes);
-                                    app.$msgbox({
-                                        title: app.i18ns.task.getDeviceNameErrorTips,
-                                        message: context,
-                                        confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function() {});
-                                }
-                                window.clearInterval(mysetInterval);
-                            }
-                        }, 100)
-                    }
+                                        }, errorInfo[i].name + ':'),
+                                        h('td', {
+                                            type: "circle"
+                                        }, errorInfo[i].msg)
+                                    ]));
 
-                    this.dialogVisible = true;
-                },
-                /**
-                 * 转义部署状态
-                 * 
-                 * @param {any} val 
-                 */
-                getDeviceResult: function(val) {
-                    var lang = localStorage.getItem('lang');
-                    if (lang) {
-                        if (lang == 'en') {
-                            return {
-                                Success: 'Success',
-                                Failed: 'Failed',
-                                Running: 'Running'
-                            }[val] || 'Running';
+                                }
+                                var context = h('ul', null, nodes);
+                                app.$msgbox({
+                                    title: app.i18ns.common.prompt,
+                                    message: context,
+                                    confirmButtonText: app.i18ns.common.confirm,
+                                }).then(function () { });
+                            } else {
+                                alertMsg(app.i18ns.template.delSuccessMsg);
+                            }
+                            window.clearInterval(mysetInterval);
                         }
+                    }, 100)
+                }).catch(function () { });
+            },
+            /**
+             * 重置搜索输入数据
+             * 
+             */
+            resetSearch: function () {
+                this.param.taskSourceName = '';
+                this.param.taskStatus = '';
+            },
+            /**
+             * 获取任务列表 回调函数
+             * 
+             * @param {any} res 
+             */
+            bindList: function (res) {
+                var data = res.data;
+                if (res.code == "0") {
+                    var _listData = [];
+                    this.totalCount = data.totalCount;
+                    _.forEach(data.data, function (x) {
+                        var status = _.find(app.taskStatusList, function (y) {
+                            return y.value == x.syncStatus
+                        });
+                        x.syncStatusText = status && status.label;
+                        x.taskProgress = x.taskProgress + '%';
+                        _listData.push(x);
+                    });
+                    this.listData = _listData;
+                } else {
+                    this.listData = [];
+                }
+                app.loading = false; //隐藏loading提示
+            },
+            /**
+             * 获取任务列表
+             * 
+             */
+            getListData: function () {
+                if (!this.curEsightHostIp) {
+                    var msg = getErrorMsg('-90002');
+                    alertMsg(msg);
+                }
+                console.log(this.queryParams);
+                manager.getList(this.queryParams, this.bindList);
+            },
+            /**
+             * 刷新
+             * 
+             */
+            refresh: function () {
+                this.getListData();
+            },
+            /**
+             * 获取eSight列表 回调函数
+             * 
+             * @param {any} ret 
+             */
+            bindEsight: function (ret) {
+                var that = this;
+                if (ret.code == '0') {
+                    _.forEach(ret.data, function (x) {
+                        app.esights.push({
+                            label: x.aliasName || x.hostIp,
+                            hostIp: x.hostIp
+                        });
+                    })
+                    var tempEsight = getCurrentEsight();
+                    if (tempEsight) {
+                        that.curEsightHostIp = tempEsight;
+                        that.esightIndex = _.findIndex(that.esights, function (x) {
+                            return x.hostIp == tempEsight
+                        })
+                        if (!that.esightIndex) {
+                            setCurrentEsight(that.esights[0].hostIp)
+                        }
+                    } else {
+                        that.curEsightHostIp = that.esights[0].hostIp;
+                        setCurrentEsight(that.esights[0].hostIp)
                     }
-                    return {
-                        Success: '成功',
-                        Failed: '失败',
-                        Running: '运行中'
-                    }[val] || '运行中';
-                },
-                /**
-                 * 获取错误码对应的提示
-                 * 
-                 * @param {any} v 
-                 */
-                getErrorDetailTxt: function(v) {
-                    return getErrorMsg(v);
-                },
-                /**
-                 * 获取错误码对应的提示
-                 * 
-                 * @param {any} v 
-                 */
-                getErrorDetailTxt1: function(v) {
-                    return getErrorMsg(v).replace(/<\/br>/g, '');
+                    that.getListData();
+                } else {
+                    var msg = getErrorMsg(ret.code);
+                    alertMsg(msg);
                 }
             },
+            /**
+             * 跳转到创建任务页面
+             * 
+             */
+            redirectCreate: function () {
+                if (!this.curEsightHostIp) {
+                    var msg = getErrorMsg('-90002');
+                    alertMsg(msg);
+                }
+                location.href = 'create.html';
+            },
+            /**
+             * eSight下拉框 切换事件
+             * 
+             * @param {any} hostIp 
+             */
+            esightChange: function (hostIp) {
+                this.param.taskSourceName = "";
+                this.param.taskStatus = "";
+                this.esightIndex = _.findIndex(this.esights, function (x) {
+                    return x.hostIp == hostIp
+                });
+                this.curEsightHostIp = hostIp;
+                setCurrentEsight(hostIp)
+                this.getListData();
+            },
+            /**
+             * 删除上传完成的任务
+             * 
+             * @param {any} index 
+             * @param {any} row 
+             * @returns 
+             */
+            confirmDelete: function (index, row) {
+                if (row.syncStatus == "CREATED") { //运行中不能删除
+                    return;
+                }
+                confirm(app.i18ns.task.confirmDelete)
+                    .then(function () {
+                        app.fullscreenLoading = true;
+                        manager.delete({
+                            esight: app.curEsightHostIp,
+                            param: {
+                                taskId: row.id
+                            }
+                        }, function (ret) {
+                            alertMsg(app.i18ns.task.delSuccessMsg);
+                            app.getListData(); //删除成功刷新当前页
+                        })
+                    }).catch(console.log)
+            },
+            /**
+             * 列表排序功能
+             * 
+             * @param {any} info 
+             */
+            sortChange: function (info) {
+                if (info.prop == 'syncStatusText') {
+                    this.param.order = 'syncStatus';
+                } else {
+                    this.param.order = info.prop;
+                }
+                this.param.pageNo = 1;
+                this.param.orderDesc = info.order == 'descending' ? true : false;
+                this.getListData();
+            },
+            /**
+             * 显示部署设备的细节
+             * 
+             * @param {any} data 
+             */
+            showDetail: function (data, index) {
+                this.Loading1 = true;
+                this.deviceDetailsData = [];
+                if (data) {
+                    var k = 0;
+                    var l = data.length;
+                    var errorInfo = [];
+                    for (var i = 0; i < data.length; i++) {
+                        (function (agr, _index, dn) {
+                            manager.getServerInfo({
+                                dn: encodeURI(dn),
+                                ip: app.curEsightHostIp
+                            }, function (ret) {
+                                k++;
+                                if (ret.code == '0') {
+                                    if (ret.data.data.length > 0) {
+                                        var _data = ret.data.data[0];
+                                        _.assign(app.listData[_index].deviceDetails[agr], {
+                                            name: _data.name
+                                        })
+                                    }
+                                } else {
+                                    errorInfo.push({
+                                        msg: getErrorMsg(ret.code),
+                                        dn: data[agr].dn
+                                    });
+                                }
+                            });
+                        })(i, index, data[i].dn)
+                    }
+                    var mysetInterval = setInterval(function () {
+                        if (k == l) {
+                            app.Loading1 = false;
+                            app.deviceDetailsData = app.listData[index].deviceDetails;
+                            if (errorInfo.length > 0) {
+                                var h = app.$createElement;
+                                var nodes = [];
+                                for (var i = 0; i < errorInfo.length; i++) {
+                                    nodes.push(h('li', {
+                                        type: "circle"
+                                    }, errorInfo[i].dn + ':' + errorInfo[i].msg));
+                                }
+                                var context = h('ul', null, nodes);
+                                app.$msgbox({
+                                    title: app.i18ns.task.getDeviceNameErrorTips,
+                                    message: context,
+                                    confirmButtonText: app.i18ns.common.confirm,
+                                }).then(function () { });
+                            }
+                            window.clearInterval(mysetInterval);
+                        }
+                    }, 100)
+                }
+
+                this.dialogVisible = true;
+            },
+            /**
+             * 转义部署状态
+             * 
+             * @param {any} val 
+             */
+            getDeviceResult: function (val) {
+                var lang = localStorage.getItem('lang');
+                if (lang) {
+                    if (lang == 'en') {
+                        return {
+                            Success: 'Success',
+                            Failed: 'Failed',
+                            Running: 'Running'
+                        }[val] || 'Running';
+                    }
+                }
+                return {
+                    Success: '成功',
+                    Failed: '失败',
+                    Running: '运行中'
+                }[val] || '运行中';
+            },
+            /**
+             * 获取错误码对应的提示
+             * 
+             * @param {any} v 
+             */
+            getErrorDetailTxt: function (v) {
+                return getErrorMsg(v);
+            },
+            /**
+             * 获取错误码对应的提示
+             * 
+             * @param {any} v 
+             */
+            getErrorDetailTxt1: function (v) {
+                return getErrorMsg(v).replace(/<\/br>/g, '');
+            }
+        },
             pageEvents)
 
     })

@@ -24,33 +24,33 @@
         [v-cloak] {
             display: none;
         }
-        
+
         body {
             min-width: 900px;
         }
-        
+
         .el-table__expanded-cell {
             padding: 0px 0px 0px 0px;
             border-right: 0px !important;
             border-bottom: 0px !important;
         }
-        
+
         .el-table__expanded-cell .el-table {
             border: 0px;
         }
-        
+
         .el-table__expanded-cell .border_right0 {
             border-right: 0px;
         }
-        
+
         .el-table__expanded-cell .el-table th {
             background-color: #fbfdff;
         }
-        
+
         .el-table__expanded-cell .el-table .el-table th>div {
             background-color: #fbfdff;
         }
-        
+
         .el-table__expanded-cell .el-table__header-wrapper thead div {
             background-color: #fbfdff;
         }
@@ -62,7 +62,8 @@
         <el-row class="search-row">
             <el-dropdown @command="changeClick">
                 <el-button>
-                    {{selectName}}<i class="el-icon-caret-bottom el-icon--right"></i>
+                    {{selectName}}
+                    <i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="item in esights" v-bind:command="item.name" v-bind:key="item.name">{{item.label}}</el-dropdown-item>
@@ -78,10 +79,11 @@
                 <div>
 
                     <!--刀片服务器显示的table-->
-                    <el-table v-show="searchKey=='blade'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" @expand="expandShow">
+                    <el-table v-show="searchKey=='blade'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading"
+                        @expand="expandShow">
                         <el-table-column type="expand">
                             <template scope="props">
-                                <el-table  v-bind:data="props.row.childBlades" style="width: 100%">
+                                <el-table v-bind:data="props.row.childBlades" style="width: 100%">
                                     <el-table-column width="48">
                                     </el-table-column>
                                     <el-table-column v-bind:label="i18ns.serverList.serverIPAddress" prop="ipAddress">
@@ -93,92 +95,93 @@
                                             <template v-if="scope.row.status=='0'">
                                                 <span>{{i18ns.serverList.serverNormal}}</span>
                                             </template>
-            <template v-else-if="scope.row.status=='-2'">
+                                            <template v-else-if="scope.row.status=='-2'">
                                                 <span>{{i18ns.serverList.serverUnknown}}</span>
                                             </template>
-            <template v-else>
+                                            <template v-else>
                                                 <span>{{i18ns.serverList.serverFault}}</span>
                                             </template>
-            </template>
-            </el-table-column>
-            <el-table-column v-bind:label="i18ns.deviceInfo.mode" prop="mode">
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.deviceInfo.mode" prop="mode">
 
-            </el-table-column>
-            <el-table-column v-bind:label="i18ns.common.operation" class-name="border_right0">
-                <template scope="scope">
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.common.operation" class-name="border_right0">
+                                        <template scope="scope">
                                             <el-button @click="bladeServerDetails(scope.row,'Blade')" type="text">{{i18ns.deviceInfo.viewDeviceStatus}}</el-button>
                                         </template>
-            </el-table-column>
-            </el-table>
-            </template>
-            </el-table-column>
-            <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
-            </el-table-column>
-            <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
-            </el-table-column>
-            <el-table-column prop="serverStatus" v-bind:label="i18ns.serverList.serverStatus">
-                <template scope="scope">
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
+                        </el-table-column>
+                        <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
+                        </el-table-column>
+                        <el-table-column prop="serverStatus" v-bind:label="i18ns.serverList.serverStatus">
+                            <template scope="scope">
                                 <template v-if="scope.row.status=='0'">
                                     <span>{{i18ns.serverList.serverNormal}}</span>
                                 </template>
-                <template v-else-if="scope.row.status=='-1'">
+                                <template v-else-if="scope.row.status=='-1'">
                                     <span>{{i18ns.serverList.serverOffline}}</span>
                                 </template>
-                <template v-else-if="scope.row.status=='-2'">
+                                <template v-else-if="scope.row.status=='-2'">
                                     <span>{{i18ns.serverList.serverUnknown}}</span>
                                 </template>
-                <template v-else>
+                                <template v-else>
                                     <span>{{i18ns.serverList.serverFault}}</span>
                                 </template>
-                </template>
-            </el-table-column>
-            <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
-            </el-table-column>
-            <el-table-column prop="serverDetails" v-bind:label="i18ns.common.operation">
-                <template scope="scope">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
+                        </el-table-column>
+                        <el-table-column prop="serverDetails" v-bind:label="i18ns.common.operation">
+                            <template scope="scope">
                                 <el-button @click="viewBladeServerDetails(scope.row)" type="text">{{i18ns.deviceInfo.viewDeviceStatus}}</el-button>
                             </template>
-            </el-table-column>
-            </el-table>
+                        </el-table-column>
+                    </el-table>
 
 
-            <!--机架服务器服务器显示的table-->
-            <el-table v-show="searchKey=='rack'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading">
-                <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
-                </el-table-column>
-                <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
-                </el-table-column>
-                <el-table-column prop="status" v-bind:label="i18ns.serverList.serverStatus">
-                    <template scope="scope">
+                    <!--机架服务器服务器显示的table-->
+                    <el-table v-show="searchKey=='rack'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading">
+                        <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
+                        </el-table-column>
+                        <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
+                        </el-table-column>
+                        <el-table-column prop="status" v-bind:label="i18ns.serverList.serverStatus">
+                            <template scope="scope">
                                 <template v-if="scope.row.status=='0'">
                                     <span>{{i18ns.serverList.serverNormal}}</span>
                                 </template>
-                    <template v-else-if="scope.row.status=='-1'">
+                                <template v-else-if="scope.row.status=='-1'">
                                     <span>{{i18ns.serverList.serverOffline}}</span>
                                 </template>
-                    <template v-else-if="scope.row.status=='-2'">
+                                <template v-else-if="scope.row.status=='-2'">
                                     <span>{{i18ns.serverList.serverUnknown}}</span>
                                 </template>
-                    <template v-else>
+                                <template v-else>
                                     <span>{{i18ns.serverList.serverFault}}</span>
                                 </template>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
-                </el-table-column>
-                <el-table-column prop="serverDetails" v-bind:label="i18ns.common.operation">
-                    <template scope="scope">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
+                        </el-table-column>
+                        <el-table-column prop="serverDetails" v-bind:label="i18ns.common.operation">
+                            <template scope="scope">
                                 <el-button @click="rackServerDetails(scope.row,'Rack')" type="text">{{i18ns.deviceInfo.viewDeviceStatus}}</el-button>
                             </template>
-                </el-table-column>
-            </el-table>
+                        </el-table-column>
+                    </el-table>
 
 
-            <!--高密服务器服务器显示的table-->
-            <el-table v-show="searchKey=='highdensity'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" @expand="expandShow1">
-                <el-table-column type="expand">
-                    <template scope="props">
-                                <el-table  v-bind:data="props.row.childBlades" style="width: 100%">
+                    <!--高密服务器服务器显示的table-->
+                    <el-table v-show="searchKey=='highdensity'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading"
+                        @expand="expandShow1">
+                        <el-table-column type="expand">
+                            <template scope="props">
+                                <el-table v-bind:data="props.row.childBlades" style="width: 100%">
                                     <el-table-column width="48">
                                     </el-table-column>
                                     <el-table-column v-bind:label="i18ns.serverList.serverIPAddress" prop="ipAddress">
@@ -190,64 +193,66 @@
                                             <template v-if="scope.row.status=='0'">
                                                 <span>{{i18ns.serverList.serverNormal}}</span>
                                             </template>
-                    <template v-else-if="scope.row.status=='-2'">
+                                            <template v-else-if="scope.row.status=='-2'">
                                                 <span>{{i18ns.serverList.serverUnknown}}</span>
                                             </template>
-                    <template v-else>
+                                            <template v-else>
                                                 <span>{{i18ns.serverList.serverFault}}</span>
                                             </template>
-                    </template>
-                </el-table-column>
-                <el-table-column v-bind:label="i18ns.deviceInfo.mode" prop="type">
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.deviceInfo.mode" prop="type">
 
-                </el-table-column>
-                <el-table-column v-bind:label="i18ns.common.operation" class-name="border_right0">
-                    <template scope="scope">
+                                    </el-table-column>
+                                    <el-table-column v-bind:label="i18ns.common.operation" class-name="border_right0">
+                                        <template scope="scope">
                                             <el-button @click="highdensityServerDetails(scope.row,'Highdensity')" type="text">{{i18ns.deviceInfo.viewDeviceStatus}}</el-button>
                                         </template>
-                </el-table-column>
-            </el-table>
-            </template>
-            </el-table-column>
-            <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
-            </el-table-column>
-            <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
-            </el-table-column>
-            <el-table-column prop="serverStatus" v-bind:label="i18ns.serverList.serverStatus">
-                <template scope="scope">
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
+                        </el-table-column>
+                        <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
+                        </el-table-column>
+                        <el-table-column prop="serverStatus" v-bind:label="i18ns.serverList.serverStatus">
+                            <template scope="scope">
                                 <template v-if="scope.row.status=='0'">
                                     <span>{{i18ns.serverList.serverNormal}}</span>
                                 </template>
-                <template v-else-if="scope.row.status=='-1'">
+                                <template v-else-if="scope.row.status=='-1'">
                                     <span>{{i18ns.serverList.serverOffline}}</span>
                                 </template>
-                <template v-else-if="scope.row.status=='-2'">
+                                <template v-else-if="scope.row.status=='-2'">
                                     <span>{{i18ns.serverList.serverUnknown}}</span>
                                 </template>
-                <template v-else>
+                                <template v-else>
                                     <span>{{i18ns.serverList.serverFault}}</span>
                                 </template>
-                </template>
-            </el-table-column>
-            <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
-            </el-table-column>
-            <el-table-column prop="serverDetails" v-bind:label="i18ns.common.operation">
-                <template scope="scope">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="serverModel" v-bind:label="i18ns.deviceInfo.mode">
+                        </el-table-column>
+                        <el-table-column prop="serverDetails" v-bind:label="i18ns.common.operation">
+                            <template scope="scope">
                                 <el-button @click="viewHighdensityServerDetails(scope.row)" type="text">{{i18ns.deviceInfo.viewDeviceStatus}}</el-button>
                             </template>
-            </el-table-column>
-            </el-table>
+                        </el-table-column>
+                    </el-table>
+
+                </div>
+            </template>
 
         </div>
-        </template>
-
-    </div>
-    <el-row class="pagination-row">
-        <el-col v-bind:span="24">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="start" v-bind:page-sizes="pages" v-bind:page-size="size" layout="total, sizes, prev, pager, next, jumper" v-bind:total="totalCount">
-            </el-pagination>
-        </el-col>
-    </el-row>
+        <el-row class="pagination-row">
+            <el-col v-bind:span="24">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="start" v-bind:page-sizes="pages"
+                    v-bind:page-size="size" layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="totalCount">
+                    <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
+                </el-pagination>
+            </el-col>
+        </el-row>
     </div>
 </body>
 <!--
@@ -276,7 +281,7 @@
             size: 10,
             status: ''
         },
-        created: function() {
+        created: function () {
             this.i18ns = getIn18();
             this.options = getServerType();
             this.server = this.options[0].value;
@@ -285,24 +290,24 @@
                 this.size = parseInt(_pageSize);
             };
         },
-        mounted: function() {
-            setTimeout(function() {
+        mounted: function () {
+            setTimeout(function () {
                 getEsightList(app.bindEsight);
             }, 0);
             this.searchKey = 'rack';
         },
         methods: {
-            expandShow: function(row, expanded) {
+            expandShow: function (row, expanded) {
                 if (row.childBlades) {
                     this.getUnitsInfo(row, expanded, '1');
                 }
             },
-            expandShow1: function(row, expanded) {
+            expandShow1: function (row, expanded) {
                 if (row.childBlades) {
                     this.getUnitsInfo(row, expanded, '2');
                 }
             },
-            getUnitsInfo: function(v, bl, type) {
+            getUnitsInfo: function (v, bl, type) {
                 if (!bl) {
                     return;
                 }
@@ -313,7 +318,7 @@
                             dn: v.childBlades[i].dn,
                             ip: app.selectKey,
                             serverType: v.serverModel
-                        }, function(ret) {
+                        }, function (ret) {
                             if (ret.data.data.length > 0) {
                                 var data = ret.data.data[0];
                                 var _index = _.findIndex(app.listData[index].childBlades, {
@@ -350,7 +355,7 @@
              * 显式高密服务器细节
              *  @param {any} row
              */
-            viewHighdensityServerDetails: function(row) {
+            viewHighdensityServerDetails: function (row) {
                 localStorage.setItem('highdensityData', JSON.stringify(row));
                 localStorage.setItem('name', row.serverName);
                 localStorage.setItem('dn', row.dn);
@@ -361,7 +366,7 @@
              * 显式刀片服务器细节
              *  @param {any} row
              */
-            viewBladeServerDetails: function(row) {
+            viewBladeServerDetails: function (row) {
                 localStorage.setItem('bladeData', JSON.stringify(row));
                 localStorage.setItem('dn', row.dn);
                 localStorage.setItem('serverType', 'Blade');
@@ -371,7 +376,7 @@
              * 显式机架服务器细节
              *  @param {any} row
              */
-            rackServerDetails: function(row, serverType) {
+            rackServerDetails: function (row, serverType) {
                 console.log(row)
                 if (row.name) {
                     var nameStr = row.name;
@@ -387,7 +392,7 @@
              * 跳转至显式子刀片服务器细节页面
              *  @param {any} row
              */
-            bladeServerDetails: function(row, serverType) {
+            bladeServerDetails: function (row, serverType) {
                 console.log(row)
                 if (row.name) {
                     var nameStr = row.name;
@@ -403,7 +408,7 @@
              * 跳转至高密服务器细节页面
              *  @param {any} row
              */
-            highdensityServerDetails: function(row, serverType) {
+            highdensityServerDetails: function (row, serverType) {
                 console.log(row)
                 if (row.name) {
                     var nameStr = row.name;
@@ -419,7 +424,7 @@
              * 获取服务器列表
              *
              */
-            getListData: function() {
+            getListData: function () {
                 this.listData = [];
                 serverListManager.getList({
                     esight: this.selectKey,
@@ -435,7 +440,7 @@
              *
              * @param {any} ret
              */
-            bindEsight: function(ret) {
+            bindEsight: function (ret) {
                 this.esights = [];
                 if (ret.code === '0') {
                     var lg = ret.data.length;
@@ -485,7 +490,7 @@
              * @param {any} ip
              * @param {any} aliasName
              */
-            changeClick: function(ip, aliasName) {
+            changeClick: function (ip, aliasName) {
                 this.selectName = aliasName.$el.innerText;
                 this.selectKey = ip;
                 setCurrentEsight(ip);
@@ -496,7 +501,7 @@
              *
              * @param {any} ret
              */
-            bindList: function(ret) {
+            bindList: function (ret) {
                 this.listData = [];
                 if (ret.code === '0') {
                     this.totalCount = ret.data.totalCount;
@@ -516,7 +521,7 @@
              * @param {any} msg
              * @param {any} callback
              */
-            alertMsg: function(msg, callback) {
+            alertMsg: function (msg, callback) {
                 this.$alert(msg, this.i18ns.common.prompt, {
                     confirmButtonText: this.i18ns.common.confirm,
                     callback: function action() {
@@ -530,7 +535,7 @@
              *
              * @param {any} val
              */
-            handleSizeChange: function(val) {
+            handleSizeChange: function (val) {
                 this.size = val;
                 localStorage.setItem("serverListPageSize", val);
                 this.getListData();
@@ -540,7 +545,7 @@
              *
              * @param {any} val
              */
-            handleCurrentChange: function(val) {
+            handleCurrentChange: function (val) {
                 this.start = val;
                 this.getListData();
             },
@@ -549,7 +554,7 @@
              *
              * @param {any} server
              */
-            serverChange: function(server) {
+            serverChange: function (server) {
                 if (server == 'Rack') {
                     server = 'rack';
                 } else if (server == 'Blade') {
@@ -562,7 +567,7 @@
                 this.searchKey = server;
                 this.handleCurrentChange(1);
             },
-            getModelTxt: function(v) {
+            getModelTxt: function (v) {
                 var model = '';
                 if (v) {
                     var arry = v.split('-');

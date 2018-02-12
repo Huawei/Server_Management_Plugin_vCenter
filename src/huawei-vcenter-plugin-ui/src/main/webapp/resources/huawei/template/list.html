@@ -24,26 +24,26 @@
         [v-cloak] {
             display: none;
         }
-        
+
         body {
             min-width: 900px;
         }
-        
+
         .el-table__body-wrapper {
             /*去掉table滚动条*/
             overflow: hidden;
             position: relative;
         }
-        
+
         .el-tabs__item {
             font-size: 18px;
         }
-        
+
         .el-table .cell {
             white-space: pre-wrap;
         }
-        
-        .el-input__inner {
+
+        .myselect .el-input__inner {
             height: 30px !important;
         }
     </style>
@@ -54,7 +54,8 @@
         <el-row>
             <el-dropdown @command="commandClick">
                 <el-button>
-                    {{menuName}}<i class="el-icon-caret-bottom el-icon--right"></i>
+                    {{menuName}}
+                    <i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="item in esights" v-bind:command="item.name" v-bind:key="item.name">{{item.label}}</el-dropdown-item>
@@ -62,11 +63,8 @@
             </el-dropdown>
             <el-button icon="plus" v-on:click="addTemplate()">{{i18ns.template.createTemplate}}</el-button>
             <template>
-                <el-select v-model="templateType" @change="templateChange" placeholder="">
-                    <el-option v-for="item in options"
-                               v-bind:key="item.value"
-                               v-bind:label="item.label"
-                               v-bind:value="item.value">
+                <el-select v-model="templateType" @change="templateChange" placeholder="" class="myselect">
+                    <el-option v-for="item in options" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
                     </el-option>
                 </el-select>
             </template>
@@ -75,40 +73,43 @@
         <div style="margin-top:23px;">
             <template>
                 <div>
-                    <el-table v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" v-loading.fullscreen.lock="fullscreenLoading" @selection-change="handleSelectionChange">
+                    <el-table v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading" v-loading.fullscreen.lock="fullscreenLoading"
+                        @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="55">
                         </el-table-column>
-                        <el-table-column  v-bind:label="i18ns.template.templateName" width="300px">
+                        <el-table-column v-bind:label="i18ns.template.templateName" width="300px">
                             <template scope="scope">
-                                <el-button type="text" size="small" :disabled="scope.row.templateType=='NETWORK'" v-on:click="showDetailed(scope.row)" >{{scope.row.templateName}}</el-button>
+                                <el-button type="text" size="small" :disabled="scope.row.templateType=='NETWORK'" v-on:click="showDetailed(scope.row)">{{scope.row.templateName}}</el-button>
                             </template>
-            </el-table-column>
-            <el-table-column prop="templateType" v-bind:label="i18ns.template.templateType" width="150px">
-            </el-table-column>
-            <el-table-column prop="templateDesc" v-bind:label="i18ns.template.templateDesc" width="300px">
-            </el-table-column>
-            <el-table-column v-bind:label="i18ns.template.operation">
-                <template scope="scope">
-                                <el-button type="text" size="small" :disabled="scope.row.templateType=='NETWORK'"  v-on:click="deleteTemplate(scope.$index, scope.row)" >{{i18ns.common.delete}}</el-button>
+                        </el-table-column>
+                        <el-table-column prop="templateType" v-bind:label="i18ns.template.templateType" width="150px">
+                        </el-table-column>
+                        <el-table-column prop="templateDesc" v-bind:label="i18ns.template.templateDesc" width="300px">
+                        </el-table-column>
+                        <el-table-column v-bind:label="i18ns.template.operation">
+                            <template scope="scope">
+                                <el-button type="text" size="small" :disabled="scope.row.templateType=='NETWORK'" v-on:click="deleteTemplate(scope.$index, scope.row)">{{i18ns.common.delete}}</el-button>
                             </template>
-            </el-table-column>
-            </el-table>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </template>
+            <el-row class="pagination-row">
+                <el-col v-bind:span="24" style="text-align: left;">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes"
+                        v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
+                        <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
+                    </el-pagination>
+                </el-col>
+            </el-row>
         </div>
-        </template>
-        <el-row class="pagination-row">
-            <el-col v-bind:span="24" style="text-align: left;">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes" v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" v-bind:total="total">
-                </el-pagination>
-            </el-col>
-        </el-row>
-    </div>
-    <el-dialog v-bind:title="i18ns.template.viewDetail" v-bind:visible.sync="templateDetailDialog">
-        <iframe id="iframe" v-bind:src="htmlString" style="width:100%;min-height:490px; border-width:0px">
-        </iframe>
-        <div slot="footer" style="text-align:center;margin-bottom:30px">
-            <el-button @click="closeDilog">{{i18ns.common.confirm}}</el-button>
-        </div>
-    </el-dialog>
+        <el-dialog v-bind:title="i18ns.template.viewDetail" v-bind:visible.sync="templateDetailDialog">
+            <iframe id="iframe" v-bind:src="htmlString" style="width:100%;min-height:490px; border-width:0px">
+            </iframe>
+            <div slot="footer" style="text-align:center;margin-bottom:30px">
+                <el-button @click="closeDilog">{{i18ns.common.confirm}}</el-button>
+            </div>
+        </el-dialog>
     </div>
     <script>
         var app = new Vue({
@@ -133,7 +134,7 @@
                 htmlString: '',
                 multipleSelection: []
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 localStorage.setItem('list_url', 'List.html')
                 var _options = getTemplateType();
@@ -145,10 +146,10 @@
                     this.pageSize = parseInt(_pageSize);
                 };
             },
-            mounted: function() {
+            mounted: function () {
                 var that = this;
                 //获取eSight列表数据
-                setTimeout(function() {
+                setTimeout(function () {
                     getEsightList(that.bindEsight);
                 }, 0);
             },
@@ -157,7 +158,7 @@
                  * 跳转到默认添加模板页面
                  * 
                  */
-                addTemplate: function() {
+                addTemplate: function () {
                     window.location.href = 'addOS.html' + '?s=' + Math.random();
                 },
                 /**
@@ -165,7 +166,7 @@
                  * 
                  * @param {any} ret 
                  */
-                bindEsight: function(ret) {
+                bindEsight: function (ret) {
                     if (ret.code === '0') {
                         var lg = ret.data.length;
                         if (lg > 0) {
@@ -215,7 +216,7 @@
                  * @param {any} command 
                  * @param {any} com 
                  */
-                commandClick: function(command, com) {
+                commandClick: function (command, com) {
                     this.menuName = com.$el.innerText;
                     this.menuKey = command;
                     setCurrentEsight(command);
@@ -227,19 +228,19 @@
                  * @param {any} index 
                  * @param {any} row 
                  */
-                deleteTemplate: function(index, row) {
+                deleteTemplate: function (index, row) {
                     var that = this;
                     this.$confirm(app.i18ns.template.beforeDeleteTips, app.i18ns.common.prompt, {
                         confirmButtonText: app.i18ns.common.confirm,
                         cancelButtonText: app.i18ns.common.cancel,
                         closeOnClickModal: false,
                         type: 'warning'
-                    }).then(function() {
+                    }).then(function () {
                         this.fullscreenLoading = true;
                         templateManage.delete({
                             esight: that.menuKey,
                             templateName: row.templateName
-                        }, function(ret) {
+                        }, function (ret) {
                             if (ret.code ===
                                 '0') {
                                 app.alertMsg(app.i18ns.template.delSuccessMsg);
@@ -251,14 +252,14 @@
                                 app.alertMsg(msg);
                             }
                         });
-                    }).catch(function() {});
+                    }).catch(function () { });
                 },
                 /**
                  * 根据选择的模板类型 筛选数据
                  * 
                  * @param {any} val 
                  */
-                templateChange: function(val) {
+                templateChange: function (val) {
                     this.templateType = val;
                     this.currentPage = 1;
                     this.getListData();
@@ -267,7 +268,7 @@
                  * 获取模板列表数据
                  * 
                  */
-                getListData: function() {
+                getListData: function () {
                     this.listData = [];
                     templateManage.getList({
                         esight: this.menuKey,
@@ -283,7 +284,7 @@
                  * 
                  * @param {any} ret 
                  */
-                bindList: function(ret) {
+                bindList: function (ret) {
                     this.listData = [];
                     if (ret.code === '0') {
                         for (var i = 0; i < ret.data.length; i++) {
@@ -302,10 +303,10 @@
                  * @param {any} msg 
                  * @param {any} callback 
                  */
-                alertMsg: function(msg, callback) {
+                alertMsg: function (msg, callback) {
                     this.$alert(msg, this.i18ns.common.prompt, {
                         confirmButtonText: this.i18ns.common.confirm,
-                        callback: function() {
+                        callback: function () {
                             callback && callback()
                         }
                     });
@@ -315,7 +316,7 @@
                  * 
                  * @param {any} val 
                  */
-                handleSizeChange: function(val) {
+                handleSizeChange: function (val) {
                     this.pageSize = val;
                     localStorage.setItem("templateListPageSize", val);
                     this.getListData();
@@ -325,7 +326,7 @@
                  * 
                  * @param {any} val 
                  */
-                handleCurrentChange: function(val) {
+                handleCurrentChange: function (val) {
                     this.currentPage = val;
                     this.getListData();
                 },
@@ -335,14 +336,14 @@
                  * 
                  * @param {any} row 
                  */
-                showDetailed: function(row) {
+                showDetailed: function (row) {
                     this.templateDetailDialog = true;
                     localStorage.setItem("templateName", row.templateName); //模板名称存入缓存
                     switch (row.templateType) {
                         case 'OS':
                             {
                                 this.htmlString = "OSDetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "590px";
                                     if (document.body.clientWidth > 1000) {
                                         document.querySelector('.el-dialog').style.width = "900px";
@@ -356,7 +357,7 @@
                         case 'POWER':
                             {
                                 this.htmlString = "PowerDetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "350px";
                                     document.querySelector('.el-dialog').style.width = "600px";
                                     document.querySelector('.el-dialog__body').style.height = "350px";
@@ -366,7 +367,7 @@
                         case 'BIOS':
                             {
                                 this.htmlString = "BIOSDetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "666px";
                                     if (document.body.clientWidth > 1000) {
                                         document.querySelector('.el-dialog').style.width = "900px";
@@ -380,7 +381,7 @@
                         case 'HBA':
                             {
                                 this.htmlString = "HBADetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "666px";
                                     if (document.body.clientWidth > 1000) {
                                         document.querySelector('.el-dialog').style.width = "900px";
@@ -394,7 +395,7 @@
                         case 'RAID':
                             {
                                 this.htmlString = "RAIDDetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "666px";
                                     if (document.body.clientWidth > 1000) {
                                         document.querySelector('.el-dialog').style.width = "900px";
@@ -408,7 +409,7 @@
                         case 'CNA':
                             {
                                 this.htmlString = "CNADetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "700px";
                                     if (document.body.clientWidth > 1000) {
                                         document.querySelector('.el-dialog').style.width = "900px";
@@ -422,7 +423,7 @@
                         case 'IBMC':
                             {
                                 this.htmlString = "iBMCDetails.html?s=" + Math.random();
-                                setTimeout(function(x) {
+                                setTimeout(function (x) {
                                     document.getElementById('iframe').style.minHeight = "666px";
                                     if (document.body.clientWidth > 1000) {
                                         document.querySelector('.el-dialog').style.width = "900px";
@@ -437,7 +438,7 @@
                             break;
                     }
                 },
-                closeDilog: function() {
+                closeDilog: function () {
                     this.templateDetailDialog = false;
                     this.htmlString = "";
                 },
@@ -446,7 +447,7 @@
                  * 
                  * @param {any} val 
                  */
-                handleSelectionChange: function(val) {
+                handleSelectionChange: function (val) {
                     console.log(val);
                     this.multipleSelection = val;
                 },
@@ -455,7 +456,7 @@
                  * 
                  * @returns 
                  */
-                batchDelete: function() {
+                batchDelete: function () {
                     if (this.multipleSelection.length === 0) {
                         return false;
                     }
@@ -464,17 +465,17 @@
                         cancelButtonText: app.i18ns.common.cancel,
                         closeOnClickModal: false,
                         type: 'warning'
-                    }).then(function() {
+                    }).then(function () {
                         app.fullscreenLoading = true;
                         var k = app.multipleSelection.length;
                         var errorInfo = []; //错误信息
                         for (var i = 0; i < app.multipleSelection.length; i++) {
-                            (function(templateName) {
+                            (function (templateName) {
                                 var param = {
                                     esight: app.menuKey,
                                     templateName: templateName
                                 };
-                                templateManage.delete(param, function(ret) {
+                                templateManage.delete(param, function (ret) {
                                     k--;
                                     if (ret.code != 0) {
                                         errorInfo.push({
@@ -485,7 +486,7 @@
                                 });
                             })(app.multipleSelection[i].templateName)
                         }
-                        var mysetInterval = setInterval(function() {
+                        var mysetInterval = setInterval(function () {
                             if (k == 0) {
                                 app.fullscreenLoading = false;
                                 app.getListData();
@@ -517,14 +518,14 @@
                                         title: app.i18ns.common.prompt,
                                         message: context,
                                         confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function() {});
+                                    }).then(function () { });
                                 } else {
                                     app.alertMsg(app.i18ns.template.delSuccessMsg);
                                 }
                                 window.clearInterval(mysetInterval);
                             }
                         }, 100)
-                    }).catch(function() {});
+                    }).catch(function () { });
                 }
             }
         });

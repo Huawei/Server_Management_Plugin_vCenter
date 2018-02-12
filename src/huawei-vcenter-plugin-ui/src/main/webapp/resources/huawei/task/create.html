@@ -220,7 +220,8 @@
             serverRackAllChecked: false,
             serverBladeNum: 0,
             serverRackNum: 0,
-            serverHighdensityNum: 0
+            serverHighdensityNum: 0,
+            templateType: ''
         },
         computed: {
             bladeParams: function() {
@@ -325,22 +326,36 @@
             submitForm: function() {
                 this.$refs['taskForm'].validate(function(valid) {
                     if (valid) {
-                        app.fullscreenLoading = true;
-                        var postParam = {
-                            esight: app.curEsightHostIp,
-                            param: {
-                                deployTaskName: app.taskForm.deployTaskName,
-                                dn: app.taskForm.selectServers.map(function(x) {
-                                    return x.dn
-                                }).join(';'),
-                                templates: app.taskForm.selectTemplates.join(';'),
-                            }
-                        };
-                        manager.create(postParam, function(ret) {
-                            alertMsg(app.i18ns.common.addSucceeded, function() {
-                                location.href = 'list.html';
+                        var templateType = _.find(app.templateOptions, function(x) {
+                            return x.value == app.taskForm.selectTemplates[0]
+                        }).type;
+                        var confirmTip = app.GetOperationTips(templateType);
+                        app.$confirm(confirmTip, app.i18ns.common.prompt, {
+                            confirmButtonText: app.i18ns.common.confirm,
+                            cancelButtonText: app.i18ns.common.cancel,
+                            closeOnClickModal: false,
+                            type: 'warning'
+                        }).then(function() {
+                            app.fullscreenLoading = true;
+                            var postParam = {
+                                esight: app.curEsightHostIp,
+                                param: {
+                                    deployTaskName: app.taskForm.deployTaskName,
+                                    dn: app.taskForm.selectServers.map(function(x) {
+                                        return x.dn
+                                    }).join(';'),
+                                    templates: app.taskForm.selectTemplates.join(';'),
+                                }
+                            };
+                            manager.create(postParam, function(ret) {
+                                alertMsg(app.i18ns.common.addSucceeded, function() {
+                                    location.href = 'list.html';
+                                });
                             });
+                        }).catch(function() {
+
                         });
+
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -729,6 +744,7 @@
                         var type = _.find(this.templateOptions, function(x) {
                             return x.value == val[i]
                         }).type;
+                        this.templateType = type;
                         console.log(types.indexOf(type));
                         if (types.indexOf(type) < 0) {
                             types.push(type);
@@ -741,7 +757,6 @@
 
                     }
                     _.forEach(this.templateOptions, function(x) {
-
                         console.log(val.indexOf(x.value));
                         if (types.indexOf(x.type) >= 0 && val.indexOf(x.value) < 0) {
                             x.disabled = true;
@@ -751,6 +766,7 @@
 
                     });
                 } else {
+                    this.templateType = '';
                     _.forEach(this.templateOptions, function(x) {
                         x.disabled = false;
                     })
@@ -778,7 +794,43 @@
                     rack: '机架服务器',
                     highdensity: '高密服务器'
                 }[servertype];
+            },
+            GetOperationTips: function(templateType) {
+                var lang = localStorage.getItem('lang');
+                var tip = "";
+                if (lang) {
+                    if (lang == 'en') {
+                        tip = {
+                            OS: 'The existing operating system will be replaced during the deployment. Are you sure you want to perform the deployment?',
+                            POWER: 'The device will be restarted or powered off and services will be interrupted during the deployment. Are you sure you want to perform the deployment?',
+                            BIOS: 'The device will be restarted or powered off and services will be interrupted during the deployment. Are you sure you want to perform the deployment?',
+                            HBA: 'The device will be restarted or powered off and services will be interrupted during the deployment. Are you sure you want to perform the deployment?',
+                            RAID: 'Data on the local hard disks of the device will be cleared during the deployment. Are you sure you want to perform the deployment?',
+                            CNA: 'The device will be restarted or powered off and services will be interrupted during the deployment. Are you sure you want to perform the deployment?',
+                            IBMC: 'Are you sure you want to perform the deployment?'
+                        }[templateType];
+                        if (!tip) {
+                            tip = 'Are you sure you want to perform the deployment?';
+                        }
+                        return tip;
+                    }
+                }
+                tip = {
+                    OS: '部署过程中原有操作系统将被覆盖，确认要进行部署吗？',
+                    POWER: '部署过程中设备将会进行重启/下电，业务将会中断，确认要进行部署吗？',
+                    BIOS: '部署过程中设备将会进行重启/下电，业务将会中断，确认要进行部署吗？',
+                    HBA: '	部署过程中设备将会进行重启/下电，业务将会中断，确认要进行部署吗？',
+                    RAID: '部署过程中设备本地硬盘数据将被清空，确认要进行部署吗？',
+                    CNA: '部署过程中设备将会进行重启/下电，业务将会中断，确认要进行部署吗？',
+                    IBMC: '确认进行部署吗？'
+                }[templateType];
+                if (!tip) {
+                    tip = '确认进行部署吗？';
+                }
+                return tip;
             }
+
+
         }
     })
 </script>

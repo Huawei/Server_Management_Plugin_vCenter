@@ -174,6 +174,10 @@ public class FirmwareApiServiceImpl extends ESightOpenApiService implements Firm
 				task.setTaskCode((String) dataMap.get("taskCode"));
 				task.setTaskResult((String) dataMap.get("taskResult"));
 				taskDao.saveTaskStatus(task);
+			}else if((int) reqMap.get("code") == RESULT_ERROR_CODE){
+				task.setSyncStatus(SyncStatus.STATUS_HW_FAILED);
+				task.setTaskProgress(100);
+				taskDao.saveTaskStatus(task);
 			}
 			} catch (RuntimeException e) {
 				LOGGER.error(e.getMessage());
