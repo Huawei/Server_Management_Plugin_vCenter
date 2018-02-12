@@ -387,24 +387,40 @@ function getFirmwareTypeList() {
     if (lang) {
         if (lang == 'en') {
             return [
-                { value: 'All', label: 'All' },
-                { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC DRIVE' },
-                { value: 'RAID_DRIVE', label: 'RAID DRIVE' },
+                { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC&IB Driver' },
+                { value: 'RAID_DRIVE', label: 'RAID Driver' },
                 { value: 'HMM', label: 'HMM' },
                 { value: 'iBMC', label: 'iBMC' },
                 { value: 'BIOS', label: 'BIOS' },
-                { value: 'CPLD', label: 'CPLD' }
+                { value: 'CPLD', label: 'CPLD' },
+                { value: 'LCD', label: 'LCD' },
+                { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
+                { value: 'RAID', label: 'RAID' },
+                { value: 'HDD', label: 'HDD' },
+                { value: 'NVME', label: 'NVME' },
+                { value: 'NVDIMM', label: 'NVDIMM' },
+                { value: 'SSD', label: 'SSD' },
+                { value: 'OTHERS', label: 'Others' }
+
             ];
         }
     }
     return [
-        { value: 'All', label: '全选' },
-        { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC 驱动' },
+        { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC&IB 驱动' },
         { value: 'RAID_DRIVE', label: 'RAID 驱动' },
         { value: 'HMM', label: 'HMM' },
         { value: 'iBMC', label: 'iBMC' },
         { value: 'BIOS', label: 'BIOS' },
-        { value: 'CPLD', label: 'CPLD' }
+        { value: 'CPLD', label: 'CPLD' },
+        { value: 'LCD', label: 'LCD' },
+        { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
+        { value: 'RAID', label: 'RAID' },
+        { value: 'HDD', label: 'HDD' },
+        { value: 'NVME', label: 'NVME' },
+        { value: 'NVDIMM', label: 'NVDIMM' },
+        { value: 'SSD', label: 'SSD' },
+        { value: 'OTHERS', label: '其他' }
+
     ];
 }
 

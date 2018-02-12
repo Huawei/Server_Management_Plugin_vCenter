@@ -4,8 +4,14 @@
     "1204": "eSight连接失败，请重试。",
     "-331": "eSight连接失败，请重试。",
     "201": "查询或删除失败，待操作对象不存在",
-
+	"1001": "eSight License 已过期！",
+	"1002": "eSight license不具有调用openapi的功能",
+	"1024": "eSight 认证失败",
     "149201": "License数量不足。",
+	"-331001": "eSight License 已过期！",
+	"-331002": "eSight license不具有调用openapi的功能",
+	"-331024": "eSight 认证失败",
+    "-33149201": "License数量不足。",
 
     "-99999": "操作失败：未知错误",
     "-90001": "系统内部错误，请先初始化", //系统内部错误 9xxxx
@@ -560,6 +566,14 @@ var errorCode_en = {
         "1204": "eSight connection failed. please try again.",
         "-331": "eSight connection failed. please try again.",
         "201": "query or delete failed, the object to be operated does not exist",
+		"1001": "eSight license has expired!",
+		"1002": "eSight license does not have the function to call openapi",
+		"1024": "eSight authentication failed",
+		"-331001": "eSight license has expired!",
+		"-331002": "eSight license does not have the function to call openapi",
+		"-331024": "eSight authentication failed",
+		"-33149201": "License number is insufficient.",
+		
         "149201": "License number is insufficient.",
         "-99999": "OperationFailed: unknownerror",
         "-90001": "System internal error, please initialize",

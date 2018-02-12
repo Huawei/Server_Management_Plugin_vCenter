@@ -21,8 +21,10 @@
             var data = [];
             var totalNum = 0;
             if(response.code === '0'){
-            	data = response.data.data;
             	totalNum = response.data.totalNum;
+            	if(totalNum!=0){
+            		data = response.data.data;
+            	}
             }
             if (typeof callback === "function") {
                 var ret = {code: response.code, msg: response.description, data: data,totalNum: totalNum}
@@ -104,7 +106,7 @@
             success: function(response){  
             	if (typeof callback === "function") {
                     var ret = {code: response.code, msg: response.description,data: response.data};
-                    dealResult(ret, callback);
+                    callback(ret);
                 }
             }
         });
@@ -146,7 +148,7 @@ var firmwareTaskManage = {
             	console.log(response);
                 if (typeof callback === "function") {
                     var ret = {code: response.code, msg: response.description,data:response.data};
-                    dealResult(ret, callback);
+                    callback(ret);
                 }
             }
         });

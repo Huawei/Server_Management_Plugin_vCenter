@@ -334,7 +334,7 @@ public class TaskDao extends H2DataBaseDao {
 	}
 
 	private void checkReservedStr(String reservedStr) throws SQLException {
-		if (reservedStr != null && reservedStr.length() > 500) {
+		if (reservedStr != null && reservedStr.length() > 5000) {
 			throw new SQLException("parameter reservedStr is not correct");
 		}
 	}

@@ -24,6 +24,8 @@ public class ESightOpenApiService {
     
     protected static final int RESULT_SUCCESS_CODE = 0;
     
+    protected static final int RESULT_ERROR_CODE = 10000;
+    
     protected static final Log LOGGER = LogFactory.getLog(ESightOpenApiService.class);
 
     /**
