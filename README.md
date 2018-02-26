@@ -34,4 +34,4 @@ V. Supported Device
 
 VI. Additional Resources
 	
-    For more information consult User Guide: https://github.com/Huawei/Server_Management_Plugin_vCenter/docs
+    For more information consult User Guide: https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs
