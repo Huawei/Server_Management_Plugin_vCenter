@@ -12,7 +12,7 @@ I. General Information
 
 II. Description
 
-    The vCenter Plugin is a plug-in integrated in the vCenter and used for Huawei Server management. It can be used to connect to multiple eSight system and view the servers managed by eSight V300R008C00SPC201.
+    The vCenter Plugin is a plug-in integrated in the vCenter and used for Huawei Server management. It can be used to connect to multiple eSight system and view the servers managed by eSight V300R008C00SPC201.
 
 III. Supported Software Version
 
