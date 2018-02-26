@@ -33,5 +33,5 @@ V. Supported Device
     For more details about compatible with Huawei Server,Please refer to the Server Devices sheet of excel document eSight V300R008C00SPC200 Supported Devices 02
 
 VI. Additional Resources
-	
-    For more information consult User Guide: https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs
+
+    For more information consult User Guide: https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs
