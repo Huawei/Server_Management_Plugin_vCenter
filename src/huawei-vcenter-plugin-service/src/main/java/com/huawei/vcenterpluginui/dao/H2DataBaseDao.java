@@ -5,10 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Locale;
 
 public class H2DataBaseDao {
@@ -20,7 +17,7 @@ public class H2DataBaseDao {
     private static final String VMWARE_RUNTIME_DATA_DIR = "VMWARE_RUNTIME_DATA_DIR";
     
     private static final String VMWARE_LINUX_DIR = "/home/vsphere-client";
-    
+
     private static final String OS = System.getProperty("os.name").toLowerCase(Locale.US);
 
     private static final String URL_PREFIX = "jdbc:h2:";
@@ -39,8 +36,8 @@ public class H2DataBaseDao {
     	return OS.indexOf("windows")>=0;
     }
 
-    public Connection getConnection() {
-        Connection con = null;
+    public Connection getConnection() throws DataBaseException {
+        Connection con;
         
 		try {
 			Class.forName("org.h2.Driver");
@@ -52,7 +49,7 @@ public class H2DataBaseDao {
         return con;
     }
 
-    public void closeConnection(Connection con, PreparedStatement ps, ResultSet rs) {
+    public void closeConnection(Connection con, ResultSet rs, PreparedStatement... ps) {
         if (rs != null) {
             try {
                 rs.close();
@@ -61,10 +58,12 @@ public class H2DataBaseDao {
             }
         }
         if (ps != null) {
-            try {
-                ps.close();
-            } catch (Exception var2) {
-                var2.printStackTrace();
+            for (PreparedStatement ps1 : ps) {
+                try {
+                    if (ps1 != null)    ps1.close();
+                } catch (Exception var2) {
+                    var2.printStackTrace();
+                }
             }
         }
         if (con != null) {
@@ -72,6 +71,22 @@ public class H2DataBaseDao {
                 con.close();
             } catch (Exception var2) {
                 var2.printStackTrace();
+            }
+        }
+    }
+
+    public void closeConnection(Connection con, Statement ps, ResultSet rs) {
+        close(rs);
+        close(ps);
+        close(con);
+    }
+
+    public void close(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                LOGGER.error(e);
             }
         }
     }
@@ -91,5 +106,6 @@ public class H2DataBaseDao {
 				this.url = URL_PREFIX + VMWARE_LINUX_DIR + File.separator + DB_FILE;
 			}
         }
+        // this.url = url + File.separator + DB_FILE;
     }
 }

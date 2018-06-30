@@ -67,8 +67,8 @@ public class ESightController extends BaseController {
      */
     @RequestMapping(value = "/rm", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBodyBean deleteESight(HttpServletRequest request, @RequestBody String ids) throws SQLException,IOException {
-        return _eSightService.deleteESights(ids) > 0 ? success() : failure();
+    public ResponseBodyBean deleteESight(HttpServletRequest request, @RequestBody String ids, HttpSession session) throws SQLException,IOException {
+        return _eSightService.deleteESights(ids, session) > 0 ? success() : failure();
     }
 
     /**

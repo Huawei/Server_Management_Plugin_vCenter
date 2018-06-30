@@ -30,6 +30,7 @@ var eSightManage = {
             hostIp: param.hostIp,
             aliasName: param.aliasName,
             hostPort: param.hostPort,
+            systemId: param.systemId,
             loginAccount: param.loginAccount,
             loginPwd: param.loginPwd
         }
@@ -73,6 +74,7 @@ var eSightManage = {
             condition: {
                 hostIp: param.hostIp,
                 hostPort: param.hostPort,
+                systemId: param.systemId,
                 loginAccount: param.loginAccount,
                 loginPwd: param.loginPwd
             }
@@ -99,6 +101,7 @@ var eSightManage = {
             hostIp: param.hostIp,
             aliasName: param.aliasName,
             hostPort: param.hostPort,
+            systemId: param.systemId,
             loginAccount: param.loginAccount,
             loginPwd: param.loginPwd
         }

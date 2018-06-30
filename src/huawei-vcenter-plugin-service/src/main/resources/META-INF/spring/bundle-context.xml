@@ -15,11 +15,22 @@
 
     <context:property-placeholder location="classpath:application.properties"/>
 
+    <bean name="SyncServerHostServiceImpl" class="com.huawei.vcenterpluginui.services.SyncServerHostServiceImpl">
+    </bean>
+
+    <bean name="VCenterHAServiceImpl" class="com.huawei.vcenterpluginui.services.VCenterHAServiceImpl">
+        <property name="vCenterInfoService" ref="VCenterInfoServiceImpl"/>
+        <property name="providerNamePrefix" value="${vcenter.ha.provider.name.prefix}"/>
+        <property name="providerNameVersion" value="${vcenter.ha.provider.name.version}"/>
+    </bean>
+
     <bean name="ESightServiceImpl" class="com.huawei.vcenterpluginui.services.ESightServiceImpl">
         <property name="eSightDao" ref="eSightDao"/>
+        <property name="notificationAlarmService" ref="NotificationAlarmServiceImpl"/>
     </bean>
     <bean name="systemService" class="com.huawei.vcenterpluginui.services.SystemServiceImpl">
         <property name="systemDao" ref="systemDao"/>
+        <property name="vCenterInfoService" ref="VCenterInfoServiceImpl"/>
     </bean>
 
     <!--    <bean name="ESightOpenApi" class="com.huawei.vcenterpluginui.services.ESightOpenApi"/> -->
@@ -34,12 +45,24 @@
     <bean name="eSightDao" class="com.huawei.vcenterpluginui.dao.ESightDao">
         <property name="url" value="${h2.url}"/>
     </bean>
-    
+
+    <bean name="eSightHAServerDao" class="com.huawei.vcenterpluginui.dao.ESightHAServerDao">
+        <property name="url" value="${h2.url}"/>
+    </bean>
+
+    <bean name="vCenterInfoDao" class="com.huawei.vcenterpluginui.dao.VCenterInfoDao">
+        <property name="url" value="${h2.url}"/>
+    </bean>
+
     <bean name="taskDao" class="com.huawei.vcenterpluginui.dao.TaskDao">
         <property name="url" value="${h2.url}"/>
     </bean>
     
     <bean name="taskResourceDao" class="com.huawei.vcenterpluginui.dao.TaskResourceDao">
+        <property name="url" value="${h2.url}"/>
+    </bean>
+
+    <bean name="notificationAlarmDao" class="com.huawei.vcenterpluginui.dao.NotificationAlarmDao">
         <property name="url" value="${h2.url}"/>
     </bean>
 
@@ -62,7 +85,28 @@
         <property name="eSightDao" ref="eSightDao"/>
         <property name="taskDao" ref="taskDao"/>
     </bean>
-    
+
+    <bean name="NotificationAlarmServiceImpl" class="com.huawei.vcenterpluginui.services.NotificationAlarmServiceImpl">
+        <property name="subscribeUrl" value="${subscribe.url}"/>
+        <property name="eSightDao" ref="eSightDao"/>
+        <property name="serverApiService" ref="ServerApiServiceImpl"/>
+        <property name="eSightService" ref="ESightServiceImpl"/>
+        <property name="vCenterHAService" ref="VCenterHAServiceImpl"/>
+        <property name="vCenterInfoService" ref="VCenterInfoServiceImpl"/>
+        <property name="eSightHAServerService" ref="ESightHAServerServiceImpl"/>
+        <property name="notificationAlarmDao" ref="notificationAlarmDao"/>
+    </bean>
+
+    <bean name="SystemKeepAliveServiceImpl" class="com.huawei.vcenterpluginui.services.SystemKeepAliveServiceImpl">
+        <property name="eSightDao" ref="eSightDao"/>
+    </bean>
+
+    <bean name="VCenterInfoServiceImpl" class="com.huawei.vcenterpluginui.services.VCenterInfoServiceImpl">
+    </bean>
+
+    <bean name="ESightHAServerServiceImpl" class="com.huawei.vcenterpluginui.services.ESightHAServerServiceImpl">
+    </bean>
+
     <bean name="SessionServiceImpl" class="com.huawei.vcenterpluginui.services.SessionServiceImpl">
         <property name="userSessionService" ref="userSessionService"/>
     </bean>

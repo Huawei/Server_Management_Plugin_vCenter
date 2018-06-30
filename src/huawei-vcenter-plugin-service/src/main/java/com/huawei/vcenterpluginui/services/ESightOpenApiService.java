@@ -23,10 +23,17 @@ public class ESightOpenApiService {
     private static final int CODE_ESIGHT_CONNECT_EXCEPTION = -80010;
     
     protected static final int RESULT_SUCCESS_CODE = 0;
+
+    protected static final double RESULT_SUCCESS_CODE_DOUBLE = 0.0;
     
     protected static final int RESULT_ERROR_CODE = 10000;
     
-    protected static final Log LOGGER = LogFactory.getLog(ESightOpenApiService.class);
+    protected final Log LOGGER = LogFactory.getLog(this.getClass());
+
+    protected static final String CODE_SUCCESS = String.valueOf(RESULT_SUCCESS_CODE);
+
+    protected static final String CODE_SUCCESS_DOUBLE = String.valueOf(RESULT_SUCCESS_CODE_DOUBLE);
+
 
     /**
      * 根据IP获取esight信息
@@ -61,6 +68,19 @@ public class ESightOpenApiService {
 		map.put("code", CODE_ESIGHT_CONNECT_EXCEPTION);
 		map.put("description", "服务器调用失败");
 		return map;
+    }
+
+    public static boolean isSuccessResponse(Object code) {
+        if (code != null) {
+            if (code instanceof Integer) {
+                return (Integer) code == Integer.parseInt(CODE_SUCCESS);
+            } else if (code instanceof Double) {
+                return (Double) code == Double.parseDouble(CODE_SUCCESS_DOUBLE);
+            } else if (code instanceof String) {
+                return CODE_SUCCESS.equals(code.toString()) || CODE_SUCCESS_DOUBLE.equals(code.toString());
+            }
+        }
+        return false;
     }
 
 }

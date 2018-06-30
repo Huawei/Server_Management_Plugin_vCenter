@@ -1,5 +1,7 @@
 var i18n_v_zh_CN = {
 		menu_eSight:"eSight 设置",
+		menu_vCenter_set:"设置",
+		menu_vCenter_ha_set:"HA 设置",
 		menu_server:"服务器",
 		menu_server_list:"服务器列表",
 		menu_server_sourceManage:"软件源管理",

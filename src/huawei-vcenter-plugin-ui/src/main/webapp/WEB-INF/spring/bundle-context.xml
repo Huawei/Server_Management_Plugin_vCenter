@@ -62,6 +62,10 @@
 
    <bean name="firmwareController" class="com.huawei.vcenterpluginui.mvc.FirmwareController" />
 
+   <bean name="notificationController" class="com.huawei.vcenterpluginui.mvc.NotificationController" />
+
+   <bean name="vCenterController" class="com.huawei.vcenterpluginui.mvc.VCenterController" />
+
    <!-- AOP -->
    <bean name="aspectBean" class="com.huawei.vcenterpluginui.services.LogAspect" />
 
@@ -86,6 +90,21 @@
          
    <osgi:reference id="sessionService"
          interface="com.huawei.vcenterpluginui.services.SessionService" />
+
+   <osgi:reference id="notificationAlarmService"
+         interface="com.huawei.vcenterpluginui.services.NotificationAlarmService" />
+
+    <osgi:reference id="systemKeepAliveService"
+                    interface="com.huawei.vcenterpluginui.services.SystemKeepAliveService" />
+
+   <osgi:reference id="vCenterInfoService"
+         interface="com.huawei.vcenterpluginui.services.VCenterInfoService" />
+
+   <osgi:reference id="eSightHAServerService"
+         interface="com.huawei.vcenterpluginui.services.ESightHAServerService" />
+
+   <osgi:reference id="syncServerHostService"
+         interface="com.huawei.vcenterpluginui.services.SyncServerHostService" />
 
    <osgi:reference id="instantiationBeanService"
          interface="com.huawei.vcenterpluginui.services.InstantiationBeanService" />

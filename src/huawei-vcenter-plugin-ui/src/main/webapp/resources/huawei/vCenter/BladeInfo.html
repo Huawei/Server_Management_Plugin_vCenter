@@ -459,10 +459,7 @@
                     <!-- 健康状态 -->
                     <el-table-column prop="status" v-bind:label="i18ns.deviceInfo.status">
                         <template scope="scope ">
-                            <span v-if="scope.row.status==0">{{i18ns.deviceInfo.normal}}</span>
-                            <span v-else-if="scope.row.status==-1">{{i18ns.deviceInfo.offline}}</span>
-                            <span v-else-if="scope.row.status==-2">{{i18ns.deviceInfo.unknown}}</span>
-                            <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                            <span>{{getHealthStausTxt(scope.row.status)}}</span>
                         </template>
                     </el-table-column>
 
@@ -483,10 +480,7 @@
                         <!-- 健康状态 -->
                         <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState ">
                             <template scope="scope ">
-                                <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                             </template>
                         </el-table-column>
                         <!-- 在位信息 -->
@@ -528,10 +522,7 @@
                         <!-- 健康状态 -->
                         <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                             <template scope="scope ">
-                                <span v-if="scope.row.healthState==0 ">{{i18ns.deviceInfo.normal}}</span>
-                                <span v-else-if="scope.row.healthState==-1 ">{{i18ns.deviceInfo.offline}}</span>
-                                <span v-else-if="scope.row.healthState==-2 ">{{i18ns.deviceInfo.unknown}}</span>
-                                <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                             </template>
                         </el-table-column>
                         <!-- 在位信息 -->
@@ -589,10 +580,7 @@
                         <!-- 健康状态 -->
                         <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                             <template scope="scope ">
-                                <span v-if="scope.row.healthState==0 ">{{i18ns.deviceInfo.normal}}</span>
-                                <span v-else-if="scope.row.healthState==-1 ">{{i18ns.deviceInfo.offline}}</span>
-                                <span v-else-if="scope.row.healthState==-2 ">{{i18ns.deviceInfo.unknown}}</span>
-                                <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                             </template>
                         </el-table-column>
                         <!-- 在位信息 -->
@@ -685,6 +673,12 @@
             },
             methods: {
                 /**
+                 * 获取部件健康状态
+                **/
+                getHealthStausTxt: function (status) {
+                    return getHealthTxt(status);
+                },
+                /**
                  * 绘制饼状图的方法
                  * **/
                 draw: function (id, normal, fault, unknown) {
@@ -729,40 +723,43 @@
                 /* 获取服务器状态方法，根据返回值判断服务器状态，0为正常，-1为离线，-2为未知，其他为故障 */
                 getServerStatus: function () {
                     var obj = document.getElementById('serverStatusImage');
-                    if (this.serverInfos.status == 0) {
-                        obj.style.backgroundColor = "limegreen";
-                        this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.normal;
-                    } else if (this.serverInfos.status == -2) {
-                        obj.style.backgroundColor = "royalblue";
-                        this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
-                    } else if (this.serverInfos.status != 0 && this.serverInfos.status != -1 && this.serverInfos.status != -2) {
-                        obj.style.backgroundColor = "red";
-                        this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.fault;
+                    var status = this.serverInfos.status.toString();
+                    switch (status) {
+                        case "-1":
+                            obj.style.backgroundColor = "gray";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.offline;
+                            break;
+                        case "-2":
+                            obj.style.backgroundColor = "royalblue";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
+                            break;
+                        case "0":
+                            obj.style.backgroundColor = "limegreen";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.normal;
+                            break;
+                        case "2":
+                        case "3":
+                        case "5":
+                        case "4":
+                        case "6":
+                        case "7":
+                        case "8":
+                            obj.style.backgroundColor = "red";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.fault;
+                            break;
+                        default:
+                            obj.style.backgroundColor = "royalblue";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
+                            break;
                     }
                 },
                 /* 获取风扇状态 */
                 getFanStatus: function () {
-                    var fanHealthState = [];
-                    var normalFans = [];
-                    var faultFans = [];
-                    var unknownFans = [];
-                    for (var i = 0; i < this.deviceInfos.Fan.length; i++) {
-                        fanHealthState.push(this.deviceInfos.Fan[i].healthState);
-                    }
-                    for (var j = 0; j < fanHealthState.length; j++) {
-                        if (fanHealthState[j] == 0) {
-                            normalFans.push(fanHealthState[j]);
-                        } else if (fanHealthState[j] == -2) {
-                            unknownFans.push(fanHealthState[j]);
-                        } else if (fanHealthState[j] != -1 && fanHealthState[j] != 0 && fanHealthState[j] != -2) {
-                            faultFans.push(fanHealthState[j]);
-                        }
-                    }
-                    this.normalFan = normalFans.length;
-                    this.faultFan = faultFans.length;
-                    this.unknownFan = unknownFans.length;
-                    var total = this.normalFan + this.faultFan + this.unknownFan;
-                    if (normalFans.length > 0 || faultFans.length > 0 || unknownFans.length > 0) {
+                    var statistics = StatusStatistics(this.deviceInfos.Fan);
+                    this.normalFan = statistics.normal;
+                    this.faultFan = statistics.fault;
+                    this.unknownFan = statistics.unknown;
+                    if ((this.normalFan + this.faultFan + this.unknownFan) > 0) {
                         this.isShowFan = true;
                         this.draw('Fan', this.normalFan, this.faultFan, this.unknownFan);
                     } else {
@@ -773,27 +770,11 @@
                  * 获取交换板状态
                  * **/
                 getBoardStatus: function () {
-                    var boardHealthState = [];
-                    var normalBoards = [];
-                    var faultBoards = [];
-                    var unknownBoards = [];
-                    for (var i = 0; i < this.deviceInfos.board.length; i++) {
-                        boardHealthState.push(this.deviceInfos.board[i].healthState);
-                    }
-                    for (var j = 0; j < boardHealthState.length; j++) {
-                        if (boardHealthState[j] == 0) {
-                            normalBoards.push(boardHealthState[j]);
-                        } else if (boardHealthState[j] == -2) {
-                            unknownBoards.push(fanHealthState[j]);
-                        } else if (boardHealthState[j] != -1 && boardHealthState[j] != 0 && boardHealthState[j] != -2) {
-                            faultBoards.push(boardHealthState[j]);
-                        }
-                    }
-                    this.normalBoard = normalBoards.length;
-                    this.faultBoard = faultBoards.length;
-                    this.unknownBoard = unknownBoards.length;
-                    var total = this.normalBoard + this.faultBoard + this.unknownBoard;
-                    if (normalBoards.length > 0 || faultBoards.length > 0 || unknownBoards.length > 0) {
+                    var statistics = StatusStatistics(this.deviceInfos.board);
+                    this.normalBoard = statistics.normal;
+                    this.faultBoard = statistics.fault;
+                    this.unknownBoard = statistics.unknown;
+                    if ((this.normalBoard + this.faultBoard + this.unknownBoard) > 0) {
                         this.isShowBoard = true;
                         this.draw('board', this.normalBoard, this.faultBoard, this.unknownBoard);
                     } else {
@@ -802,27 +783,11 @@
                 },
                 /* 获取电源状态 */
                 getPowerStatus: function () {
-                    var powerHealthState = [];
-                    var normalPSUS = [];
-                    var faultPSUS = [];
-                    var unknownPSUS = [];
-                    for (var i = 0; i < this.deviceInfos.PSU.length; i++) {
-                        powerHealthState.push(this.deviceInfos.PSU[i].healthState);
-                    }
-                    for (var j = 0; j < powerHealthState.length; j++) {
-                        if (powerHealthState[j] == 0) {
-                            normalPSUS.push(powerHealthState[j]);
-                        } else if (powerHealthState[j] == -2) {
-                            unknownPSUS.push(powerHealthState[j]);
-                        } else if (powerHealthState[j] != -1 && powerHealthState[j] != -2 && powerHealthState[j] != 0) {
-                            faultPSUS.push(powerHealthState[j]);
-                        }
-                    }
-                    this.normalPSU = normalPSUS.length;
-                    this.faultPSU = faultPSUS.length;
-                    this.unknownPSU = unknownPSUS.length;
-                    var total = this.normalPSU + this.faultPSU + this.unknownPSU;
-                    if (normalPSUS.length > 0 || faultPSUS.length > 0 || unknownPSUS.length > 0) {
+                    var statistics = StatusStatistics(this.deviceInfos.PSU);
+                    this.normalPSU = statistics.normal;
+                    this.faultPSU = statistics.fault;
+                    this.unknownPSU = statistics.unknown;
+                    if ((this.normalPSU + this.faultPSU + this.unknownPSU) > 0) {
                         this.isShowPSU = true;
                         this.draw('PSU', this.normalPSU, this.faultPSU, this.unknownPSU);
                     } else {

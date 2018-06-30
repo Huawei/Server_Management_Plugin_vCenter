@@ -319,10 +319,7 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                    <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                                 </template>
                             </el-table-column>
                             <!-- 在位信息 -->
@@ -355,10 +352,7 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                    <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                                 </template>
                             </el-table-column>
                             <!-- 在位信息 -->
@@ -391,10 +385,7 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                    <span v-if="scope.row.healthState==0">{{i18ns.deviceInfo.normal}}</span>
-                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.offline}}</span>
-                                    <span v-else-if="scope.row.healthState==-2">{{i18ns.deviceInfo.unknown}}</span>
-                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                    <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                                 </template>
                             </el-table-column>
                             <!-- 在位信息 -->
@@ -421,10 +412,7 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="healthState" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                    <span v-if="scope.row.healthState==1">{{i18ns.deviceInfo.normal}}</span>
-                                    <span v-else-if="scope.row.healthState==0">{{i18ns.deviceInfo.offline}}</span>
-                                    <span v-else-if="scope.row.healthState==-1">{{i18ns.deviceInfo.unknown}}</span>
-                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                    <span>{{getHealthStausTxt(scope.row.healthState)}}</span>
                                 </template>
                             </el-table-column>
                             <!-- RAID类型 -->
@@ -458,9 +446,7 @@
                             <!-- 健康状态 -->
                             <el-table-column prop="mezzHealthStatus" v-bind:label="i18ns.deviceInfo.healthState">
                                 <template scope="scope">
-                                    <span v-if="scope.row.mezzHealthStatus==1">{{i18ns.deviceInfo.normal}}</span>
-                                    <span v-else-if="scope.row.mezzHealthStatus==-2||scope.row.mezzHealthStatus==5">{{i18ns.deviceInfo.unknown}}</span>
-                                    <span v-else>{{i18ns.deviceInfo.fault}}</span>
+                                    <span>{{getHealthStausTxt(scope.row.mezzHealthStatus)}}</span>
                                 </template>
                             </el-table-column>
                             <!--在位信息-->
@@ -577,6 +563,12 @@
             },
             methods: {
                 /**
+                 * 获取部件健康状态
+                **/
+                getHealthStausTxt: function (status) {
+                    return getHealthTxt(status);
+                },
+                /**
                  * 绘制饼状图的方法
                  * **/
                 draw: function (id, normal, fault, unknown) {
@@ -625,43 +617,45 @@
                  * **/
                 getBladeServerStatus: function () {
                     var obj = document.getElementById('bladeServerStatusImage');
-                    if (this.serverInfos.status == 0) {
-                        obj.style.backgroundColor = "limegreen";
-                        this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.normal;
-                    } else if (this.serverInfos.status == -2) {
-                        obj.style.backgroundColor = "royalblue";
-                        this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
-                    } else if (this.serverInfos.status != 0 && this.serverInfos.status != -1 && this.serverInfos.status != -2) {
-                        obj.style.backgroundColor = "red";
-                        this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.fault;
+                    var status = this.serverInfos.status.toString();
+                    switch (status) {
+                        case "-1":
+                            obj.style.backgroundColor = "gray";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.offline;
+                            break;
+                        case "-2":
+                            obj.style.backgroundColor = "royalblue";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
+                            break;
+                        case "0":
+                            obj.style.backgroundColor = "limegreen";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.normal;
+                            break;
+                        case "2":
+                        case "3":
+                        case "5":
+                        case "4":
+                        case "6":
+                        case "7":
+                        case "8":
+                            obj.style.backgroundColor = "red";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.fault;
+                            break;
+                        default:
+                            obj.style.backgroundColor = "royalblue";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
+                            break;
                     }
                 },
                 /**
                  *  获取cpu状态方法，根据返回值判断cpu状态*
                  **/
                 getCpuStatus: function () {
-                    var obj = document.getElementById('Cpu');
-                    var cpuHealthState = [];
-                    var normalCpus = [];
-                    var faultCpus = [];
-                    var unknownCpus = [];
-                    for (var i = 0; i < this.deviceInfos.CPU.length; i++) {
-                        cpuHealthState.push(this.deviceInfos.CPU[i].healthState);
-                    }
-                    for (var j = 0; j < cpuHealthState.length; j++) {
-                        if (cpuHealthState[j] == 0) {
-                            normalCpus.push(cpuHealthState[j]);
-                        } else if (cpuHealthState[j] == -2) {
-                            unknownCpus.push(cpuHealthState[j]);
-                        } else if (cpuHealthState[j] != -1 && cpuHealthState[j] != 0 && cpuHealthState[j] != -2) {
-                            faultCpus.push(cpuHealthState[j]);
-                        }
-                    }
-                    this.normalCpu = normalCpus.length;
-                    this.faultCpu = faultCpus.length;
-                    this.unknownCpu = unknownCpus.length;
-                    var total = this.normalCpu + this.faultCpu + this.unknownCpu;
-                    if (normalCpus.length > 0 || faultCpus.length > 0 || unknownCpus.length > 0) {
+                    var statistics = StatusStatistics(this.deviceInfos.CPU);
+                    this.normalCpu = statistics.normal;
+                    this.faultCpu = statistics.fault;
+                    this.unknownCpu = statistics.unknown;
+                    if ((this.normalCpu + this.faultCpu + this.unknownCpu) > 0) {
                         this.isShowCpu = true;
                         this.draw('Cpu', this.normalCpu, this.faultCpu, this.unknownCpu);
                     } else {
@@ -670,59 +664,25 @@
                 },
                 /* 获取内存状态 */
                 getMemoryStatus: function () {
-                    var obj = document.getElementById('Memory');
-                    var MemoryHealthState = [];
-                    var normalMemorys = [];
-                    var faultMemorys = [];
-                    var unknownMemorys = [];
-                    for (var i = 0; i < this.deviceInfos.Memory.length; i++) {
-                        MemoryHealthState.push(this.deviceInfos.Memory[i].healthState)
-                    }
-                    for (var j = 0; j < MemoryHealthState.length; j++) {
-                        if (MemoryHealthState[j] == 0) {
-                            normalMemorys.push(MemoryHealthState[j]);
-                        } else if (MemoryHealthState[j] == -2) {
-                            unknownMemorys.push(MemoryHealthState[j]);
-                        } else if (MemoryHealthState[j] != -1 && MemoryHealthState[j] != 0 && MemoryHealthState[j] != -2) {
-                            faultMemorys.push(MemoryHealthState[j]);
-                        }
-                    }
-                    this.normalMemory = normalMemorys.length;
-                    this.faultMemory = faultMemorys.length;
-                    this.unknownMemory = unknownMemorys.length;
-                    var total = this.normalMemory + this.faultMemory + this.unknownMemory;
-                    if (normalMemorys.length > 0 || faultMemorys.length > 0 || unknownMemorys.length > 0) {
+                    var statistics = StatusStatistics(this.deviceInfos.Memory);
+                    this.normalMemory = statistics.normal;
+                    this.faultMemory = statistics.fault;
+                    this.unknownMemory = statistics.unknown;
+                    if ((this.normalMemory + this.faultMemory + this.unknownMemory) > 0) {
                         this.isShowMemory = true;
                         this.draw('Memory', this.normalMemory, this.faultMemory, this.unknownMemory);
                     } else {
                         this.isShowMemory = false;
                     }
-
                 },
                 /* 获取硬盘状态 */
                 getDiskStatus: function () {
                     var obj = document.getElementById('disk');
-                    var diskHealthState = [];
-                    var normalDisks = [];
-                    var faultDisks = [];
-                    var unknownDisks = [];
-                    for (var i = 0; i < this.deviceInfos.Disk.length; i++) {
-                        diskHealthState.push(this.deviceInfos.Disk[i].healthState)
-                    }
-                    for (var j = 0; j < diskHealthState.length; j++) {
-                        if (diskHealthState[j] == 0) {
-                            normalDisks.push(diskHealthState[j]);
-                        } else if (diskHealthState[j] == -2) {
-                            unknownDisks.push(diskHealthState[j]);
-                        } else if (diskHealthState[j] != -1 && diskHealthState[j] != 0 && diskHealthState[j] != -2) {
-                            faultDisks.push(diskHealthState[j]);
-                        }
-                    }
-                    this.normalDisk = normalDisks.length;
-                    this.faultDisk = faultDisks.length;
-                    this.unknownDisk = unknownDisks.length;
-                    var total = this.normalMemory + this.faultMemory + this.unknownMemory;
-                    if (normalDisks.length > 0 || faultDisks.length > 0 || unknownDisks.length > 0) {
+                    var statistics = StatusStatistics(this.deviceInfos.Disk);
+                    this.normalDisk = statistics.normal;
+                    this.faultDisk = statistics.fault;
+                    this.unknownDisk = statistics.unknown;
+                    if ((this.normalDisk + this.faultDisk + this.unknownDisk) > 0) {
                         this.isShowDisk = true;
                         this.draw('Disk', this.normalDisk, this.faultDisk, this.unknownDisk);
                     } else {
@@ -837,7 +797,7 @@
                                         item.mezzETHMac = obj.mezzETHMac.join(";");
                                         item.mezzIBMac = obj.mezzIBMac.join(";");
                                         item.mezzFCWWPN = obj.mezzFCWWPN.join(";");
-                                        item.mezzHealthStatus = -2;
+                                        //item.mezzHealthStatus = -2;
                                         app.deviceInfos.Mezz.push(item)
                                     }
                                 }

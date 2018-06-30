@@ -106,6 +106,7 @@
                     	<exclude name="**/*InstantiationBeanService*.class" />
                     	<exclude name="**/*SystemService*.class" />
                     	<exclude name="**/*SessionService*.class" />
+                    	<exclude name="**/*NotificationAlarmService*.class" />
                     </fileset>
                 </classfiles>
                 <sourcefiles encoding="UTF-8">

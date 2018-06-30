@@ -1,0 +1,435 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>eSight</title>
+    <link href="../../css/element.css" rel="stylesheet"/>
+    <link href="../../css/style.css" rel="stylesheet"/>
+    <script src="../../scripts/vue.js"></script>
+    <script src="../../scripts/element.js"></script>
+    <script src="../../scripts/jquery-2.1.3.min.js"></script>
+    <script src="../../scripts/i18n/zh-CN.js"></script>
+    <script src="../../scripts/i18n/en.js"></script>
+    <script src="../i18n/en.js"></script>
+    <script src="../i18n/zh-CN.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="js/rest.js"></script>
+    <script src="../../scripts/web-platform.js"></script>
+    <script src="../js/errorCode.js"></script>
+    <script src="../../scripts/lodash.min.js"></script>
+    <script src="../../scripts/polyfill.min.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        body {
+            min-width: 900px;
+        }
+
+        form input {
+            max-width: 350px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="app" v-cloak>
+    <!-- 编辑 和 添加对话框 -->
+    <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" label-width="130px" label-position="left">
+        <!-- 用户名和密码设定 -->
+        <div style="margin-top:15px;margin-bottom:15px;margin-left:10px">
+            <el-checkbox v-model="ruleForm.state" @change="checkboxChange" :disabled='checkDisabled'>
+                {{i18ns.vCenter.stateInfo}}
+            </el-checkbox>
+        </div>
+        <el-row>
+            <el-form-item v-bind:label="i18ns.vCenter.hostIp" prop="hostIp">
+                <el-select :disabled="!isEsight" v-model="ruleForm.hostIp">
+                    <el-option
+                            v-for="item in ips"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item v-bind:label="i18ns.vCenter.userName" prop="userName">
+                <div>
+                    <el-input v-model="ruleForm.userName" :disabled="!isEsight" auto-complete="off"></el-input>
+                </div>
+            </el-form-item>
+            <el-form-item v-show="!isUpdate" v-bind:label="i18ns.vCenter.password" prop="password">
+                <div>
+                    <el-input type="password" :disabled="!isEsight" v-model="ruleForm.password"
+                              auto-complete="off"></el-input>
+                </div>
+            </el-form-item>
+        </el-row>
+        <el-row v-if="isUpdate">
+            <!--  <div style="margin-top:15px;margin-bottom:15px;margin-left:10px">
+                <el-checkbox :disabled="!ruleForm.state" v-model="checked">{{i18ns.vCenter.changeInfo}}</el-checkbox>
+              </div>-->
+
+            <el-form-item v-bind:label="i18ns.vCenter.password" prop="password1">
+                <div>
+                    <el-input type="password" v-model="ruleForm.password1"
+                              auto-complete="off" :disabled="!isEsight"></el-input>
+                </div>
+            </el-form-item>
+        </el-row>
+        <el-form-item>
+            <span style="font-size:12px; text-align:left; color:green;" v-show="isVisible">{{isWhatDescription}}</span>
+        </el-form-item>
+    </el-form>
+    <!-- 保存按钮 -->
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="save()" v-loading.fullscreen.lock='loading' :element-loading-text='i18ns.vCenter.loadingText'
+                   :disabled="!isEsight">{{i18ns.vCenter.ok}}
+        </el-button>
+    </div>
+    <!-- 点击保弹出框-->
+    <el-dialog
+            :title="i18ns.vCenter.prompt"
+            :visible.sync="centerDialogVisible"
+            width="30%"
+            fullscreen='true'
+            center>
+        <p style='text-align: center'>{{resMessage.title}}</p>
+        <div class="info" v-if='resMessage.successInfo.length != 0'>
+            <p>{{resMessage.successTitle}}</p>
+            <el-table
+                    :data="resMessage.successInfo"
+                    style="width: 100%">
+                <el-table-column
+                        prop="hostIp"
+                        :label="i18ns.vCenter.tableESightIP"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="aliasName"
+                        :label="i18ns.vCenter.tableAliasName"
+                        width="150">
+                </el-table-column>
+                <el-table-column
+                        prop="systemId"
+                        :label="i18ns.vCenter.systemId"
+                >
+                </el-table-column>
+            </el-table>
+        </div>
+        <div class="info" v-if='resMessage.failInfo.length != 0'>
+            <p>{{resMessage.failTitle}}</p>
+            <el-table
+                    :data="resMessage.failInfo"
+                    style="width: 100%">
+                <el-table-column
+                        prop="hostIp"
+                        :label="i18ns.vCenter.tableESightIP"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="aliasName"
+                        :label="i18ns.vCenter.tableAliasName"
+                        width="150">
+                </el-table-column>
+                <el-table-column
+                        prop="systemId"
+                        :label="i18ns.vCenter.systemId">
+                </el-table-column>
+            </el-table>
+        </div>
+        <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="centerDialogVisible = false">{{i18ns.vCenter.ok}}</el-button>
+  </span>
+    </el-dialog>
+</div>
+</body>
+<script type="text/javascript">
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            //国际化
+            i18ns: {},
+            checked: false,
+            isUpdate: false,
+            isVisible: false,
+            isWhatDescription: '',
+            checkDisabled: false,
+            isEsight: false,
+            ips: [],
+            isFalseWhatDescription: '',
+            centerDialogVisible: false,
+            haCode: false,
+            resMessage: {
+                title: '',
+                successTitle: '',
+                failTitle: '',
+                successInfo: [],
+                failInfo: [],
+            },
+            ruleForm: {
+                hostIp: '',
+                userName: '',
+                password: '',
+                state: false,
+                password1: ''
+            },
+            loading: false,
+            loadingText: '',
+            // 验证规则设定
+            rules: {
+                hostIp: {
+                    required: true,
+                    validator: function (rule, value, callback) {
+                        if (value) {
+                            if (!/^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/.test(value)) {
+                                return callback(new Error(app.i18ns.eSight.hostIPError));
+                            } else
+                                return callback();
+                        } else {
+                            return callback(new Error(app.i18ns.eSight.hostNull));
+                        }
+                    },
+                    trigger: 'change'
+                },
+                userName: [{
+                    required: true,
+                    validator: function (rule, value, callback) {
+                        if (value) {
+                            if (value.length > 100) {
+                                return callback(new Error(app.i18ns.vCenter.userNameError));
+                            } else
+                                return callback();
+                        } else {
+                            return callback(new Error(app.i18ns.vCenter.userNameNull));
+                        }
+                    },
+                    trigger: 'change'
+                }],
+                password: {
+                    required: true,
+                    validator: function (rule, value, callback) {
+                        if (value) {
+                            if (!/^[a-zA-Z0-9\~\`\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]|{\}\;\'\:\"\,\.\/\<\>\?]{1,100}$/.test(value)) {
+                                return callback(new Error(app.i18ns.vCenter.passwordError));
+                            } else {
+                                return callback();
+                            }
+                        } else {
+                            if (app.isUpdate) {
+                                return callback();
+                            }
+                            return callback(new Error(app.i18ns.vCenter.passwordNull));
+                        }
+                    },
+                    trigger: 'change'
+                },
+                password1: {
+                    required: true,
+                    validator: function (rule, value, callback) {
+                        if (value) {
+                            if (!/^[a-zA-Z0-9\~\`\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]|{\}\;\'\:\"\,\.\/\<\>\?]{1,100}$/.test(value)) {
+                                return callback(new Error(app.i18ns.vCenter.passwordError));
+                            }
+                        } else {
+                            return callback(new Error(app.i18ns.vCenter.passwordNull));
+                        }
+                        return callback();
+                    },
+                    trigger: 'change'
+                }
+            }
+        },
+        created: function () {
+            this.i18ns = getIn18();
+            this.get();
+            this.getIps();
+            this.getEsightData('');
+            this.judgmentStatus();
+
+        },
+        mounted: function () {
+            //获取列表数据
+            console.log(getCookie('JSESSIONID'));
+            // this.judgmentStatus();
+        },
+        methods: {
+            /**
+             * 获取eSight列表
+             *
+             * @param {any} keyword
+             */
+            getEsightData: function (keyword) {
+                var queryParam = {
+                    param: {
+                        pageNo: 1,
+                        pageSize: 10,
+                        hostIP: keyword
+                    }
+                }
+                vCenterManage.getList(queryParam, this.getEsight);
+            },
+
+            getEsight: function (ret) {
+                if (ret.code === '0') {
+                    ret.data.length != 0 ? app.haCode = true : app.haCode = false;
+                } else {
+                    app.haCode = false;
+                }
+            },
+            getIps: function () {
+                vCenterManage.getIps(function (response) {
+                    app.ips = [];
+                    console.log(response)
+                    for (var i in response.data) {
+                        app.ips.push({
+                            "label": response.data[i],
+                            "value": response.data[i]
+                        });
+                    }
+                })
+            },
+            get: function () {
+                vCenterManage.get(function (response) {
+                    if (response.code === '0') {
+                        if (response.data['USER_NAME']) {
+                            app.isUpdate = true;
+                        }
+                        app.ruleForm.hostIp = response.data['HOST_IP'];
+                        app.ruleForm.userName = response.data['USER_NAME'];
+                        app.ruleForm.state = response.data['STATE'];
+                    }
+                });
+            },
+            /**
+             * 判断启用HA按钮状态
+             *
+             */
+            judgmentStatus: function () {
+                var queryParam = {
+                    param: {
+                        pageNo: 1,
+                        pageSize: 10,
+                        hostIP: ''
+                    }
+                }
+                vCenterManage.getList(queryParam, function (ret) {
+                    app.getEsight(ret);
+                    if (app.haCode) {
+                        app.checkDisabled = false;
+                        app.isEsight = true;
+                    } else {
+                        app.checkDisabled = true;
+                        app.ruleForm.state = false;
+                        app.isEsight = false;
+                        this.alertMsg(app.i18ns.vCenter.alertMsg)
+                        ;
+                    }
+                });
+
+            },
+            /**
+             * 保存配置
+             *
+             */
+            save: function () {
+                console.log("save::");
+                // var that = this;
+                app.loading = true;
+                this.$refs['ruleForm'].validate(function (valid) {
+                    if (valid) {
+                        var param = {
+                            userName: app.ruleForm.userName,
+                            state: app.ruleForm.state,
+                            hostIp: app.ruleForm.hostIp
+                        }
+                        if (app.isUpdate && app.ruleForm.password1.length > 0) {
+                            param.password = app.ruleForm.password1
+                        } else if (app.ruleForm.password && app.ruleForm.password.length > 0) {
+                            param.password = app.ruleForm.password
+                        }
+                        vCenterManage.save(param, function (response) {
+                            app.loading = false;
+                            if (app.ruleForm.state) {
+                                if (response.code === '0') {
+                                    if (response.data.fail.length === 0) {
+                                        app.resMessage.title = app.i18ns.vCenter.saveDoneSuccessHA
+                                    } else {
+                                        app.resMessage.title = app.i18ns.vCenter.saveDoneFail
+                                    }
+                                    app.resMessage.successTitle = app.i18ns.vCenter.successTitle; // 成功title
+                                    app.resMessage.failTitle = app.i18ns.vCenter.failTitle; // 失败titlt
+                                    app.resMessage.successInfo = response.data.success; // 失败信息
+                                    app.resMessage.failInfo = response.data.fail; // 成功信息
+                                    app.centerDialogVisible = true;
+                                } else if (response.code === '-90006') {
+                                    app.alertMsg(app.i18ns.vCenter.HAVersionSupport);
+                                    app.ruleForm.state = false
+                                    return false;
+                                } else {
+                                    app.alertMsg(app.i18ns.vCenter.saveFail);
+                                }
+                            } else {
+                                if (response.code === '0') {
+                                    // app.alertMsg(app.i18ns.vCenter.saveDoneSuccess);
+                                    if (response.code === '0') {
+                                        if (response.data.fail.length === 0) {
+                                            app.resMessage.title = app.i18ns.vCenter.saveDoneSuccess
+                                        } else {
+                                            app.resMessage.title = app.i18ns.vCenter.saveDoneFail1
+                                        }
+                                        app.resMessage.successTitle = app.i18ns.vCenter.SaveSuccessInformation; // 成功title
+                                        app.resMessage.failTitle = app.i18ns.vCenter.SaveFailInformation; // 失败titlt
+                                        app.resMessage.successInfo = response.data.success; // 成功信息
+                                        app.resMessage.failInfo = response.data.fail; // 失败信息
+                                        app.centerDialogVisible = true;
+                                    } else {
+                                        app.alertMsg(app.i18ns.vCenter.saveFail);
+                                    }
+                                }
+                            }
+                        })
+                    } else {
+                        app.loading = false;
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            /**
+             * 提醒框方法
+             *
+             * @param {any} msg
+             * @param {any} callback
+             */
+            alertMsg: function (msg, callback) {
+                this.$alert(msg, this.i18ns.common.prompt, {
+                    confirmButtonText: this.i18ns.common.confirm,
+                    callback: function () {
+                        callback && callback()
+                    }
+                });
+            },
+            checkboxChange: function (val) {
+                if (val.target.checked != true) {
+                    this.ruleForm.state = false;
+                    app.checked = false;
+                }
+                app.judgmentStatus();
+            },
+        }
+    })
+</script>
+
+</html>
