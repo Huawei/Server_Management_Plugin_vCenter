@@ -8,7 +8,7 @@ I. General Information
 
     Name:     Management Plugin Pack for Huawei Server
     Category: Monitoring and Configuration
-    version : 1.1.2
+    version : 1.2.92
 
 II. Description
 
