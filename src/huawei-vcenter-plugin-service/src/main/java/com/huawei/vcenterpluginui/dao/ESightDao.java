@@ -107,6 +107,51 @@ public class ESightDao extends H2DataBaseDao {
 
     }
 
+    public List<ESight> getESightListWithPwd(String ip, int pageNo, int pageSize) throws SQLException {
+        checkNullIp(ip);
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            StringBuffer sql = new StringBuffer();
+            sql.append("select * from HW_ESIGHT_HOST");
+            if (ip != null && !ip.isEmpty()) {
+                sql.append(" where HOST_IP like ?");
+            }
+
+            if (pageSize > 0) {
+                sql.append(" limit ? offset ?");
+            }
+            ps = con.prepareStatement(sql.toString());
+
+            int i = 1;
+
+            if (ip != null && !ip.isEmpty()) {
+                ps.setString(i++, "%" + ip + "%");
+            }
+
+            if (pageSize > 0) {
+                ps.setInt(i++, pageSize);
+                ps.setInt(i++, (pageNo - 1) * pageSize);
+            }
+            rs = ps.executeQuery();
+            List<ESight> eSightList = new ArrayList<>();
+            while (rs.next()) {
+                ESight eSight = buildESight(rs);
+                eSightList.add(eSight);
+            }
+            return eSightList;
+        } catch (SQLException e) {
+            LOGGER.error(e);
+            throw e;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+
+    }
+
     public List<ESight> getAllESights() throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;

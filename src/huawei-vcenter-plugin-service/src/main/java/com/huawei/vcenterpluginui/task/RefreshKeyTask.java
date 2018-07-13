@@ -36,7 +36,7 @@ public class RefreshKeyTask {
 		LOGGER.info("Refresh the key...");  
 		try {
 			//获取用户密码等信息
-			List<ESight> eSightList = eSightDao.getESightList(null, -1, -1);
+			List<ESight> eSightList = eSightDao.getESightListWithPwd(null, -1, -1);
 
 			VCenterInfo vCenterInfo = vCenterInfoDao.getVCenterInfo();
 			if (vCenterInfo != null) {
