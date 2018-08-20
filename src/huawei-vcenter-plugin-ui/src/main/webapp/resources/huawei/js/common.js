@@ -397,10 +397,10 @@ function getFirmwareTypeList() {
                 { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
                 { value: 'RAID', label: 'RAID' },
                 { value: 'HDD', label: 'HDD' },
-                { value: 'NVME', label: 'NVME' },
+                //{ value: 'NVME', label: 'NVME' }
                 { value: 'NVDIMM', label: 'NVDIMM' },
                 { value: 'SSD', label: 'SSD' },
-                { value: 'OTHERS', label: 'Others' }
+                //{ value: 'OTHERS', label: 'Others' }
 
             ];
         }
@@ -416,10 +416,10 @@ function getFirmwareTypeList() {
         { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
         { value: 'RAID', label: 'RAID' },
         { value: 'HDD', label: 'HDD' },
-        { value: 'NVME', label: 'NVME' },
+       // { value: 'NVME', label: 'NVME' },
         { value: 'NVDIMM', label: 'NVDIMM' },
-        { value: 'SSD', label: 'SSD' },
-        { value: 'OTHERS', label: '其他' }
+        { value: 'SSD', label: 'SSD' }
+        //{ value: 'OTHERS', label: '其他' }
 
     ];
 }

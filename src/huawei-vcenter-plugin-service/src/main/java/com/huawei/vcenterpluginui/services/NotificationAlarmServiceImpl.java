@@ -1,24 +1,17 @@
 package com.huawei.vcenterpluginui.services;
 
 import com.google.gson.Gson;
-import com.huawei.esight.api.provider.DefaultOpenIdProvider;
 import com.huawei.esight.api.provider.OpenIdProvider;
 import com.huawei.esight.api.rest.notification.DeleteNotificationCommonAlarm;
 import com.huawei.esight.api.rest.notification.PutNotificationCommonAlarm;
-import com.huawei.esight.utils.StringUtil;
 import com.huawei.vcenterpluginui.constant.DeviceComponent;
 import com.huawei.vcenterpluginui.constant.ESightServerType;
 import com.huawei.vcenterpluginui.dao.ESightDao;
 import com.huawei.vcenterpluginui.dao.NotificationAlarmDao;
-import com.huawei.vcenterpluginui.entity.ESight;
-import com.huawei.vcenterpluginui.entity.ESightHAServer;
-import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
-import com.huawei.vcenterpluginui.entity.VCenterInfo;
-import com.huawei.vcenterpluginui.exception.ComponentNotReadyException;
+import com.huawei.vcenterpluginui.entity.*;
 import com.huawei.vcenterpluginui.exception.NoEsightException;
 import com.huawei.vcenterpluginui.exception.VcenterException;
 import com.huawei.vcenterpluginui.provider.SessionOpenIdProvider;
-import com.huawei.vcenterpluginui.utils.CipherUtils;
 import com.huawei.vcenterpluginui.utils.OpenIdSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -371,7 +364,7 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
                     // 高密类型如果当前DN未同步，还需要判断管理板部件变化，有变化的需要推送到已同步的子板
                     if (eSightHAServers.isEmpty()) {
                         ESightHAServer eSightHAServer = eSightHAServerService.getESightHAServerByDN(eSight.getId(), dn);
-                        LOGGER.info("[Polling]Not a synchronized server: " + eSightHAServer == null ? entry.getKey() : eSightHAServer);
+                        LOGGER.info("[Polling]Not a synchronized server: " + (eSightHAServer == null ? entry.getKey() : eSightHAServer));
                         if (eSightHAServer != null
                                 && ESightServerType.HIGH_DENSITY.value().equalsIgnoreCase(eSightHAServer.geteSightServerType())
                                 && StringUtils.hasLength(eSightHAServer.geteSightServerParentDN())) {
@@ -402,17 +395,21 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
                     ESightHAServer haServerInstance = eSightHAServers.get(0);
                     String serverType = haServerInstance.geteSightServerType();
                     String parentDN = haServerInstance.geteSightServerParentDN();
+                    boolean isHighDensity = false;
+                    boolean isBlade = false;
                     if (ESightServerType.RACK.value().equalsIgnoreCase(serverType)) {
                         affectedDNs.add(haServerInstance.geteSightServerDN());
                         if (StringUtils.hasLength(parentDN)) {
-                            affectedDNs.add(haServerInstance.geteSightServerParentDN());
+                            affectedDNs.add(parentDN);
                         }
                     } else if (ESightServerType.HIGH_DENSITY.value().equalsIgnoreCase(serverType)) {
+                        isHighDensity = true;
                         affectedDNs.add(haServerInstance.geteSightServerDN());
                         if (StringUtils.hasLength(parentDN)) {
-                            affectedDNs.add(haServerInstance.geteSightServerParentDN());
+                            affectedDNs.add(parentDN);
                         }
                     } else if (ESightServerType.BLADE.value().equalsIgnoreCase(serverType)) {
+                        isBlade = true;
                         affectedDNs.add(dn);
                     } else {
                         affectedDNs.add(dn);
@@ -446,28 +443,24 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
                             LOGGER.info("[Polling]Server device detail initial size: " + pushList.size() + ", data: " + pushList);
                         } else {
                             // 取状态变化的
+                            Collection<String> turnGreenComponents;
                             List<ServerDeviceDetail> diffDeviceDetailList;
                             try {
-                                diffDeviceDetailList = notificationAlarmDao.getServerDeviceDetailDiff(deviceDetailList);
+                                Pair<Collection<String>, List<ServerDeviceDetail>> resultPair = notificationAlarmDao.getServerDeviceDetailDiff(deviceDetailList);
+                                turnGreenComponents = resultPair.getKey(); // 绿色告警
+                                diffDeviceDetailList = resultPair.getValue(); // 非绿告警
+                                LOGGER.info("Green: " + turnGreenComponents + ", Non-Green: " + diffDeviceDetailList);
                             } catch (Exception e) {
                                 LOGGER.error(e.getMessage(), e);
                                 continue;
                             }
-                            // 恢复告警每个部件只需要一个告警
-                            Set<String> resumeAlarmComponents = new HashSet<>();
-                            List<ServerDeviceDetail> newDiffDeviceDetailList = new ArrayList<>();
-                            for (ServerDeviceDetail serverDeviceDetail : diffDeviceDetailList) {
-                                if ("0".equals(serverDeviceDetail.getHealthState())) {
-                                    resumeAlarmComponents.add(serverDeviceDetail.getComponent());
-                                } else {
-                                    newDiffDeviceDetailList.add(serverDeviceDetail);
-                                }
-                            }
-                            for (String resumeAlarmComponent : resumeAlarmComponents) {
-                                newDiffDeviceDetailList.add(new ServerDeviceDetail(eSight.getId(), affectedDN,
+                            // 添加恢复告警
+                            for (String resumeAlarmComponent : turnGreenComponents) {
+                                pushList.add(new ServerDeviceDetail(eSight.getId(), affectedDN,
                                         resumeAlarmComponent, null, "0", "1"));
                             }
-                            pushList.addAll(newDiffDeviceDetailList);
+                            // 添加故障告警
+                            pushList.addAll(diffDeviceDetailList);
 
                             LOGGER.info("[Polling]Server device detail different size: " + pushList.size() + ", data: " + pushList);
                         }
@@ -490,14 +483,18 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
                     LOGGER.info("Components have present state: " + componentHasPresentState);
                     // 手动构建红色告警推送部件全不在位情况
                     // 将要推送的部件
-                    Set<String> changedComponents = new HashSet<>();
-                    for (ServerDeviceDetail serverDeviceDetail : pushList) {
-                        changedComponents.add(serverDeviceDetail.getComponent());
-                    }
+                    Collection<String> notPresentStateComponents = notificationAlarmDao.getNotPresentStateComponents();
+                    LOGGER.info("All not present state components: " + notPresentStateComponents);
                     for (Map.Entry<String, Boolean> sdd : componentHasPresentState.entrySet()) {
-                        // 部件变化才推送全不在位告警
-                        if (!sdd.getValue() && changedComponents.contains(sdd.getKey())) {
-                            ServerDeviceDetail aNotPresentState = new ServerDeviceDetail(eSight.getId(), dn, sdd.getKey(), null, "4", "0");
+                        // 前次没推送过(数据库部件非全-1)才推送全不在位告警
+                        if (!sdd.getValue() && !notPresentStateComponents.contains(sdd.getKey())) {
+                            ServerDeviceDetail aNotPresentState = null;
+                            if ((isHighDensity || isBlade) && ("Fan".equalsIgnoreCase(sdd.getKey()) || "PSU"
+                                .equalsIgnoreCase(sdd.getKey())) && StringUtils.hasLength(parentDN)) {
+                                aNotPresentState = new ServerDeviceDetail(eSight.getId(), parentDN, sdd.getKey(), null, "4", "0");
+                            } else {
+                                aNotPresentState = new ServerDeviceDetail(eSight.getId(), dn, sdd.getKey(), null, "4", "0");
+                            }
                             pushList.add(aNotPresentState);
                         }
                     }

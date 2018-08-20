@@ -72,6 +72,7 @@
    	<copy file="${ROOT_DIR}/third_party/wssamples.jar" todir="${CLASSES}"/>
    	<copy file="${ROOT_DIR}/third_party/samples-core-1.0.0.jar" todir="${CLASSES}"/>
    	<copy file="${ROOT_DIR}/third_party/vim25.jar" todir="${CLASSES}"/>
+   	<copy file="${ROOT_DIR}/third_party/spring-core-4.3.9.RELEASE.jar" todir="${CLASSES}"/>
 
       <!-- Create the jar -->
       <jar  destfile="${BUILD_DIR}/${JAR_FILE}"

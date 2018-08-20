@@ -18,7 +18,7 @@ public class SyncServerHostTask {
     /**
      * 同步eSight和vCenter的服务器主机
      */
-    @Scheduled(fixedDelay = 10 * 60 * 1000L)
+    @Scheduled(fixedDelay = 30 * 60 * 1000L)
     public void syncServerHost() {
         LOGGER.info("schedule start.");
         syncServerHostService.syncServerHost();

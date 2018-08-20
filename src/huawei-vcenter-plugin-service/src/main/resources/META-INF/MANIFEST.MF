@@ -1,17 +1,20 @@
 Manifest-Version: 1.0
 Bundle-Vendor: VMware
-Bundle-Version: 1.2.93
+Bundle-Version: 1.3.44
 Tool: Bundlor 1.1.0.RELEASE
 Bundle-Name: huawei-vcenter-plugin-service
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.huawei.vcenterpluginui.huawei-vcenter-plugin-service
-Export-Package: com.huawei.vcenterpluginui.services;version="1.2.93",
- com.huawei.vcenterpluginui.mvc;version="1.2.93",
- com.huawei.vcenterpluginui.interceptor;version="1.2.93",
- com.huawei.vcenterpluginui.entity;version="1.2.93",
- com.huawei.vcenterpluginui.exception;version="1.2.93",
- com.huawei.vcenterpluginui.provider;version="1.2.93",
- com.huawei.esight.exception;version="1.1.1"
+Export-Package: com.huawei.vcenterpluginui.services;version="1.3.44",
+ com.huawei.vcenterpluginui.mvc;version="1.3.44",
+ com.huawei.vcenterpluginui.interceptor;version="1.3.44",
+ com.huawei.vcenterpluginui.entity;version="1.3.44",
+ com.huawei.vcenterpluginui.exception;version="1.3.44",
+ com.huawei.vcenterpluginui.provider;version="1.3.44",
+ com.huawei.esight.exception;version="1.1.1",
+ org.springframework.cglib.proxy;version="4.3.9",
+ org.springframework.cglib.core;version="4.3.9",
+ org.springframework.cglib.reflect;version="4.3.9"
 Bundle-ClassPath: .,h2-1.4.192.jar,esight-api-1.1.1.jar,gson-2.7.jar,jna-4.4.0.jar,wssamples.jar,samples-core-1.0.0.jar,vim25.jar
 Import-Package: org.apache.commons.logging;version="1.1.1",
  com.vmware.vise.data;version="0",
@@ -42,6 +45,8 @@ Import-Package: org.apache.commons.logging;version="1.1.1",
  org.springframework.context.event;version="3.1.4",
  org.springframework.web.servlet.handler;version="3.1.4",
  org.springframework.web.servlet;version="3.1.4",
+ org.springframework.web.servlet.view;version="3.1.4",
+ org.springframework.web.servlet.view.json;version="3.1.4",
  org.springframework.http.converter;version="3.1.4",
  org.springframework.http.converter.xml;version="3.1.4",
  org.aspectj.lang;version="1.6.12",
@@ -50,4 +55,7 @@ Import-Package: org.apache.commons.logging;version="1.1.1",
  org.aopalliance.aop;version="1.0",
  net.sf.cglib.proxy;version="2.1.3",
  net.sf.cglib.core;version="2.1.3",
- net.sf.cglib.reflect;version="2.1.3"
+ net.sf.cglib.reflect;version="2.1.3",
+ org.springframework.cglib.proxy;version="4.3.9",
+ org.springframework.cglib.core;version="4.3.9",
+ org.springframework.cglib.reflect;version="4.3.9"

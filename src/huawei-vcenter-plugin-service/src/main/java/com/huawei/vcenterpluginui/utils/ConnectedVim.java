@@ -264,13 +264,16 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     private ManagedEntityStatus convertHealthStatus(String healthState) {
         switch (healthState) {
             case "0":
-                return ManagedEntityStatus.GREEN;
-            case "4":
-                return ManagedEntityStatus.RED;
             case "2":
             case "3":
             case "5":
-                return ManagedEntityStatus.YELLOW;
+                return ManagedEntityStatus.GREEN;
+            case "4":
+                return ManagedEntityStatus.RED;
+//            case "2":
+//            case "3":
+//            case "5":
+//                return ManagedEntityStatus.YELLOW;
             default:
                 return ManagedEntityStatus.RED;
         }

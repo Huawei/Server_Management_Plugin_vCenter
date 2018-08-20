@@ -18,8 +18,8 @@ public class DeviceComponent {
     // 注意：如果component有变更，可能需要更改配置文件中的vcenter.ha.provider.name.version，重新注册provider
     private static final Map<String, Map<String, String>> componentMap;
 
-    private static final List<String> ALL_HEALTH_STATE = Arrays.asList("0", "-1", "-2", "2", "3", "4", "5", "6", "7", "8");
-    private static final List<String> PUSH_HEALTH_STATE = Arrays.asList("0", "4", "6", "7", "8");
+    private static final List<String> ALL_HEALTH_STATE = Arrays.asList("0", "-1", "-2", "2", "3", "4", "5", "6", "7", "8", "-3");
+    private static final List<String> PUSH_HEALTH_STATE = Arrays.asList("0", "4", "6", "7", "8", "-3");
 
     static {
         componentMap = new HashMap<>();

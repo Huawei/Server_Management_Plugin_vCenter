@@ -113,9 +113,14 @@
 
     <bean name="InstantiationBeanServiceImpl" class="com.huawei.vcenterpluginui.services.InstantiationBeanServiceImpl">
         <property name="systemService" ref="systemService" />
+        <property name="vmActionService" ref="VmActionServiceImpl"/>
+    </bean>
+
+    <bean name="VmActionServiceImpl" class="com.huawei.vcenterpluginui.services.VmActionServiceImpl">
+        <constructor-arg ref="vimObjectReferenceService"/>
     </bean>
     
-    <context:annotation-config />  
+    <context:annotation-config />
     <!--spring扫描注解的配置--> 
     <context:component-scan base-package="com.huawei.vcenterpluginui.task" />  
       

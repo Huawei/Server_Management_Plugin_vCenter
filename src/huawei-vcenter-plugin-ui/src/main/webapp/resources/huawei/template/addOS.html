@@ -55,6 +55,17 @@
             min-width: 820px;
             max-width: 1300px;
         }
+
+        .el-alert__icon {
+            color: #20a0ff;
+            padding-top: 5px;
+        }
+
+        .el-alert--info {
+            background-color: #FFF5EA;
+            color: #1f2d3d;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 
@@ -159,23 +170,28 @@
                         <el-form-item label="CD Key" prop="CDKey" class="cdkey">
                             <el-row style="max-width:480px;">
                                 <el-col v-bind:span="4">
-                                    <el-input v-model="form_data.CDKey.key1" v-bind:maxlength="5" v-on:input="changeUpper(1)" @focus="focusStatus2=false;focusStatus3=false;focusStatus4=false;focusStatus5=false;" v-focus="focusStatus1"></el-input>
+                                    <el-input v-model="form_data.CDKey.key1" v-bind:maxlength="5" v-on:input="changeUpper(1)" @focus="focusStatus2=false;focusStatus3=false;focusStatus4=false;focusStatus5=false;"
+                                        v-focus="focusStatus1"></el-input>
                                 </el-col>
                                 <el-col class="line" v-bind:span="1">-</el-col>
                                 <el-col v-bind:span="4">
-                                    <el-input v-model="form_data.CDKey.key2" v-bind:maxlength="5" v-on:input="changeUpper(2)" @focus="focusStatus1=false;focusStatus3=false;focusStatus4=false;focusStatus5=false;" v-focus="focusStatus2"></el-input>
+                                    <el-input v-model="form_data.CDKey.key2" v-bind:maxlength="5" v-on:input="changeUpper(2)" @focus="focusStatus1=false;focusStatus3=false;focusStatus4=false;focusStatus5=false;"
+                                        v-focus="focusStatus2"></el-input>
                                 </el-col>
                                 <el-col class="line" v-bind:span="1">-</el-col>
                                 <el-col v-bind:span="4">
-                                    <el-input v-model="form_data.CDKey.key3" v-bind:maxlength="5" v-on:input="changeUpper(3)" @focus="focusStatus2=false;focusStatus1=false;focusStatus4=false;focusStatus5=false;" v-focus="focusStatus3"></el-input>
+                                    <el-input v-model="form_data.CDKey.key3" v-bind:maxlength="5" v-on:input="changeUpper(3)" @focus="focusStatus2=false;focusStatus1=false;focusStatus4=false;focusStatus5=false;"
+                                        v-focus="focusStatus3"></el-input>
                                 </el-col>
                                 <el-col class="line" v-bind:span="1">-</el-col>
                                 <el-col v-bind:span="4">
-                                    <el-input v-model="form_data.CDKey.key4" v-bind:maxlength="5" v-on:input="changeUpper(4)" @focus="focusStatus2=false;focusStatus3=false;focusStatus1=false;focusStatus5=false;" v-focus="focusStatus4"></el-input>
+                                    <el-input v-model="form_data.CDKey.key4" v-bind:maxlength="5" v-on:input="changeUpper(4)" @focus="focusStatus2=false;focusStatus3=false;focusStatus1=false;focusStatus5=false;"
+                                        v-focus="focusStatus4"></el-input>
                                 </el-col>
                                 <el-col class="line" v-bind:span="1">-</el-col>
                                 <el-col v-bind:span="4">
-                                    <el-input v-model="form_data.CDKey.key5" v-bind:maxlength="5" v-on:input="changeUpper(5)" @focus="focusStatus2=false;focusStatus3=false;focusStatus4=false;focusStatus1=false;" v-focus="focusStatus5"></el-input>
+                                    <el-input v-model="form_data.CDKey.key5" v-bind:maxlength="5" v-on:input="changeUpper(5)" @focus="focusStatus2=false;focusStatus3=false;focusStatus4=false;focusStatus1=false;"
+                                        v-focus="focusStatus5"></el-input>
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -198,7 +214,8 @@
                     <el-col v-bind:span="12">
                         <el-form-item v-bind:label="i18ns.template.deployDevice" prop="osDeployPolicy">
                             <el-select v-model="form_data.osDeployPolicy">
-                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                </el-option>
                             </el-select>
                             <el-tooltip v-bind:content="i18ns.template.deployDeviceTips" effect="light" placement="top">
                                 <img src="../../images/icon_help.png" />
@@ -230,37 +247,58 @@
                                     <template v-if="scope.$index===0&&index===0">
                                         {{scope.row.fileSystem==='0'?'NTFS':'FAT32'}}
                                     </template>
-                    <template v-else>
+                                    <template v-else>
                                         <el-select v-model="scope.row.fileSystem" style="width:90px;">
                                             <el-option key="NTFS" label="NTFS" value="0"></el-option>
                                             <el-option key="FAT32" label="FAT32" value="1"></el-option>
                                         </el-select>
                                     </template>
 
-                    </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
-                        <template scope="scope">
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
+                                <template scope="scope">
                                     <el-input v-model="scope.row.capacity" style="width:130px;" onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
                                     <el-select v-model="scope.row.unit" style="width:70px;">
                                         <el-option key="GB" label="GB" value="1"></el-option>
                                         <el-option key="MB" label="MB" value="2"></el-option>
                                     </el-select>
-                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0&&scope.row.fileSystem=='0')||(scope.store.states.data.length===(scope.$index+1)&&index>0&&scope.row.fileSystem=='0')" v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
+                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0&&scope.row.fileSystem=='0')||(scope.store.states.data.length===(scope.$index+1)&&index>0&&scope.row.fileSystem=='0')"
+                                        v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
                                 </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.operation">
-                        <template scope="scope">
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.operation">
+                                <template scope="scope">
                                     <el-button type="text" icon="plus" size="small" v-on:click="addDriver(index,scope.$index)"></el-button>
 
                                     <el-button v-show="scope.$index>0" type="text" icon="minus" size="small" v-on:click="deleteDriver(index,scope.row)"></el-button>
                                 </template>
-                    </el-table-column>
-                    </el-table>
+                            </el-table-column>
+                        </el-table>
                     </template>
 
                 </el-row>
             </div>
+            <!-- <el-row class="margin-top-8">
+                <el-col v-bind:span="24">
+                    <div class="nem_component_content_title" v-on:click="class_data.isExtendOpen=!class_data.isExtendOpen">
+                        <span v-bind:class="[class_data.isExtendOpen ? class_data.openClass : class_data.closeClass]"></span>
+                        <span class="nem_component_content_title_lbl">{{i18ns.template.extendSoftware}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <div v-show="class_data.isExtendOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.extendSoftwareTips" show-icon :closable="false"></el-alert>
+                </el-row>
+                <el-row>
+                    <el-col v-bind:span="12">
+                        <el-form-item label="iBMA" prop="extendSoftware">
+                            <el-checkbox v-model="form_data.extendSoftware">iBMA</el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div> -->
         </div>
     </script>
 
@@ -305,7 +343,8 @@
                     <el-col v-bind:span="11">
                         <el-form-item v-bind:label="i18ns.template.deployDevice" prop="osDeployPolicy">
                             <el-select v-model="form_data.osDeployPolicy">
-                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                </el-option>
                             </el-select>
                             <el-tooltip v-bind:content="i18ns.template.deployDeviceTips " effect="light" placement="top">
                                 <img src="../../images/icon_help.png" />
@@ -335,17 +374,17 @@
                                     <template v-if="scope.$index<2&&index===0">
                                         {{scope.row.driver}}
                                     </template>
-                    <template v-else>
+                                    <template v-else>
                                         <el-input v-model="scope.row.driver" style="width:130px;"></el-input>
                                     </template>
-                    </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.fileSystem" width="130">
-                        <template scope="scope">
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.fileSystem" width="130">
+                                <template scope="scope">
                                     <template v-if="scope.$index===0&&index===0">
                                         swap
                                     </template>
-                        <template v-else>
+                                    <template v-else>
                                         <el-select v-model="scope.row.fileSystem" style="width:90px;">
                                             <el-option key="reiser" label="reiser" value="1"></el-option>
                                             <el-option key="ext2" label="ext2" value="2"></el-option>
@@ -354,30 +393,51 @@
                                         </el-select>
                                     </template>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
-                        <template scope="scope">
-                                    <el-input v-model="scope.row.capacity" style="width:130px;"   onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
+                                <template scope="scope">
+                                    <el-input v-model="scope.row.capacity" style="width:130px;" onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
                                     <el-select v-model="scope.row.unit" style="width:70px;">
                                         <el-option key="GB" label="GB" value="1"></el-option>
                                         <el-option key="MB" label="MB" value="2"></el-option>
                                     </el-select>
-                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0)||(scope.store.states.data.length===(scope.$index+1)&&index>0)" v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
+                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0)||(scope.store.states.data.length===(scope.$index+1)&&index>0)"
+                                        v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
                                 </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.operation">
-                        <template scope="scope">
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.operation">
+                                <template scope="scope">
                                     <el-button type="text" icon="plus" size="small" v-on:click="addDriver(index,scope.$index)"></el-button>
 
                                     <el-button v-show="scope.$index>0&&(scope.$index!=1&&index==0)" type="text" icon="minus" size="small" v-on:click="deleteDriver(index,scope.row)"></el-button>
                                 </template>
-                    </el-table-column>
-                    </el-table>
+                            </el-table-column>
+                        </el-table>
                     </template>
 
                 </el-row>
             </div>
+            <!-- <el-row class="margin-top-8">
+                <el-col v-bind:span="24">
+                    <div class="nem_component_content_title" v-on:click="class_data.isExtendOpen=!class_data.isExtendOpen">
+                        <span v-bind:class="[class_data.isExtendOpen ? class_data.openClass : class_data.closeClass]"></span>
+                        <span class="nem_component_content_title_lbl">{{i18ns.template.extendSoftware}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <div v-show="class_data.isExtendOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.extendSoftwareTips" show-icon :closable="false"></el-alert>
+                </el-row>
+                <el-row>
+                    <el-col v-bind:span="12">
+                        <el-form-item label="iBMA" prop="extendSoftware">
+                            <el-checkbox v-model="form_data.extendSoftware">iBMA</el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div> -->
         </div>
     </script>
 
@@ -422,7 +482,8 @@
                     <el-col v-bind:span="11">
                         <el-form-item v-bind:label="i18ns.template.deployDevice" prop="osDeployPolicy">
                             <el-select v-model="form_data.osDeployPolicy">
-                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                </el-option>
                             </el-select>
                             <el-tooltip v-bind:content="i18ns.template.deployDeviceTips " effect="light" placement="top">
                                 <img src="../../images/icon_help.png" />
@@ -452,17 +513,17 @@
                                     <template v-if="scope.$index<2&&index===0">
                                         {{scope.row.driver}}
                                     </template>
-                    <template v-else>
+                                    <template v-else>
                                         <el-input v-model="scope.row.driver" style="width:130px;"></el-input>
                                     </template>
-                    </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.fileSystem" width="130">
-                        <template scope="scope">
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.fileSystem" width="130">
+                                <template scope="scope">
                                     <template v-if="scope.$index===0&&index===0">
                                         swap
                                     </template>
-                        <template v-else>
+                                    <template v-else>
                                         <el-select v-model="scope.row.fileSystem" style="width:90px;">
                                             <el-option key="ext2" label="ext2" value="2"></el-option>
                                             <el-option key="ext3" label="ext3" value="3"></el-option>
@@ -470,30 +531,51 @@
                                         </el-select>
                                     </template>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
-                        <template scope="scope">
-                                    <el-input v-model="scope.row.capacity" style="width:130px;"  onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
+                                <template scope="scope">
+                                    <el-input v-model="scope.row.capacity" style="width:130px;" onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
                                     <el-select v-model="scope.row.unit" style="width:70px;">
                                         <el-option key="GB" label="GB" value="1"></el-option>
                                         <el-option key="MB" label="MB" value="2"></el-option>
                                     </el-select>
-                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0)||(scope.store.states.data.length===(scope.$index+1)&&index>0)" v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
+                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0)||(scope.store.states.data.length===(scope.$index+1)&&index>0)"
+                                        v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
                                 </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.operation">
-                        <template scope="scope">
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.operation">
+                                <template scope="scope">
                                     <el-button type="text" icon="plus" size="small" v-on:click="addDriver(index,scope.$index)"></el-button>
 
                                     <el-button v-show="scope.$index>0&&(scope.$index!=1&&index==0)" type="text" icon="minus" size="small" v-on:click="deleteDriver(index,scope.row)"></el-button>
                                 </template>
-                    </el-table-column>
-                    </el-table>
+                            </el-table-column>
+                        </el-table>
                     </template>
 
                 </el-row>
             </div>
+           <!--  <el-row class="margin-top-8">
+                <el-col v-bind:span="24">
+                    <div class="nem_component_content_title" v-on:click="class_data.isExtendOpen=!class_data.isExtendOpen">
+                        <span v-bind:class="[class_data.isExtendOpen ? class_data.openClass : class_data.closeClass]"></span>
+                        <span class="nem_component_content_title_lbl">{{i18ns.template.extendSoftware}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <div v-show="class_data.isExtendOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.extendSoftwareTips" show-icon :closable="false"></el-alert>
+                </el-row>
+                <el-row>
+                    <el-col v-bind:span="12">
+                        <el-form-item label="iBMA" prop="extendSoftware">
+                            <el-checkbox v-model="form_data.extendSoftware">iBMA</el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div> -->
         </div>
     </script>
 
@@ -538,7 +620,8 @@
                     <el-col v-bind:span="11">
                         <el-form-item v-bind:label="i18ns.template.deployDevice" prop="osDeployPolicy">
                             <el-select v-model="form_data.osDeployPolicy">
-                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                </el-option>
                             </el-select>
                             <el-tooltip v-bind:content="i18ns.template.deployDeviceTips " effect="light" placement="top">
                                 <img src="../../images/icon_help.png" />
@@ -568,17 +651,17 @@
                                     <template v-if="scope.$index<2&&index===0">
                                         {{scope.row.driver}}
                                     </template>
-                    <template v-else>
+                                    <template v-else>
                                         <el-input v-model="scope.row.driver" style="width:130px;"></el-input>
                                     </template>
-                    </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.fileSystem" width="130">
-                        <template scope="scope">
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.fileSystem" width="130">
+                                <template scope="scope">
                                     <template v-if="scope.$index===0&&index===0">
                                         swap
                                     </template>
-                        <template v-else>
+                                    <template v-else>
                                         <el-select v-model="scope.row.fileSystem" style="width:90px;">
                                             <el-option key="ext2" label="ext2" value="2"></el-option>
                                             <el-option key="ext3" label="ext3" value="3"></el-option>
@@ -586,30 +669,51 @@
                                         </el-select>
                                     </template>
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
-                        <template scope="scope">
-                                    <el-input v-model="scope.row.capacity" style="width:130px;"  onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.capacity" min-width="345">
+                                <template scope="scope">
+                                    <el-input v-model="scope.row.capacity" style="width:130px;" onKeyPress="preventNonNum(event)" v-on:input="validateCapacity(index,scope.$index,scope.row.capacity)"></el-input>
                                     <el-select v-model="scope.row.unit" style="width:70px;">
                                         <el-option key="GB" label="GB" value="1"></el-option>
                                         <el-option key="MB" label="MB" value="2"></el-option>
                                     </el-select>
-                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0)||(scope.store.states.data.length===(scope.$index+1)&&index>0)" v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
+                                    <el-checkbox v-show="(scope.store.states.data.length===(scope.$index+1)&&scope.$index>0)||(scope.store.states.data.length===(scope.$index+1)&&index>0)"
+                                        v-model="scope.row.isUseResidualCcapacity">{{i18ns.template.useAvailableCapacity}}</el-checkbox>
                                 </template>
-                    </el-table-column>
-                    <el-table-column v-bind:label="i18ns.template.operation">
-                        <template scope="scope">
+                            </el-table-column>
+                            <el-table-column v-bind:label="i18ns.template.operation">
+                                <template scope="scope">
                                     <el-button type="text" icon="plus" size="small" v-on:click="addDriver(index,scope.$index)"></el-button>
 
                                     <el-button v-show="scope.$index>0&&(scope.$index!=1&&index==0)" type="text" icon="minus" size="small" v-on:click="deleteDriver(index,scope.row)"></el-button>
                                 </template>
-                    </el-table-column>
-                    </el-table>
+                            </el-table-column>
+                        </el-table>
                     </template>
 
                 </el-row>
             </div>
+            <!-- <el-row class="margin-top-8">
+                <el-col v-bind:span="24">
+                    <div class="nem_component_content_title" v-on:click="class_data.isExtendOpen=!class_data.isExtendOpen">
+                        <span v-bind:class="[class_data.isExtendOpen ? class_data.openClass : class_data.closeClass]"></span>
+                        <span class="nem_component_content_title_lbl">{{i18ns.template.extendSoftware}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <div v-show="class_data.isExtendOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.extendSoftwareTips" show-icon :closable="false"></el-alert>
+                </el-row>
+                <el-row>
+                    <el-col v-bind:span="12">
+                        <el-form-item label="iBMA" prop="extendSoftware">
+                            <el-checkbox v-model="form_data.extendSoftware">iBMA</el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div> -->
         </div>
     </script>
 
@@ -654,7 +758,8 @@
                         <el-form-item v-bind:label="i18ns.template.deployDevice">
                             <el-row>
                                 <el-select v-model="form_data.osDeployPolicy">
-                                    <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                    <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                    </el-option>
                                 </el-select>
                                 <el-tooltip v-bind:content="i18ns.template.deployDeviceTips " effect="light" placement="top">
                                     <img src="../../images/icon_help.png" />
@@ -710,7 +815,8 @@
                         <el-form-item v-bind:label="i18ns.template.deployDevice">
                             <el-row>
                                 <el-select v-model="form_data.osDeployPolicy">
-                                    <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                    <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                    </el-option>
                                 </el-select>
                                 <el-tooltip v-bind:content="i18ns.template.deployDeviceTips" effect="light" placement="top">
                                     <img src="../../images/icon_help.png" />
@@ -764,7 +870,8 @@
                     <el-col v-bind:span="11">
                         <el-form-item v-bind:label="i18ns.template.deployDevice" prop="osDeployPolicy">
                             <el-select v-model="form_data.osDeployPolicy">
-                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"> </el-option>
+                                <el-option v-for="item in form_data.osDeployPolicyOption" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                                </el-option>
                             </el-select>
                             <el-tooltip v-bind:content="i18ns.template.deployDeviceTips " effect="light" placement="top">
                                 <img src="../../images/icon_help.png" />
@@ -773,6 +880,26 @@
                     </el-col>
                 </el-row>
             </div>
+            <!-- <el-row class="margin-top-8">
+                <el-col v-bind:span="24">
+                    <div class="nem_component_content_title" v-on:click="class_data.isExtendOpen=!class_data.isExtendOpen">
+                        <span v-bind:class="[class_data.isExtendOpen ? class_data.openClass : class_data.closeClass]"></span>
+                        <span class="nem_component_content_title_lbl">{{i18ns.template.extendSoftware}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <div v-show="class_data.isExtendOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.extendSoftwareTips" show-icon :closable="false"></el-alert>
+                </el-row>
+                <el-row>
+                    <el-col v-bind:span="12">
+                        <el-form-item label="iBMA" prop="extendSoftware">
+                            <el-checkbox v-model="form_data.extendSoftware">iBMA</el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div> -->
         </div>
     </script>
 
@@ -786,7 +913,9 @@
             data: function () {
                 return {
                     i18ns: [],
-                    letter: ['D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:', 'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:', 'V:', 'W:', 'X:', 'Y:', 'Z:'], //盘符
+                    letter: ['D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:', 'K:', 'L:', 'M:', 'N:', 'O:', 'P:',
+                        'Q:', 'R:', 'S:', 'T:', 'U:', 'V:', 'W:', 'X:', 'Y:', 'Z:'
+                    ], //盘符
                     letterIndex: 0, //盘符索引
                     focusStatus1: false,
                     focusStatus2: false,
@@ -876,7 +1005,7 @@
                     if (this.letterIndex === 18) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg1, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -912,7 +1041,8 @@
                             for (var i = 0; i < driverLength; i++) {
                                 if (j === 0 && i === 0)
                                     continue;
-                                this.form_data.disk[j].partitioninfo[i].driver = this.letter[newLetterIndex - 1];
+                                this.form_data.disk[j].partitioninfo[i].driver = this.letter[newLetterIndex -
+                                    1];
                                 newLetterIndex += 1;
                                 console.log('newLetterIndex:' + newLetterIndex);
                             }
@@ -931,7 +1061,7 @@
                     if (this.letterIndex === 18) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg1, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1039,7 +1169,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1082,7 +1212,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1178,7 +1308,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1221,7 +1351,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1316,7 +1446,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1359,7 +1489,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1567,7 +1697,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1610,7 +1740,7 @@
                     if (this.letterIndex === 12) {
                         this.$alert(app.i18ns.template.moreHardDiskErrorMsg2, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
-                            callback: function () { }
+                            callback: function () {}
                         });
                         return;
                     }
@@ -1736,7 +1866,8 @@
                     hostOwnerName: '',
                     hostOwnerCompany: '',
                     softSourceVersions: [],
-                    softSourceVersion: ''
+                    softSourceVersion: '',
+                    extendSoftware: false
                 },
                 rules: {
                     desc: {
@@ -1805,7 +1936,8 @@
                                 var upperChar = new RegExp(/[A-Z]/g);
                                 var lowerChar = new RegExp(/[a-z]/g);
                                 var numChar = new RegExp(/[0-9]/g);
-                                var specialChar = new RegExp(/[`~!@%&_=+;:'",<>\-\*\.\?\+\$\^\[\]\(\)\{\}\|\\\/]/g);
+                                var specialChar = new RegExp(
+                                    /[`~!@%&_=+;:'",<>\-\*\.\?\+\$\^\[\]\(\)\{\}\|\\\/]/g);
                                 var poundSign = new RegExp(/[# ]/g);
                                 if (upperChar.test(value)) {
                                     count++;
@@ -1858,6 +1990,7 @@
                 classData: {
                     isOsOpen: true,
                     isPartitionOpen: true,
+                    isExtendOpen: true,
                     openClass: 'nem_component_content_title_icon_open',
                     closeClass: 'nem_component_content_title_icon_close'
                 },
@@ -1955,6 +2088,7 @@
                                     isUseResidualCcapacity: false
                                 }]
                             }];
+                            this.ruleForm.extendSoftware = false;
                             break;
                         case '2': //suse linux
                             this.ruleForm.disk = [{
@@ -1972,6 +2106,7 @@
                                     isUseResidualCcapacity: false
                                 }]
                             }];
+                            this.ruleForm.extendSoftware = false;
                             this.ruleForm.softSourceVersion = '';
                             break;
                         case '3': //redhat linux
@@ -1990,6 +2125,7 @@
                                     isUseResidualCcapacity: false
                                 }]
                             }];
+                            this.ruleForm.extendSoftware = false;
                             this.ruleForm.softSourceVersion = '';
                             break;
                         case '4': //centos linux
@@ -2008,17 +2144,20 @@
                                     isUseResidualCcapacity: false
                                 }]
                             }];
+                            this.ruleForm.extendSoftware = false;
                             this.ruleForm.softSourceVersion = '';
                             break;
                         case '5':
                             this.ruleForm.osDeployPolicyOption = _.filter(getOSDeployPolicys(), function (n) {
                                 return n.value == 1;
                             });
+                            this.ruleForm.extendSoftware = false;
                             break;
                         case '6':
                             this.ruleForm.osDeployPolicyOption = _.filter(getOSDeployPolicys(), function (n) {
                                 return n.value < 2;
                             });
+                            this.ruleForm.extendSoftware = false;
                             break;
                         default:
                             break;
@@ -2063,7 +2202,9 @@
                                 var cdKey = '';
                                 //得到CDKey
                                 if (app.ruleForm.CDKey.key1) {
-                                    cdKey = app.ruleForm.CDKey.key1 + '-' + app.ruleForm.CDKey.key2 + '-' + app.ruleForm.CDKey.key3 + '-' + app.ruleForm.CDKey.key4 + '-' + app.ruleForm.CDKey.key5;
+                                    cdKey = app.ruleForm.CDKey.key1 + '-' + app.ruleForm.CDKey.key2 +
+                                        '-' + app.ruleForm.CDKey.key3 + '-' + app.ruleForm.CDKey.key4 +
+                                        '-' + app.ruleForm.CDKey.key5;
                                 }
                                 //构建提交参数
                                 var param = {
@@ -2079,18 +2220,23 @@
                                             confirmPassword: app.ruleForm.checkPassWord,
                                             cdKey: cdKey,
                                             osDeployPolicy: app.ruleForm.osDeployPolicy,
-                                            disk: disk
+                                            disk: disk,
+                                            // software: app.ruleForm.extendSoftware ? 'ibma' : ''
+                                            software: ''
                                         }
                                     }
                                 };
+                                console.log(param);
                                 //调用api提交
                                 templateManage.addOneOS(param, function (ret) {
                                     app.fullscreenLoading = false;
                                     //成功
                                     if (ret.code === '0') {
-                                        app.alertMsg(app.i18ns.template.addSuccessMsg, function () {
-                                            window.location.href = 'List.html?s=' + Math.random();
-                                        })
+                                        app.alertMsg(app.i18ns.template.addSuccessMsg,
+                                            function () {
+                                                window.location.href = 'List.html?s=' +
+                                                    Math.random();
+                                            })
                                     } else {
                                         msg = getErrorMsg(ret.code);
                                         app.alertMsg(msg);
@@ -2158,13 +2304,15 @@
                     }, function (ret) {
                         app.total = ret.data.totalNum;
                         if (ret.code === '0') {
-                            var data = ret.data.data;
-                            for (var i = 0; i < data.length; i++) {
-                                var d = data[i]
-                                _.assign(d, {
-                                    isChecked: false
-                                });
-                                app.softwareData.push(d);
+                            if (ret.data.totalNum > 0) {
+                                var data = ret.data.data;
+                                for (var i = 0; i < data.length; i++) {
+                                    var d = data[i]
+                                    _.assign(d, {
+                                        isChecked: false
+                                    });
+                                    app.softwareData.push(d);
+                                }
                             }
                         } else {
                             msg = getErrorMsg(ret.code);
@@ -2294,7 +2442,8 @@
                                 }
                             }
                         }
-                    } else if (app.ruleForm.osType == 2 || app.ruleForm.osType == 3 || app.ruleForm.osType == 4) { //lunix os
+                    } else if (app.ruleForm.osType == 2 || app.ruleForm.osType == 3 || app.ruleForm.osType ==
+                        4) { //lunix os
                         var driverArry = [];
                         var driverCount = 0;
                         for (var i = 0; i < app.ruleForm.disk.length; i++) {

@@ -1,6 +1,7 @@
 package com.huawei.vcenterpluginui.dao;
 
 import com.huawei.vcenterpluginui.constant.SqlFileConstant;
+import com.huawei.vcenterpluginui.entity.Pair;
 import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
 import com.huawei.vcenterpluginui.exception.DataBaseException;
 import com.huawei.vcenterpluginui.utils.CommonUtils;
@@ -17,6 +18,28 @@ public class NotificationAlarmDao extends H2DataBaseDao {
 
     private String getTempTableName() {
         return String.format("HW_%s", UUID.randomUUID().toString().replaceAll("-", "_"));
+    }
+
+    public Collection<String> getNotPresentStateComponents() throws SQLException {
+        String sql = String.format("SELECT DISTINCT component FROM %s t1 WHERE component NOT IN" +
+                "(SELECT DISTINCT component FROM %s t2 WHERE t2.health_state <> '-1')", TABLE_NAME, TABLE_NAME);
+        Collection<String> notPresentStateComponents = new HashSet<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                notPresentStateComponents.add(rs.getString("component"));
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeConnection(conn, ps, rs);
+        }
+        return notPresentStateComponents;
     }
 
     public int getServerDeviceDetailCount(int esightId, Collection<String> dns) throws SQLException {
@@ -45,16 +68,25 @@ public class NotificationAlarmDao extends H2DataBaseDao {
         }
     }
 
-    public List<ServerDeviceDetail> getServerDeviceDetailDiff(List<ServerDeviceDetail> list)
+    public Pair<Collection<String>, List<ServerDeviceDetail>> getServerDeviceDetailDiff(List<ServerDeviceDetail> list)
             throws SQLException {
+        Collection<String> turnGreenComponents = new HashSet<>();
+        List<ServerDeviceDetail> differentDevices = new ArrayList<>();
         if (list == null) {
-            return Collections.emptyList();
+            return new Pair<>(turnGreenComponents, differentDevices);
         }
-
-        List<ServerDeviceDetail> result = new ArrayList<>();
 
         // insert temp table
         String tmpTableName = getTempTableName();
+        // green components
+        String sqlTurnGreenComponents = "SELECT DISTINCT component FROM %s t1 " +
+                "WHERE t1.health_state IN('0', '2', '3', '5') AND t1.component NOT IN " +
+                "      (SELECT DISTINCT component FROM %s WHERE health_state NOT IN('0', '2', '3', '5', '-1', '-2'))" +
+                "  AND t1.component IN " +
+                "      (SELECT DISTINCT component FROM HW_SERVER_DEVICE_DETAIL WHERE health_state NOT IN('0', '2', '3', '5', '-1')" +
+                "            UNION SELECT DISTINCT component FROM HW_SERVER_DEVICE_DETAIL WHERE component NOT IN" +
+                "                (SELECT component FROM HW_SERVER_DEVICE_DETAIL WHERE health_state <> '-1'))";
+        // non-green components
         String sqlPattern = "SELECT t3.* " +
                 "FROM (SELECT t1.* " +
                 "      FROM %s t1 " +
@@ -68,20 +100,16 @@ public class NotificationAlarmDao extends H2DataBaseDao {
                 "            AND t2.UUID = t1.UUID " +
                 "            AND t2.HEALTH_STATE = t1.HEALTH_STATE " +
                 "            AND t2.PRESENT_STATE = t1.PRESENT_STATE)) t3 " +
-                "WHERE t3.HEALTH_STATE <> '0' " +
-                "      OR (t3.HEALTH_STATE = '0' AND NOT EXISTS( " +
-                "    SELECT 1 FROM %s t4" +
-                "    WHERE t4.HEALTH_STATE NOT IN('0','-1') AND " +
-                "          t4.ESIGHT_HOST_ID = t3.ESIGHT_HOST_ID AND " +
-                "          t4.DN = t3.DN AND " +
-                "          t4.COMPONENT = t3.COMPONENT)) ";
+                "WHERE t3.HEALTH_STATE NOT IN ('0', '2', '3', '5', '-1', '-2')";
         String sql1 = String.format("CREATE TABLE %s AS SELECT ESIGHT_HOST_ID,DN,COMPONENT,UUID,HEALTH_STATE,PRESENT_STATE,UPDATE_TIME FROM %s WHERE 1=0", tmpTableName, TABLE_NAME);
-        String sql2 = String.format(sqlPattern, tmpTableName, tmpTableName);
-        String sql3 = "DROP TABLE " + tmpTableName;
+        String sql2 = String.format(sqlTurnGreenComponents, tmpTableName, tmpTableName);
+        String sql3 = String.format(sqlPattern, tmpTableName);
+        String sql4 = "DROP TABLE " + tmpTableName;
         Connection conn = null;
         PreparedStatement ps1 = null;
         PreparedStatement ps2 = null;
         PreparedStatement ps3 = null;
+        PreparedStatement ps4 = null;
         ResultSet rs = null;
         try {
             // create temp table
@@ -93,11 +121,19 @@ public class NotificationAlarmDao extends H2DataBaseDao {
             // add data into temp table
             addServerDeivceDetails(conn, tmpTableName, list);
 
+            // get green components
+            ps4 = conn.prepareStatement(sql2);
+            rs = ps4.executeQuery();
+            while (rs.next()) {
+                turnGreenComponents.add(rs.getString("component"));
+            }
+            rs.close();
+
             // compare and get differences
-            ps2 = conn.prepareStatement(sql2);
+            ps2 = conn.prepareStatement(sql3);
             rs = ps2.executeQuery();
             while (rs.next()) {
-                result.add(new ServerDeviceDetail(
+                differentDevices.add(new ServerDeviceDetail(
                         rs.getInt("ESIGHT_HOST_ID"),
                         rs.getString("DN"),
                         rs.getString("COMPONENT"),
@@ -108,7 +144,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
             }
 
             // drop temp table
-            ps3 = conn.prepareStatement(sql3);
+            ps3 = conn.prepareStatement(sql4);
             ps3.execute();
             conn.commit();
         } catch (SQLException e) {
@@ -118,9 +154,9 @@ public class NotificationAlarmDao extends H2DataBaseDao {
             }
             throw e;
         } finally {
-            closeConnection(conn, rs, ps1, ps2, ps3);
+            closeConnection(conn, rs, ps1, ps2, ps3, ps4);
         }
-        return result;
+        return new Pair<>(turnGreenComponents, differentDevices);
     }
 
     private void addServerDeivceDetails(Connection conn, List<ServerDeviceDetail> list) throws SQLException {
@@ -224,7 +260,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
         // don't update not ready uuid
         if (!notReadyUUIDs.isEmpty()) {
             sql.append(" AND UUID NOT IN(");
-            sql.append(getSQLIn(components.size()));
+            sql.append(getSQLIn(notReadyUUIDs.size()));
             sql.append(")");
         }
 
@@ -248,6 +284,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
                     ps.setString(index++, uuid);
                 }
             }
+            LOGGER.info("Parameters: " + esightId + ", " + dnList + ", " + components + ", " + notReadyUUIDs);
             ps.executeUpdate();
 
             // DO NOT update server devices which are not ready
