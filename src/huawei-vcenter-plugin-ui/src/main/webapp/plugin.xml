@@ -47,4 +47,18 @@
       </object>
    </extension>
 
+   <extension id="com.huawei.vcenterpluginui.summaryview">
+      <extendedPoint>vsphere.core.host.monitorViews</extendedPoint>
+      <object>
+         <name>#{tab.name}</name>
+         <componentClass className="com.vmware.vsphere.client.htmlbridge.HtmlView">
+            <object>
+               <root>
+                  <url>/vsphere-client/vcenterpluginui/resources/serverInfo.html</url>
+               </root>
+            </object>
+         </componentClass>
+      </object>
+   </extension>
+
 </plugin>

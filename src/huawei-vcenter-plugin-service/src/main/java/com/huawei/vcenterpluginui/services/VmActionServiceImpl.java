@@ -1,10 +1,14 @@
 package com.huawei.vcenterpluginui.services;
 
 import com.huawei.esight.utils.HttpRequestUtil;
+import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.model.VmInfo;
+import com.huawei.vcenterpluginui.utils.AlarmDefinitionConverter;
+import com.huawei.vcenterpluginui.utils.ConnectedVim;
 import com.vmware.common.ssl.TrustAllTrustManager;
 import com.vmware.vim25.*;
 import com.vmware.vise.vim.data.VimObjectReferenceService;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpMethod;
@@ -145,10 +149,24 @@ public class VmActionServiceImpl implements VmActionService {
       }
    }
 
+   private ServiceContent getServiceContent(VimPortType vimPort) {
+      ManagedObjectReference serviceInstance = new ManagedObjectReference();
+      serviceInstance.setType(SERVICE_INSTANCE);
+      serviceInstance.setValue(SERVICE_INSTANCE);
+      try {
+         return vimPort.retrieveServiceContent(serviceInstance);
+      } catch (RuntimeFaultFaultMsg runtimeFaultFaultMsg) {
+         _logger.info("failed to get service content", runtimeFaultFaultMsg);
+         return null;
+      }
+   }
+
    public Collection<String> getSupportedVersions() {
       synchronized (SUPPORTED_VERSIONS) {
          if (SUPPORTED_VERSIONS.isEmpty()) {
-            DOMSource domSource = HttpRequestUtil.requestWithBody(SUPPORTED_VERSION_URL, HttpMethod.GET, null, "", DOMSource.class).getBody();
+            DOMSource domSource = HttpRequestUtil
+                .requestWithBody(SUPPORTED_VERSION_URL, HttpMethod.GET, null, "", DOMSource.class)
+                .getBody();
             loopVersion(domSource.getNode());
          }
          return SUPPORTED_VERSIONS;

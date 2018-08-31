@@ -42,4 +42,5 @@ public interface VmActionService {
    void setSupportedVersionUrl(String supportedVersionUrl);
 
    Collection<String> getSupportedVersions();
+
 }

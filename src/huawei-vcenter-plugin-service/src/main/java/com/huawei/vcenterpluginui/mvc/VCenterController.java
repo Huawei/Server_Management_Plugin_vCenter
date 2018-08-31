@@ -3,14 +3,20 @@ package com.huawei.vcenterpluginui.mvc;
 import com.huawei.vcenterpluginui.entity.ESight;
 import com.huawei.vcenterpluginui.entity.ResponseBodyBean;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
+import com.huawei.vcenterpluginui.exception.VcenterException;
 import com.huawei.vcenterpluginui.services.ESightService;
 import com.huawei.vcenterpluginui.services.VCenterInfoService;
+import com.vmware.connection.ConnectionException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +57,16 @@ public class VCenterController extends BaseController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
     public ResponseBodyBean saveVCenterInfo(HttpServletRequest request, @RequestBody VCenterInfo vCenterInfo, HttpSession session) throws SQLException {
-        boolean result = vCenterInfoService.saveVCenterInfo(vCenterInfo, session) > 0;
-        if (result) {
+        int result = 0;
+        try {
+            result = vCenterInfoService.saveVCenterInfo(vCenterInfo, session);
+        }  catch (ConnectionException e) {
+            LOGGER.warn("can not connect to vCenter, ", e);
+            throw new VcenterException("-90007", e.getMessage());
+        }
+        if (result < 0) {
+            return failure(String.valueOf(result), String.valueOf(result));
+        } else if (result > 0) {
             List<ESight> eSightList = eSightService.getESightList(null, -1, -1);
             List<ESight> subscribedList = new ArrayList<>();
             List<ESight> unsubscribedList = new ArrayList<>();
@@ -64,14 +78,13 @@ public class VCenterController extends BaseController {
                     unsubscribedList.add(eSight);
                 }
             }
-            if (vCenterInfo.isState()) {
+            if (vCenterInfo.isState() || vCenterInfo.isPushEvent()) {
                 dataMap.put("success", subscribedList);
                 dataMap.put("fail", unsubscribedList);
             } else {
                 dataMap.put("fail", subscribedList);
                 dataMap.put("success", unsubscribedList);
             }
-
             return success(dataMap);
         } else {
             return failure();

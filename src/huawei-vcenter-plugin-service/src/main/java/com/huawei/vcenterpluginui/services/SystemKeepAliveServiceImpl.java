@@ -69,7 +69,7 @@ public class SystemKeepAliveServiceImpl extends ESightOpenApiService implements 
     public void checkSubscription() {
         try {
             VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
-            boolean isHAEnabled = (vCenterInfo != null && vCenterInfo.isState());
+            boolean isHAEnabled = (vCenterInfo != null && (vCenterInfo.isState() || vCenterInfo.isPushEvent()));
             if (isHAEnabled) {
                 LOGGER.info("[Keepalive]start to check: " + KEEP_ALIVE_MAP);
             } else {
@@ -152,7 +152,7 @@ public class SystemKeepAliveServiceImpl extends ESightOpenApiService implements 
         }
         if (vCenterInfo == null) {
             throw new VcenterException("vCenter info not exist.");
-        } else if (!vCenterInfo.isState()) {
+        } else if (!vCenterInfo.isState() && !vCenterInfo.isPushEvent()) {
             throw new VcenterException("vCenter info is disabled.");
         }
         return "https://" + vCenterInfo.getHostIp() + "/vsphere-client/vcenterpluginui/rest/services/notification/systemKeepAlive";

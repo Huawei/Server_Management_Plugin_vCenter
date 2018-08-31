@@ -2,6 +2,7 @@ package com.huawei.vcenterpluginui.services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -18,6 +19,9 @@ public class InstantiationBeanServiceImpl implements
     private SystemService systemService;
 
     private VmActionService vmActionService;
+
+    @Autowired
+    private VCenterInfoService vCenterInfoService;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -40,9 +44,10 @@ public class InstantiationBeanServiceImpl implements
     public void init() {
         try {
             systemService.initDB();
+            vCenterInfoService.syncAlarmDefinitions();
             // initialize supported version
-            Collection<String> supportedVersion = vmActionService.getSupportedVersions();
-            LOGGER.info("Supported version: " + supportedVersion);
+            //Collection<String> supportedVersion = vmActionService.getSupportedVersions();
+            //LOGGER.info("Supported version: " + supportedVersion);
         } catch (Exception e) {
             LOGGER.warn(e);
         }

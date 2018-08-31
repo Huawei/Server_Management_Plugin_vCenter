@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-   xmlns:osgi="http://www.springframework.org/schema/osgi"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:aop="http://www.springframework.org/schema/aop"
-   xmlns:mvc="http://www.springframework.org/schema/mvc"
-   xmlns:context="http://www.springframework.org/schema/context"
-   xsi:schemaLocation="
+  xmlns:osgi="http://www.springframework.org/schema/osgi"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="
       http://www.springframework.org/schema/beans
       http://www.springframework.org/schema/beans/spring-beans.xsd
       http://www.springframework.org/schema/osgi
@@ -17,110 +17,115 @@
       http://www.springframework.org/schema/aop
       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-   <!-- DO NOT CHANGE this section, it enables Spring MVC @Controller programming model -->
+  <!-- DO NOT CHANGE this section, it enables Spring MVC @Controller programming model -->
 
-   <mvc:annotation-driven />
-   <context:annotation-config/>
-   
-   <!-- 拦截器 -->
-	<mvc:interceptors>
-	     <mvc:interceptor>  
-	     <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->
-	       <mvc:mapping path="/**" />
-	         <!-- 拦截器类 --> 
-	         <bean class="com.huawei.vcenterpluginui.interceptor.SessionHandlerInterceptor">
-	         </bean>
-	     </mvc:interceptor>
-	        <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
-	</mvc:interceptors>
+  <mvc:annotation-driven/>
+  <context:annotation-config/>
+
+  <!-- 拦截器 -->
+  <mvc:interceptors>
+    <mvc:interceptor>
+      <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->
+      <mvc:mapping path="/**"/>
+      <!-- 拦截器类 -->
+      <bean class="com.huawei.vcenterpluginui.interceptor.SessionHandlerInterceptor">
+      </bean>
+    </mvc:interceptor>
+    <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
+  </mvc:interceptors>
 
   <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
     <!--<property name="mediaTypes">-->
-       <!--<map>-->
-          <!--<entry key="json" value="application/json"/>-->
-       <!--</map>-->
+    <!--<map>-->
+    <!--<entry key="json" value="application/json"/>-->
+    <!--</map>-->
     <!--</property>-->
     <!--<property name="defaultViews">-->
-      <!--<list>-->
-        <!--&lt;!&ndash; This is required to render the controller responses as Json &ndash;&gt;-->
-        <!--<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />-->
-      <!--</list>-->
+    <!--<list>-->
+    <!--&lt;!&ndash; This is required to render the controller responses as Json &ndash;&gt;-->
+    <!--<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />-->
+    <!--</list>-->
     <!--</property>-->
   </bean>
 
 
   <!-- Standard controller beans: you can modify them if necessary -->
 
-   <bean name="eSightController" class="com.huawei.vcenterpluginui.mvc.ESightController" />
+  <bean name="eSightController" class="com.huawei.vcenterpluginui.mvc.ESightController"/>
 
-   <bean name="softwareResourceController" class="com.huawei.vcenterpluginui.mvc.SoftwareResourceController" />
-   
-   <bean name="serverController" class="com.huawei.vcenterpluginui.mvc.ServerController" />
-   
-   <bean name="templateController" class="com.huawei.vcenterpluginui.mvc.TemplateController" />
+  <bean name="softwareResourceController"
+    class="com.huawei.vcenterpluginui.mvc.SoftwareResourceController"/>
 
-   <bean name="firmwareController" class="com.huawei.vcenterpluginui.mvc.FirmwareController" />
+  <bean name="serverController" class="com.huawei.vcenterpluginui.mvc.ServerController"/>
 
-   <bean name="notificationController" class="com.huawei.vcenterpluginui.mvc.NotificationController" />
+  <bean name="templateController" class="com.huawei.vcenterpluginui.mvc.TemplateController"/>
 
-   <bean name="vCenterController" class="com.huawei.vcenterpluginui.mvc.VCenterController" />
+  <bean name="firmwareController" class="com.huawei.vcenterpluginui.mvc.FirmwareController"/>
 
-   <!-- AOP -->
-   <bean name="aspectBean" class="com.huawei.vcenterpluginui.services.LogAspect" />
+  <bean name="notificationController"
+    class="com.huawei.vcenterpluginui.mvc.NotificationController"/>
 
-   <!-- OSGI references to platform services used by the controllers -->
+  <bean name="vCenterController" class="com.huawei.vcenterpluginui.mvc.VCenterController"/>
 
-   <!-- OSGI references to your services used by the controllers -->
+  <!-- AOP -->
+  <bean name="aspectBean" class="com.huawei.vcenterpluginui.services.LogAspect"/>
 
-   <osgi:reference id="eSightService"
-         interface="com.huawei.vcenterpluginui.services.ESightService" />
+  <!-- OSGI references to platform services used by the controllers -->
 
-   <osgi:reference id="serverApiService"
-         interface="com.huawei.vcenterpluginui.services.ServerApiService" />
-         
-   <osgi:reference id="softwareApiService"
-         interface="com.huawei.vcenterpluginui.services.SoftwareApiService" />
-         
+  <!-- OSGI references to your services used by the controllers -->
+
+  <osgi:reference id="eSightService"
+    interface="com.huawei.vcenterpluginui.services.ESightService"/>
+
+  <osgi:reference id="serverApiService"
+    interface="com.huawei.vcenterpluginui.services.ServerApiService"/>
+
+  <osgi:reference id="softwareApiService"
+    interface="com.huawei.vcenterpluginui.services.SoftwareApiService"/>
+
   <osgi:reference id="templateApiService"
-         interface="com.huawei.vcenterpluginui.services.TemplateApiService" />
-         
-   <osgi:reference id="firmwareApiService"
-         interface="com.huawei.vcenterpluginui.services.FirmwareApiService" />
-         
-   <osgi:reference id="sessionService"
-         interface="com.huawei.vcenterpluginui.services.SessionService" />
+    interface="com.huawei.vcenterpluginui.services.TemplateApiService"/>
 
-   <osgi:reference id="notificationAlarmService"
-         interface="com.huawei.vcenterpluginui.services.NotificationAlarmService" />
+  <osgi:reference id="firmwareApiService"
+    interface="com.huawei.vcenterpluginui.services.FirmwareApiService"/>
 
-    <osgi:reference id="systemKeepAliveService"
-                    interface="com.huawei.vcenterpluginui.services.SystemKeepAliveService" />
+  <osgi:reference id="sessionService"
+    interface="com.huawei.vcenterpluginui.services.SessionService"/>
 
-   <osgi:reference id="vCenterInfoService"
-         interface="com.huawei.vcenterpluginui.services.VCenterInfoService" />
+  <osgi:reference id="notificationAlarmService"
+    interface="com.huawei.vcenterpluginui.services.NotificationAlarmService"/>
 
-   <osgi:reference id="eSightHAServerService"
-         interface="com.huawei.vcenterpluginui.services.ESightHAServerService" />
+  <osgi:reference id="systemKeepAliveService"
+    interface="com.huawei.vcenterpluginui.services.SystemKeepAliveService"/>
 
-   <osgi:reference id="syncServerHostService"
-         interface="com.huawei.vcenterpluginui.services.SyncServerHostService" />
+  <osgi:reference id="vCenterHAService"
+    interface="com.huawei.vcenterpluginui.services.VCenterHAService"/>
 
-   <osgi:reference id="instantiationBeanService"
-         interface="com.huawei.vcenterpluginui.services.InstantiationBeanService" />
+  <osgi:reference id="vCenterInfoService"
+    interface="com.huawei.vcenterpluginui.services.VCenterInfoService"/>
+
+  <osgi:reference id="eSightHAServerService"
+    interface="com.huawei.vcenterpluginui.services.ESightHAServerService"/>
+
+  <osgi:reference id="syncServerHostService"
+    interface="com.huawei.vcenterpluginui.services.SyncServerHostService"/>
+
+  <osgi:reference id="instantiationBeanService"
+    interface="com.huawei.vcenterpluginui.services.InstantiationBeanService"/>
 
 
-    <osgi:reference id="objectReferenceService"
-                    interface="com.vmware.vise.data.query.ObjectReferenceService" />
+  <osgi:reference id="objectReferenceService"
+    interface="com.vmware.vise.data.query.ObjectReferenceService"/>
 
-    <osgi:reference id="vmActionService"
-                    interface="com.huawei.vcenterpluginui.services.VmActionService" />
+  <osgi:reference id="vmActionService"
+    interface="com.huawei.vcenterpluginui.services.VmActionService"/>
 
-   <aop:config proxy-target-class="false">
-      <aop:aspect ref="aspectBean">
-         <aop:pointcut id="controllerPointcut"
-                       expression="execution(public * com.huawei.vcenterpluginui.mvc.*Controller.*(..))" />
-         <aop:before pointcut-ref="controllerPointcut" method="logRequest"/>
-      </aop:aspect>
-   </aop:config>
+  <aop:config proxy-target-class="false">
+    <aop:aspect ref="aspectBean">
+      <aop:pointcut id="controllerPointcut"
+        expression="execution(public * com.huawei.vcenterpluginui.mvc.*Controller.*(..))"/>
+      <aop:before pointcut-ref="controllerPointcut" method="logRequest"/>
+    </aop:aspect>
+  </aop:config>
 </beans>
 

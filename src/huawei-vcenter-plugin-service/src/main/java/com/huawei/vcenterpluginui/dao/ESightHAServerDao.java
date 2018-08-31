@@ -184,6 +184,27 @@ public class ESightHAServerDao extends H2DataBaseDao {
         }
     }
 
+    public ESightHAServer getEsightHAServerByHost(String host) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement("SELECT * FROM " + SqlFileConstant.HW_ESIGHT_HA_SERVER
+                + " WHERE HA_HOST_SYSTEM=? LIMIT 1");
+            ps.setString(1, host);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return buildESightHAServer(rs);
+            }
+        } catch (DataBaseException | SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        return null;
+    }
+
     private ESightHAServer buildESightHAServer(ResultSet rs) throws SQLException {
         ESightHAServer eSightHAServer = new ESightHAServer();
         eSightHAServer.setId(rs.getInt("ID"));

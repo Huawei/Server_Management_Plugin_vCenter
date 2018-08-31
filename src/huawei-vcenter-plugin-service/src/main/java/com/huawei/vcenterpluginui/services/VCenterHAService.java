@@ -1,9 +1,11 @@
 package com.huawei.vcenterpluginui.services;
 
+import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
 import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
 
+import com.huawei.vcenterpluginui.utils.ConnectedVim;
 import java.util.List;
 
 /**
@@ -22,11 +24,10 @@ public interface VCenterHAService {
 
     /**
      * create provider if it doesn't exist
-     * @param vCenterInfo vCenter account info
      * @param enable Whether to enable
      * @return providerId
      */
-    String createProvider(VCenterInfo vCenterInfo, boolean enable);
+    String createProvider(ConnectedVim connectedVim, boolean enable);
 
     /**
      * remove provider if it exist
@@ -36,4 +37,22 @@ public interface VCenterHAService {
      *          false: remove fail or other exception
      */
     Boolean removeProvider(VCenterInfo vCenterInfo);
+
+    /**
+     * create alarm definition in vcenter and DB in a new lowest priority thread
+     * @param vCenterInfo
+     * @param alarmDefinitionList
+     */
+    void registerAlarmDefInVcenterAndDB(VCenterInfo vCenterInfo,
+        List<AlarmDefinition> alarmDefinitionList);
+
+    ConnectedVim getConnectedVim();
+
+    /**
+     * unregister alarm definitions from vCenter
+     * @param vCenterInfo
+     * @param morList
+     */
+    void unregisterAlarmDef(VCenterInfo vCenterInfo, List<String> morList);
+
 }

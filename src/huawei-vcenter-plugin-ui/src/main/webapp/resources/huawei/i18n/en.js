@@ -182,7 +182,7 @@ var i18n_en = {
         saveDoneFail1: 'Some cancellation of the subscription failed. Please check and save again.',
         SaveSuccessInformation:'Unsubscribe from successful information',
         SaveFailInformation:'Unsubscribe from failed information',
-        saveFail: 'OperationFailed: Please verify userName and password.',
+        saveFail: 'Operation failed: Please verify user name and password.',
         successTitle: 'Register HA Provider success information',
         saveDoneSuccess: 'Saved successfully',
         saveDoneSuccessHA: 'Register HA Provider successfully.',
@@ -200,7 +200,30 @@ var i18n_en = {
         systemId :'SystemId',
         ok:'OK',
         alertMsg:'Please configure eSight first',
-        HAVersionSupport:'HA can not work in this version'
+        HAVersionSupport:'HA can not work in this version',
+        isRegisterHA:'Register HA Provider:',
+        enable:'Enable',
+        critical :'Critical',  
+        majorAndcritical:'Major And Critical',  
+        all:'All',
+        alarmLevel:'Received Alarm Level:',
+        isAlarmEnable:'Alarm Enabled:',
+        basicSetting:'Basic Setting',
+        HASetting:'HA Setting',
+        alarmSetting:'Alarm Setting',
+        operationINfo:'Operation information',
+        HAOperationResult:'HA Setting Result',
+        alarmOperationResult:'Alarm Setting Result',
+        unregisterSuccess:'Canceling registration succeeded.',
+        unregisterFail:'Canceling registration failed.',
+        registerSuccess:'Registration succeeded',
+        registerFail:'Registration failed',
+        unalarmSuccess:'Disabling alarm configuration succeeded',
+        unalarmFail:'Disabling alarm configuration failed.',
+        alarmSuccess:'Enabling alarm configuration succeeded',
+        alarmrFail:'Enabling alarm configuration failed',
+
+
     },
     eSight: {
         search: 'Search',
@@ -562,7 +585,9 @@ var i18n_en = {
         bladeServer: "Blade Server",
         deviceModel: "Device Model",
         switchBoard: "Switch Board",
-        rackServer: 'Rack Server'
+        rackServer: 'Rack Server',
+        ibMacIp:'iBMC IP',
+        eSightIp:'eSight IP'
     }
 
 }

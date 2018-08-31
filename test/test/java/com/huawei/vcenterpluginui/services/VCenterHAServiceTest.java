@@ -39,7 +39,7 @@ public class VCenterHAServiceTest extends ContextSupported {
         if (vCenterInfo == null) {
             LOGGER.info("vCenter info not exist.");
             return null;
-        } else if (!vCenterInfo.isState()) {
+        } else if (!vCenterInfo.isState() && !vCenterInfo.isPushEvent()) {
             LOGGER.info("vCenter info is disabled.");
             return null;
         }
@@ -65,11 +65,11 @@ public class VCenterHAServiceTest extends ContextSupported {
         System.out.println(removeProvider);
     }
 
-    @Test
-    public void createProvider() throws Exception {
-        VCenterInfo vCenterInfo = getvCenterInfo();
-        if (vCenterInfo == null) return;
-        String providerId = vCenterHAService.createProvider(vCenterInfo, true);
-        System.out.println(providerId);
-    }
+//    @Test
+//    public void createProvider() throws Exception {
+//        VCenterInfo vCenterInfo = getvCenterInfo();
+//        if (vCenterInfo == null) return;
+//        String providerId = vCenterHAService.createProvider(vCenterInfo, true);
+//        System.out.println(providerId);
+//    }
 }

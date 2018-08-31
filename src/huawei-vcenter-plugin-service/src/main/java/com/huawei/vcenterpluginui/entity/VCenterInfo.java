@@ -15,6 +15,16 @@ public class VCenterInfo implements Serializable {
     private String password;
     private Date createTime;
     private boolean state;
+    private boolean pushEvent;
+    private int pushEventLevel; // 1:crtical 2:majorandcritical 3:all
+
+    public int getPushEventLevel() {
+        return pushEventLevel;
+    }
+
+    public void setPushEventLevel(int pushEventLevel) {
+        this.pushEventLevel = pushEventLevel;
+    }
 
     public int getId() {
         return id;
@@ -62,5 +72,13 @@ public class VCenterInfo implements Serializable {
 
     public void setState(boolean state) {
         this.state = state;
+    }
+
+    public boolean isPushEvent() {
+        return pushEvent;
+    }
+
+    public void setPushEvent(boolean pushEvent) {
+        this.pushEvent = pushEvent;
     }
 }

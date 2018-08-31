@@ -45,4 +45,13 @@ public interface ESightHAServerService {
      * @param eSightId 可为null
      */
     int deleteAll(Integer eSightId) throws SQLException;
+
+    /**
+     * 根据host查询esightHAServer信息
+     * @param host
+     * @return
+     */
+    ESightHAServer getEsightHAServerByHost(String host);
+
+    ESightHAServer getESightHAServer(int eSightId, String dn);
 }

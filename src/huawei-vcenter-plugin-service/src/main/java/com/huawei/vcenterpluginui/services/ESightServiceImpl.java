@@ -117,7 +117,7 @@ public class ESightServiceImpl extends ESightOpenApiService implements ESightSer
         List<ESight> eSightList = new ArrayList<>();
         VCenterInfo vCenterInfo = null;
         vCenterInfo = vCenterInfoService.getVCenterInfo();
-        if (vCenterInfo != null && vCenterInfo.isState()) {
+        if (vCenterInfo != null && (vCenterInfo.isState() || vCenterInfo.isPushEvent())) {
             for (Integer esightId : id) {
                 eSightList.add(eSightDao.getESightById(esightId));
             }

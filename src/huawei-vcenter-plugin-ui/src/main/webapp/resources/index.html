@@ -64,10 +64,10 @@
                 {{i18ns.menu_server_firmware_upgrade}}
             </el-menu-item>
         </el-submenu>
-        <el-submenu index="3">
-            <template slot="title"><a id="menu-vcenter">{{i18ns.menu_vCenter_set}}</a></template>
-            <el-menu-item id="menu-vCenter-ha" index="huawei/vCenter/vCenterConfig.html">{{i18ns.menu_vCenter_ha_set}}</el-menu-item>
-        </el-submenu>
+       <!--  <el-submenu index="3"> -->
+         <!--    <template slot="title"><a id="menu-vcenter">{{i18ns.menu_vCenter_set}}</a></template> -->
+            <el-menu-item id="menu-vCenter-ha" index="huawei/vCenter/vCenterConfig.html">{{i18ns.menu_vCenter_set}}</el-menu-item>
+       <!--  </el-submenu> -->
         <el-menu-item style="float: right;" index="huawei/about/about.html">
         	{{i18ns.menu_about}}
         </el-menu-item>
@@ -118,7 +118,7 @@
     function doResize() {
         var explorer = navigator.userAgent;
         if (explorer.indexOf("Firefox") >= 0 || explorer.indexOf("Windows") >= 0) {
-            app.iframeHeight = $(document).height() - 80;
+            app.iframeHeight = $(window).height() - 80;
         } else {
             app.iframeHeight = document.body.scrollHeight - 80;
         }
@@ -154,8 +154,8 @@
                 return i18n_v_zh_CN;
             }
         } else {
-            ELEMENT.locale(ELEMENT.lang.zhCN);
-            return i18n_v_zh_CN;
+            ELEMENT.locale(ELEMENT.lang.en);
+            return i18n_v_en;
         }
     }
 </script>

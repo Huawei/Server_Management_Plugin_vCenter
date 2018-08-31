@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: huawei-vcenter-plugin-ui
 Bundle-SymbolicName: com.huawei.vcenterpluginui.huawei-vcenter-plugin-ui
-Bundle-Version: 1.3.44
+Bundle-Version: 1.4.8
 Bundle-Vendor: VMware
 Web-ContextPath: vsphere-client/vcenterpluginui
-Import-Package: com.huawei.vcenterpluginui.services;version="1.3.44",
- com.huawei.vcenterpluginui.mvc;version="1.3.44",
- com.huawei.vcenterpluginui.interceptor;version="1.3.44",
- com.huawei.vcenterpluginui.entity;version="1.3.44",
- com.huawei.vcenterpluginui.exception;version="1.3.44",
- com.huawei.vcenterpluginui.provider;version="1.3.44",
+Import-Package: com.huawei.vcenterpluginui.services;version="1.4.8",
+ com.huawei.vcenterpluginui.mvc;version="1.4.8",
+ com.huawei.vcenterpluginui.interceptor;version="1.4.8",
+ com.huawei.vcenterpluginui.entity;version="1.4.8",
+ com.huawei.vcenterpluginui.exception;version="1.4.8",
+ com.huawei.vcenterpluginui.provider;version="1.4.8",
  com.huawei.esight.exception;version="1.1.1",
  com.vmware.vise.data.query;version="0",
  com.vmware.vise.security;version="0",

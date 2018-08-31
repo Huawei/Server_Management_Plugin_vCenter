@@ -9,6 +9,7 @@ import com.huawei.vcenterpluginui.entity.ESight;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
 import com.huawei.vcenterpluginui.provider.SessionOpenIdProvider;
 import com.huawei.vcenterpluginui.utils.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
@@ -19,6 +20,9 @@ public class ServerApiServiceImpl extends ESightOpenApiService implements Server
 
     private static final int START_PAGE_NO = 1; // 起始页码数，API限定的
     private static final int MAX_PAGE_SIZE = 100; // 单页最大数据，API限定的
+
+	@Autowired
+	private ESightHAServerService eSightHAServerService;
 
 	@Override
 	public String queryServer(String ip, HttpSession session, String servertype, int pageNo, int pageSize) throws SQLException {
@@ -63,6 +67,24 @@ public class ServerApiServiceImpl extends ESightOpenApiService implements Server
 	@Override
 	public String getESightFailKey(int eSightId, String serverType) {
 		return String.format("%s_%s", eSightId, serverType);
+	}
+
+	@Override
+	public Map<String, String> getIpAndDN(String host) {
+		ESightHAServer eSightHAServer = eSightHAServerService.getEsightHAServerByHost(host);
+		LOGGER.info("getIpAndDN - eSightHAServer: " + eSightHAServer);
+		if (eSightHAServer == null) {
+			return Collections.EMPTY_MAP;
+		}
+		ESight eSight;
+		try {
+			eSight = getESightById(eSightHAServer.geteSightHostId());
+		} catch (SQLException e) {
+			LOGGER.error("Failed to get esight by id: " + eSightHAServer.geteSightHostId());
+			return Collections.EMPTY_MAP;
+		}
+		LOGGER.info("getIpAndDN - eSight: " + eSight);
+		return Collections.singletonMap(eSight.getHostIp(), eSightHAServer.geteSightServerDN());
 	}
 
 	/**

@@ -45,6 +45,10 @@ public class ESightOpenApiService {
         return eSightDao.getESightByIp(ip);
     }
 
+    protected ESight getESightById(int id) throws SQLException {
+      return eSightDao.getESightById(id);
+    }
+
     public void seteSightDao(ESightDao eSightDao) {
         this.eSightDao = eSightDao;
     }

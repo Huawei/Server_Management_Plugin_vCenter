@@ -52,4 +52,14 @@ public class ESightHAServerServiceImpl implements ESightHAServerService {
         return eSightHAServerDao.deleteAll(eSightId);
     }
 
+    @Override
+    public ESightHAServer getEsightHAServerByHost(String host) {
+        return eSightHAServerDao.getEsightHAServerByHost(host);
+    }
+
+    @Override
+    public ESightHAServer getESightHAServer(int eSightId, String dn) {
+        return eSightHAServerDao.getESightHAServer(eSightId, dn);
+    }
+
 }

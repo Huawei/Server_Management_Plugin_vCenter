@@ -3,11 +3,10 @@ package com.huawei.vcenterpluginui.services;
 import com.huawei.esight.api.provider.DefaultOpenIdProvider;
 import com.huawei.vcenterpluginui.entity.ESight;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
-
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpSession;
 
 /**
  * It must be declared as osgi:service with the same name in
@@ -66,5 +65,12 @@ public interface ServerApiService {
      * @return map key
      */
     String getESightFailKey(int eSightId, String serverType);
+
+	/**
+	 * 根据host获取已同步的服务器
+	 * @param host
+	 * @return
+	 */
+	Map<String, String> getIpAndDN(String host);
 
 }

@@ -7,6 +7,7 @@ public class SqlFileConstant {
 	public static final String HW_ESIGHT_HA_SERVER = "HW_ESIGHT_HA_SERVER";
 	public static final String HW_VCENTER_INFO = "HW_VCENTER_INFO";
 	public static final String HW_SERVER_DEVICE_DETAIL = "HW_SERVER_DEVICE_DETAIL";
+	public static final String HW_ALARM_DEFINITION = "HW_ALARM_DEFINITION";
 	public static final String SUFFIX = ".sql";
 	
 	public static final String HW_ESIGHT_HOST_SQL = "DROP TABLE IF EXISTS \"HW_ESIGHT_HOST\";\n" +
@@ -99,6 +100,8 @@ public class SqlFileConstant {
 						+ "\"PASSWORD\"  nvarchar(255),\n"
 						+ "\"STATE\"  BOOLEAN,\n"
             + "\"CREATE_TIME\"  datetime NOT NULL,\n"
+            + "\"PUSH_EVENT\"  BOOLEAN,\n"
+            + "\"PUSH_EVENT_LEVEL\"  integer,\n"
             + "CONSTRAINT UNIQUE_HOST_IP UNIQUE (HOST_IP)\n"
             + ");";
 
@@ -116,11 +119,33 @@ public class SqlFileConstant {
 			"        REFERENCES HW_ESIGHT_HOST (ID)\n" +
 			"        ON DELETE CASCADE\n" +
 			");";
+
+	public static final String HW_ALARM_DEFINITION_SQL = "DROP TABLE IF EXISTS \"HW_ALARM_DEFINITION\";\n"
+			+ "CREATE TABLE \"HW_ALARM_DEFINITION\" (\n"
+			+ "  \"ID\"  integer PRIMARY KEY AUTO_INCREMENT NOT NULL,\n"
+			+ "  \"MOR_VALUE\"  nvarchar(255),\n"
+			+ "  \"EVENT_TYPE_ID\"  nvarchar(255),\n"
+			+ "  \"EVENT_NAME\"  nvarchar(255)\n"
+			+ ");";
+
 	public static final String HW_ESIGHT_HOST_SYSTEM_ID = "SYSTEM_ID";
 	public static final String HW_ESIGHT_HOST_ALTER_SQL = "ALTER TABLE HW_ESIGHT_HOST ADD SYSTEM_ID VARCHAR(50) NULL;";
 
 	public static final String HW_VCENTER_INFO_STATE = "STATE";
+	public static final String HW_VCENTER_INFO_PUSHEVENT = "PUSH_EVENT";
+	public static final String HW_VCENTER_INFO_PUSHEVENTLEVEL = "PUSH_EVENT_LEVEL";
 	public static final String HW_VCENTER_INFO_STATE_ALTER_SQL = "ALTER TABLE HW_VCENTER_INFO ADD STATE BOOLEAN NULL;";
+	public static final String HW_VCENTER_INFO_PUSHEVENT_ALTER_SQL = "ALTER TABLE HW_VCENTER_INFO ADD PUSH_EVENT BOOLEAN NULL;";
+	public static final String HW_VCENTER_INFO_PUSHEVENTLEVEL_ALTER_SQL = "ALTER TABLE HW_VCENTER_INFO ADD PUSH_EVENT_LEVEL integer NULL;";
+
+	public static final String HW_ALARM_DEFINITION_SEVERITY = "SEVERITY";
+	public static final String HW_ALARM_DEFINITION_EVENTTYPE = "EVENT_TYPE";
+	public static final String HW_ALARM_DEFINITION_DESCRIPTION = "DESCRIPTION";
+
+	public static final String HW_ALARM_DEFINITION_SEVERITY_ALTER_SQL = "ALTER TABLE HW_ALARM_DEFINITION ADD SEVERITY VARCHAR(32) NULL;";
+	public static final String HW_ALARM_DEFINITION_EVENTTYPE_ALTER_SQL = "ALTER TABLE HW_ALARM_DEFINITION ADD EVENT_TYPE VARCHAR(32) NULL;";
+	public static final String HW_ALARM_DEFINITION_DESCRIPTION_ALTER_SQL = "ALTER TABLE HW_ALARM_DEFINITION ADD DESCRIPTION VARCHAR(255) NULL;";
+
 
 	public static final String COLUMN_ESIGHT_SERVER_PARENT_DN = "ESIGHT_SERVER_PARENT_DN";
 	public static final String COLUMN_ESIGHT_SERVER_PARENT_DN_SQL = "ALTER TABLE " + HW_ESIGHT_HA_SERVER + " ADD " +

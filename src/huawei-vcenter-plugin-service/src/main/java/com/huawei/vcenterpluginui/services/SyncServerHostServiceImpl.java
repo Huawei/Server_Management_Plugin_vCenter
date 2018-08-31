@@ -61,10 +61,7 @@ public class SyncServerHostServiceImpl implements SyncServerHostService {
                 // 获取vCenter配置信息
                 VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
                 if (vCenterInfo == null) {
-                    LOGGER.info("vCenter info not exist.");
-                    return;
-                } else if (!vCenterInfo.isState()) {
-                    LOGGER.info("vCenter info is disabled.");
+                    LOGGER.info("vCenter info does not exist.");
                     return;
                 }
 

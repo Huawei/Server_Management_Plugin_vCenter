@@ -1,6 +1,7 @@
 package com.huawei.vcenterpluginui.interceptor;
 
 import com.huawei.vcenterpluginui.services.SessionService;
+import com.huawei.vcenterpluginui.services.VmActionService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,12 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
-public class SessionHandlerInterceptor extends HandlerInterceptorAdapter {
+public class  SessionHandlerInterceptor extends HandlerInterceptorAdapter {
 
 	protected SessionService sessionService;
+
+	@Autowired
+	private VmActionService vmActionService;
 
 	private static final Log LOGGER = LogFactory.getLog(SessionHandlerInterceptor.class);
 
@@ -116,5 +120,13 @@ public class SessionHandlerInterceptor extends HandlerInterceptorAdapter {
 
 	public void setSessionService(SessionService sessionService) {
 		this.sessionService = sessionService;
+	}
+
+	public VmActionService getVmActionService() {
+		return vmActionService;
+	}
+
+	public void setVmActionService(VmActionService vmActionService) {
+		this.vmActionService = vmActionService;
 	}
 }

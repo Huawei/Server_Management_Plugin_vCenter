@@ -290,8 +290,8 @@ function getIn18() {
 
         }
     } else {
-        ELEMENT.locale(ELEMENT.lang.zhCN);
-        return i18n_zh_CN;
+        ELEMENT.locale(ELEMENT.lang.en);
+        return i18n_en;
     }
 }
 
