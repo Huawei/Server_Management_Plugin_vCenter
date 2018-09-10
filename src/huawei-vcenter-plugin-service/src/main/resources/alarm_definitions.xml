@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
-	<EventID name="ibmc-The air inlet temperature exceeds the over minor threshold" severity="yellow">
+	<EventID name="ibmc-The air inlet temperature over minor threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-12000001-hwChassisInletOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The air inlet temperature exceeds the overtemperature threshold.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The air inlet temperature  the over threshold major" severity="yellow">
+	<EventID name="ibmc-The air inlet temperature over major threshold " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-12000003-hwChassisInletOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -35,7 +35,7 @@
 			<description>ibmc alarm :CPU DIMMs VDDQ temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The CPU VRD temperature exceeds the over minor  threshold" severity="yellow">
+	<EventID name="ibmc-The CPU VRD temperature exceeds the over minor threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-00000007-hwCPUVRDOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -49,46 +49,46 @@
 			<description>ibmc alarm :Temperature of the DIMMs connected to CPU is too high.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 3.3 V detection point is too lower " severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 3.3V detection point is too lower " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000001-hwMainboard3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 3.3 V detection point is too high" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 3.3V detection point is too high" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000003-hwMainboard3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 5 V detection point is too low" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 5V detection point is too low" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000005-hwMainboard5VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 5 V detection point is too high" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 5V detection point is too high" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000007-hwMainboard5VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 12 V detection point is too lower" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 12V detection point is too lower" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000009-hwMainboard12VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 12 V detection point is lower than the undervoltage threshold . </description>
+			<description>ibmc alarm :Mainboard voltage at 12V detection point is lower than the undervoltage threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 12 V detection point is too high" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 12V detection point is too high" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000000B-hwMainboard12VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 12 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 12V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-CPU core voltage is lower than the undervoltage threshold" severity="yellow">
@@ -245,7 +245,7 @@
 			<description>ibmc alarm :PSU predictive failure.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The AC/DC input of PSU is lost or out-of-range" severity="red">
+	<EventID name="ibmc-The ACDC input of PSU is lost or out-of-range" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-0300000D-hwPSUInputLost</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -315,14 +315,14 @@
 			<description>ibmc alarm :The host was restarted due to watchdog timeout.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The host is restarted after being powered on " severity="green">
+	<EventID name="ibmc-The host is restarted after being powered on" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-2C000017-hwSystemRestartByTurnOnStrategy</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The host is restarted after being powered on (Power strategy is &quot;Turn On&quot;).</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The host is restarted after being powered on PreviousStrategy" severity="green">
+	<EventID name="ibmc-The host is restarted after being powered on Previous Strategy" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-2C000019-hwSystemRestartByRestorePreviousStrategy</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -469,11 +469,11 @@
 			<description>ibmc alarm :Lost fan redundancy.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Fan # failure" severity="yellow">
+	<EventID name="ibmc-Fan failure" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-04000007-hwFanSpeedDeviation</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Fan # failure. </description>
+			<description>ibmc alarm :Fan failure. </description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The RAID controller card installed" severity="green">
@@ -515,7 +515,7 @@
 		<EventType>
 			<eventTypeID>ibmc-28000001-hwCableSASIncorrectConnection</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :The SAS or PCIe cable to disk backplane is incorrectly connected. </description>
+			<description>ibmc alarm :The SAS or PCIe cable to disk backplane is incorrectly connected.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-RAID controller card failure" severity="yellow">
@@ -560,7 +560,7 @@
 			<description>ibmc alarm :The RAID controller card triggered an uncorrectable error .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The triggered an uncorrectable error" severity="red">
+	<EventID name="ibmc-The PCIeCard triggered an uncorrectable error" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-08000001-hwPCIeCardUncorrectableErr</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -595,14 +595,14 @@
 			<description>ibmc alarm :Power supply to disk backplane failed. </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-disconnected" severity="green">
+	<EventID name="ibmc-Port disconnected" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-29000001-hwPortDisconnected</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm : disconnected.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-connected" severity="green">
+	<EventID name="ibmc-Port connected" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-29000003-hwPortConnected</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -777,18 +777,18 @@
 			<description>ibmc alarm :The air inlet temperature of the expansion board exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 3.3 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 3.3V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000000F-hwMainboardStdby3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 3.3 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 3.3V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000011-hwMainboardStdby3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The PCH voltage is lower than the undervoltage threshold" severity="yellow">
@@ -805,88 +805,88 @@
 			<description>ibmc alarm :The PCH voltage exceeds the overvoltage threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 12 V detection point is under threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 12V detection point is under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000007-hwExpandBoard12VlowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 12 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 12V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 12 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 12V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000009-hwExpandBoard12VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 12 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 12V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 5 V detection point is under threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 5V detection point is under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D00000B-hwExpandBoard5VlowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 5 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 5V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D00000D-hwExpandBoard5VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 3.3 V detection point under  threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 3.3V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D00000F-hwExpandBoard3V3lowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 3.3 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 3.3V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000011-hwExpandBoard3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 1.5 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 1.5V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000013-hwExpandBoard1V5lowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 1.5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 1.5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at standby 1.5 V detection  over threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at standby 1.5V detection over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000015-hwExpandBoard1V5OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at standby 1.5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at standby 1.5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 1 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 1V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000017-hwExpandBoard1VlowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at 1 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at 1V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000019-hwExpandBoard1VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at 1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at 1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at standby 3.3 V detection point under threshold " severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at standby 3.3V detection point under threshold " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D00001B-hwExpandBoardStdby3V3lowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at standby 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at standby 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Expansion board voltage at standby 3.3 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Expansion board voltage at standby 3.3V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D00001D-hwExpandBoardStdby3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Expansion board voltage at standby 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Expansion board voltage at standby 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Expansion board error" severity="yellow">
@@ -994,7 +994,7 @@
 			<description>ibmc alarm :The board ID cannot be obtained or is incorrect.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-changed" severity="green">
+	<EventID name="ibmc-BMCVersion changed" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-1A00000B-hwBMCVersionChanged</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1022,49 +1022,49 @@
 			<description>ibmc alarm :iBMC event record has reached 90% space capacity.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1 V detection point  underthreshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000001F-hwMainboardStdby1VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000021-hwMainboardStdby1VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 2.5 V detection point  under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 2.5V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000023-hwMainboardStdby2V5LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 2.5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 2.5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 2.5 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 2.5V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000025-hwMainboardStdby2V5OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 2.5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 2.5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 1 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 1V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000027-hwMainboard1VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 1 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 1V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000029-hwMainboard1VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch module fabric plane LSW chip voltage  under threshold" severity="yellow">
+	<EventID name="ibmc-Switch module fabric plane LSW chip VDD voltage under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1E000001-hwFabricPlaneLSWVDDLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1078,7 +1078,7 @@
 			<description>ibmc alarm :Switch module fabric plane LSW chip voltage at the detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch module fabric plane LSW chip voltage under threshold" severity="yellow">
+	<EventID name="ibmc-Switch module fabric plane LSW chip Vcore voltage under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1E000005-hwFabricPlaneLSWVcoreLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1092,18 +1092,18 @@
 			<description>ibmc alarm :Switch module fabric plane LSW chip voltage at the Vcore voltage detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 1.5 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 1.5V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000002B-hwMainboard1V5LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 1.5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 1.5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 1.5 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 1.5V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000002D-hwMainboard1V5OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 1.5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 1.5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The MOS FET voltage drop of the soft-start circuit over threshold" severity="yellow">
@@ -1131,7 +1131,7 @@
 		<EventType>
 			<eventTypeID>ibmc-1E00000B-hwFabricPlaneLSWOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch module fabric plane LSW chip temperature1% exceeds the overtemperature threshold .</description>
+			<description>ibmc alarm :Switch module fabric plane LSW chip temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Switch module fabric plane LSW chip temperature is critical" severity="red">
@@ -1204,158 +1204,158 @@
 			<description>ibmc alarm :Abnormal heartbeat signal between the iBMC and switch module Fabric plane.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 2.5 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 2.5V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000007-hwSwitchMezz2V5LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 2.5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 2.5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 2.5 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 2.5V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000009-hwSwitchMezz2V5OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 2.5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 2.5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 3.3 V under threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 3.3V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F00000B-hwSwitchMezz3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 3.3 V  over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 3.3V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F00000D-hwSwitchMezz3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 12 V under threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 12V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F00000f-hwSwitchMezz12VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 12 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 12V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 12 V over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 12V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000011-hwSwitchMezz12VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 12 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 12V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 1 V  underthreshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 1V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000013-hwSwitchMezz1VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 1 V  over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 1V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000015-hwSwitchMezz1VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 1.8 V under threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 1.8V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000017-hwSwitchMezz1V8LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 1.8 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 1.8V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 1.8 V over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 1.8V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000019-hwSwitchMezz1V8OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 1.8 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 1.8V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 1.5 V  under threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 1.5V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F00001B-hwSwitchMezz1V5LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 1.5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 1.5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at 1.5 V over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at 1.5V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F00001D-hwSwitchMezz1V5OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at 1.5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at 1.5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at standby 3.3 V  under threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at standby 3.3V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F00001F-hwSwitchMezzStdby3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at standby 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at standby 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch mezzanine card voltage at standby 3.3 V over threshold" severity="yellow">
+	<EventID name="ibmc-Switch mezzanine card voltage at standby 3.3V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1F000021-hwSwitchMezzStdby3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Switch mezzanine card voltage at standby 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Switch mezzanine card voltage at standby 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 5 V under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 5V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000033-hwMainboardStdby5VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 5 V over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 5V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000035-hwMainboardStdby5VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-CPU QPI/UPI link failed" severity="yellow">
+	<EventID name="ibmc-CPU QPIUPI link failed" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-28000005-hwCableQPILinkFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :CPU QPI/UPI link failed.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Middle of the I/O board air inlet temperature exceeds the over threshold" severity="yellow">
+	<EventID name="ibmc-Middle of the IO board air inlet temperature over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000001-hwIOBoardInletMOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Middle of the I/O board air inlet temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Right part of the I/O board air inlet temperature  over threshold" severity="yellow">
+	<EventID name="ibmc-Right part of the IO board air inlet temperature over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000003-hwIOBoardInletROverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Right part of the I/O board air inlet temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Left part of the I/O board air inlet temperature  over threshold" severity="yellow">
+	<EventID name="ibmc-Left part of the IO board air inlet temperature over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000005-hwIOBoardInletLOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Left part of the I/O board air inlet temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PSU is overtemperature" severity="yellow">
+	<EventID name="ibmc-PSU is over temperature threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-03000011-hwPSUOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PSU is overtemperature.</description>
+			<description>ibmc alarm :PSU is over temperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-CPU board # temperature exceeds the over threshold" severity="yellow">
+	<EventID name="ibmc-CPU board temperature over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-24000001-hwCPUBoardOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :CPU board # temperature exceeds the overtemperature threshold .</description>
+			<description>ibmc alarm :CPU board temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Abnormal heartbeat signal between the active and standby iBMCs" severity="yellow">
@@ -1365,35 +1365,35 @@
 			<description>ibmc alarm :Abnormal heartbeat signal between the active and standby iBMCs.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 1.1 V detection point underthreshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 1.1V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000003B-hwMainboard1V1LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 1.1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 1.1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 1.1 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 1.1V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000003D-hwMainboard1V1OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 1.1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 1.1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.2 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.2V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000003F-hwMainboardStdby1V2LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.2 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.2V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.2 V  over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.2V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000041-hwMainboardStdby1V2OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.2 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.2V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The temperature of the NCM chip  over threshold" severity="yellow">
+	<EventID name="ibmc-The temperature of the NCM chip over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-13000005-hwNCBoardOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1449,11 +1449,11 @@
 			<description>ibmc alarm :Mezzanine card triggered an uncorrectable error .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Different CPU models detected during system startup" severity="red">
+	<EventID name="ibmc-Different CPU models is detected during system startup" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-2C000037-hwSystemDiffCPUModule</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Different CPU models detected during system startup.</description>
+			<description>ibmc alarm :Different CPU models is detected during system startup.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-System suspended during startup" severity="red">
@@ -1694,7 +1694,7 @@
 			<description>ibmc alarm :The PCIe hot swap button is pressed.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The air inlet temperature exceeds the over critical threshold" severity="red">
+	<EventID name="ibmc-The air inlet temperature over critical threshold" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-1200000f-hwChassisInletOverTempCritical</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1750,70 +1750,70 @@
 			<description>ibmc alarm :The management LSW chip on the iBMC of the switch module is faulty.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 3.3 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 3.3V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000001-hwPICCard3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 3.3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 3.3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 3.3 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 3.3V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000003-hwPICCard3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 3.3 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 3.3V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 1.2 V detection point  under threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 1.2V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000005-hwPICCard1V2LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 1.2 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 1.2V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 1.2 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 1.2V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000007-hwPICCard1V2OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 1.2 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 1.2V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 1 V detection point  under threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 1V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000009-hwPICCard1VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 1 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 1V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-3000000B-hwPICCard1VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 12 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 12V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-3000000D-hwPICCard12VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 12 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 12V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage at 12 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage at 12V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-3000000F-hwPICCard12VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :PIC card voltage at 12 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :PIC card voltage at 12V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The PIC card temperature exceeds the over minor threshold" severity="yellow">
+	<EventID name="ibmc-The PIC card temperature over minor threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000011-hwPICCardOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The PIC card temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The PIC card temperature  over major threshold" severity="yellow">
+	<EventID name="ibmc-The PIC card temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000013-hwPICCardOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1876,14 +1876,14 @@
 			<description>ibmc alarm :PHY MDIO error.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-hwPort installed" severity="green">
+	<EventID name="ibmc-Port installed" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-29000005-hwPortInstalled</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :hwPort installed.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-hwPort removed" severity="green">
+	<EventID name="ibmc-Port removed" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-29000007-hwPortRemoved</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -1911,88 +1911,88 @@
 			<description>ibmc alarm :Failed to obtain data of the air inlet temperature.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain the voltage at 3.3 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain the voltage at 3.3V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000063-hwMainboardAccess3V3Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at 3.3 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at 3.3V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain the voltage at 5 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain the voltage at 5V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000065-hwMainboardAccess5VFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at 5 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at 5V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain the voltage at 12 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain the voltage at 12V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000067-hwMainboardAccess12VFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at 12 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at 12V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain the voltage at 1.1 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain the voltage at 1.1V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000069-hwMainboardAccess1V1Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at 1.1 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at 1.1V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain the voltage at 1.5 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain the voltage at 1.5V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000006B-hwMainboardAccess1V5Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at 1.5 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at 1.5V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Failed to obtain value at standby 5V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000006D-hwMainboardAccessStdby5VFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 5 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 5V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain value at standby 3.3 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain value at standby 3.3V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000006F-hwMainboardAccessStdby3V3Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 3.3 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 3.3V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain value at standby 2.5 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain value at standby 2.5V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000071-hwMainboardAccessStdby2V5Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 2.5 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 2.5V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain value at standby 1.5 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain value at standby 1.5V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000073-hwMainboardAccessStdby1V5Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 1.5 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 1.5V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain value at standby 1.2 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain value at standby 1.2V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000075-hwMainboardAccessStdby1V2Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 1.2 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 1.2V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain value at standby 1.1 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain value at standby 1.1V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000077-hwMainboardAccessStdby1V1Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 1.1 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 1.1V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain value at standby 1 V detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain value at standby 1V detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000079-hwMainboardAccessStdby1VFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 1 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 1V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Failed to obtain the MOS FET voltage drop of the soft-start circuit" severity="yellow">
@@ -2184,11 +2184,11 @@
 			<description>ibmc alarm :Failed to obtain data of the expand board temperature.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain data of the expand board 12 Vvoltage" severity="yellow">
+	<EventID name="ibmc-Failed to obtain data of the expand board 12V voltage" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2D000023-hwExpandBoardAccess12VFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain data of the expand board 12 Vvoltage.</description>
+			<description>ibmc alarm :Failed to obtain data of the expand board 12V voltage.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Failed to obtain data of the expand board 5V voltage" severity="yellow">
@@ -2226,21 +2226,21 @@
 			<description>ibmc alarm :Failed to obtain data of the expand board standby 3.3V voltage.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-obtain data of the middle part of the I/O board inlet temperature error" severity="yellow">
+	<EventID name="ibmc-obtain data of the middle part of the IO board inlet temperature error" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000007-hwIOBoardInletMAccessTempFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Failed to obtain data of the middle part of the I/O board air inlet temperature.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-obtain data of the right part of the I/O board inlet temperature error" severity="yellow">
+	<EventID name="ibmc-obtain data of the right part of the IO board inlet temperature error" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000009-hwIOBoardInletRAccessTempFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain data of the right part of the I/O board air inlet temperature.</description>
+			<description>ibmc alarm :Failed to obtain data of the right part of the IO board air inlet temperature.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-obtain data of the left part of the I/O board  inlet temperature error" severity="yellow">
+	<EventID name="ibmc-obtain data of the left part of the IO board inlet temperature error" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2300000B-hwIOBoardInletLAccessTempFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -2303,11 +2303,11 @@
 			<description>ibmc alarm :Failed to obtain electronic label data of the The PCIe card .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The CPU connected to JC chip # has VMSE error" severity="yellow">
+	<EventID name="ibmc-The CPU connected to JC chip has VMSE error" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-38000001-hwJCChipVMSEFault</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :The CPU connected to JC chip # has VMSE error.</description>
+			<description>ibmc alarm :The CPU connected to JC chip has VMSE error.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-iBMC is reset and started" severity="green">
@@ -2352,28 +2352,28 @@
 			<description>ibmc alarm :The HPC type does not match the CPU board or CPU.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-CPU QPI/UPI link degrade" severity="yellow">
+	<EventID name="ibmc-CPU QPIUPI link degrade" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2800000B-hwCableQPILinkDegrade</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :CPU QPI/UPI link degrade.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The CPU VRD temperature exceeds the over major threshold" severity="yellow">
+	<EventID name="ibmc-The CPU VRD temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-00000027-hwCPUVRDOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The CPU VRD temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The maximum CPU JC chip temperature exceeds the over Minor threshold" severity="yellow">
+	<EventID name="ibmc-The maximum CPU JC chip temperature over Minor threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-38000003-hwJCChipOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The maximum CPU JC chip temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The maximum CPU JC chip temperature exceeds the over major threshold" severity="yellow">
+	<EventID name="ibmc-The maximum CPU JC chip temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-38000005-hwJCChipOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -2401,7 +2401,7 @@
 			<description>ibmc alarm :Abnormal NCM CPLD self-check result.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Abnormal I/O board CPLD self-check result" severity="yellow">
+	<EventID name="ibmc-Abnormal IO board CPLD self-check result" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2300000D-hwIOBoardCPLDSelfTestFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -2457,21 +2457,21 @@
 			<description>ibmc alarm :The PCIe card exceeds the overtemperature threshold.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The temperature exceeds the overt major threshold" severity="yellow">
+	<EventID name="ibmc-The temperature exceeds the over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-0800000B-hwPCIeCardOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The PCIe card CPU core temperature exceeds the over minor threshold" severity="yellow">
+	<EventID name="ibmc-The PCIe card CPU core temperature over minor threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-0800000D-hwPCIeCardCPUOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The PCIe card CPU core temperature exceeds the overtemperature threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The PCIe card CPU core temperature exceeds the over major threshold" severity="yellow">
+	<EventID name="ibmc-The PCIe card CPU core temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-0800000F-hwPCIeCardCPUOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -2482,7 +2482,7 @@
 		<EventType>
 			<eventTypeID>ibmc-08000011-hwPCIeCardBattLowerVoltMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :The PCIe card voltage at 3 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :The PCIe card voltage at 3V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The PCIe card voltage at detection point under threshold" severity="yellow">
@@ -2527,11 +2527,11 @@
 			<description>ibmc alarm :The PCIe card boot disk does not exist.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The PCIe card is" severity="yellow">
+	<EventID name="ibmc-The PCIe card DIMM Failure " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-0800001F-hwPCIeCardDIMMFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :The PCIe card is . </description>
+			<description>ibmc alarm :The PCIe card is IMM Failure </description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The PCIe card has a firmware initialization alarm" severity="yellow">
@@ -2611,18 +2611,18 @@
 			<description>ibmc alarm :CPU iMC 1 channel 3 mirroring failed.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-I/O board voltage at 12 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-IO board voltage at 12V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2300000f-hwIOBoard12VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :I/O board voltage at 12 V detection point exceeds the overvoltage threshold . </description>
+			<description>ibmc alarm :I/O board voltage at 12V detection point exceeds the overvoltage threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-NCM voltage at 12 V detection point exceeds the overvoltage threshold" severity="yellow">
+	<EventID name="ibmc-NCM voltage at 12V detection point exceeds the overvoltage threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1300000f-hwNCBoard12VOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :NCM voltage at 12 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :NCM voltage at 12V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-RAID card BBU voltage is low" severity="yellow">
@@ -2688,7 +2688,7 @@
 			<description>ibmc alarm :Failed to obtain data of the DTS temperature for CPU .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain data of the 12V voltage for I/O board" severity="yellow">
+	<EventID name="ibmc-Failed to obtain data of the 12V voltage for IO board" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000013-hwIOBoardAccess12VFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -2716,32 +2716,32 @@
 			<description>ibmc alarm :Failed to obtain data of the The disk temperature.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.1 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.1V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000008B-hwMainboardStdby1V1LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.1 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.1V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.1 V over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.1V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000008D-hwMainboardStdby1V1OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.1 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.1V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.5 V under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.5V under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1000008F-hwMainboardStdby1V5LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.5 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.5V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.5 V over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.5V over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000091-hwMainboardStdby1V5OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.5 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.5V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Failed to obtain data of the CPU DIMM VPP 1 voltage" severity="yellow">
@@ -2758,7 +2758,7 @@
 			<description>ibmc alarm :Failed to obtain data of the 1.8V voltage for switch mezzanine card .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-A PS/2 or USB keyboard controller error is detected during system startup" severity="red">
+	<EventID name="ibmc-A PS2 or USB keyboard controller error is detected during system startup" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-10000093-hwMainboardKeyboardControllerFault</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -2870,25 +2870,25 @@
 			<description>ibmc alarm :Failed to obtain data of the CPU DIMM VPP 2 voltage.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 12 V 2 detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 12V2 detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000095-hwMainboard12V_2LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 12 V 2 detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 12V2 detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at 12 V 2 detection point exceeds the over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at 12V2 detection point exceeds the over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000097-hwMainboard12V_2OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at 12 V 2 detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at 12V2 detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain the voltage at 12 V 2 detection point on the mainboard" severity="yellow">
+	<EventID name="ibmc-Failed to obtain the voltage at 12V2 detection point on the mainboard" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-10000099-hwMainboardAccessStdby1V2_2Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at 12 V 2 detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at 12V2 detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-CPU VSA voltage exceeds the overvoltage threshold" severity="yellow">
@@ -3052,18 +3052,18 @@
 			<description>ibmc alarm :SD RAID controller failure.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Memory board [VMSECH ] SMI2 training error" severity="red">
+	<EventID name="ibmc-Memory board VMSECH SMI2 training error" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-0E000005-hwMemoryBoardSMI2TainingError</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Memory board [VMSECH ] SMI2 training error. Error code: .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-CPU [VMSECH ] SMI2 training error" severity="red">
+	<EventID name="ibmc-CPU VMSECH SMI2 training error" severity="red">
 		<EventType>
 			<eventTypeID>ibmc-1000009B-hwMainboardSMI2TainingError</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :CPU [VMSECH ] SMI2 training error. Error code: .</description>
+			<description>ibmc alarm :CPU VMSECH SMI2 training error. Error code: .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The MOS 2 FET drop of the soft-start circuit on the mainboard overVoltage" severity="yellow">
@@ -3087,25 +3087,25 @@
 			<description>ibmc alarm :Failed to obtain data of the CPU VRD temperature.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.8 V detection point under threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.8V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-100000A1-hwMainboardStdby1V8LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.8 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.8V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard voltage at standby 1.8 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard voltage at standby 1.8V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-100000A3-hwMainboardStdby1V8OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Mainboard voltage at standby 1.8 V detection point exceeds the overvoltage threshold .</description>
+			<description>ibmc alarm :Mainboard voltage at standby 1.8V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-obtain value at standby 1.8 V detection point on the mainboard error" severity="yellow">
+	<EventID name="ibmc-obtain value at standby 1.8V detection point on the mainboard error" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-100000A5-hwMainboardAccessStdby1V8Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain the voltage at standby 1.8 V detection point on the mainboard.</description>
+			<description>ibmc alarm :Failed to obtain the voltage at standby 1.8V detection point on the mainboard.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The hard disk partition usage exceeds the threshold" severity="green">
@@ -3115,11 +3115,11 @@
 			<description>ibmc alarm :The hard disk partition usage exceeds the threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-I/O board voltage at 12V  is lower than the undervoltage threshold" severity="yellow">
+	<EventID name="ibmc-IO board voltage at 12V is lower than the undervoltage threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000011-hwIOBoard12VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :I/O board voltage at 12 V detection point is lower than the undervoltage threshold .</description>
+			<description>ibmc alarm :I/O board voltage at 12V detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-health status degradation detected by PFAE" severity="green">
@@ -3276,7 +3276,7 @@
 			<description>ibmc alarm :The disk backplane voltage at detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The disk backplane voltage  over threshold" severity="yellow">
+	<EventID name="ibmc-The disk backplane voltage over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-05000007-hwDiskBackplaneOverVoltMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3367,7 +3367,7 @@
 			<description>ibmc alarm :CPU board clock signals lost.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-I/O board clock signals lost" severity="yellow">
+	<EventID name="ibmc-IO board clock signals lost" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000015-hwIOBoardClockSignalLost</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3423,7 +3423,7 @@
 			<description>ibmc alarm :Switch module base plane switch voltage at detection point is lower than the undervoltage threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch modulebase plane switch voltage  over threshold" severity="yellow">
+	<EventID name="ibmc-Switch modulebase plane switch voltage over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1D00001B-hwBasePlaneLSWOverVoltMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3465,7 +3465,7 @@
 			<description>ibmc alarm :PIC card voltage at detection point is lower than the undervoltage threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PIC card voltage  over threshold" severity="yellow">
+	<EventID name="ibmc-PIC card voltage over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-30000029-hwPICCardOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3486,7 +3486,7 @@
 			<description>ibmc alarm :Switch module fabric plane switch voltage at detection point is lower than the undervoltage threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch module fabric plane switch voltage  over threshold" severity="yellow">
+	<EventID name="ibmc-Switch module fabric plane switch voltage over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1E000031-hwFabricPlaneSWOverVoltMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3500,14 +3500,14 @@
 			<description>ibmc alarm :Failed to obtain data of the switch voltage for base.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The fabric switch chip temperature  on the switch module  minor alarm" severity="yellow">
+	<EventID name="ibmc-The fabric switch chip temperature on the switch module minor alarm" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1E000035-hwFabricPlaneSWOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The switch chip temperature of the fabric plane on the switch module exceeds the minor alarm threshold.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The fabric switch chip temperature  on the switch module  major alarm" severity="yellow">
+	<EventID name="ibmc-The fabric switch chip temperature on the switch module major alarm" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-1E000037-hwFabricPlaneSWOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3528,14 +3528,14 @@
 			<description>ibmc alarm :PIC card clock signals lost.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch module voltage at V detection point  over threshold" severity="yellow">
+	<EventID name="ibmc-Switch module voltage at V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-14000001-hwSwitchModuleOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Switch module voltage at V detection point exceeds the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Switch module voltage at V detection point  under threshold" severity="yellow">
+	<EventID name="ibmc-Switch module voltage at V detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-14000003-hwSwitchModuleLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3549,7 +3549,7 @@
 			<description>ibmc alarm :Failed to obtain data of the V voltage for switch module .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PCH temperature exceeds the over Major threshold" severity="yellow">
+	<EventID name="ibmc-PCH temperature over Major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-27000025-hwPCHOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3563,7 +3563,7 @@
 			<description>ibmc alarm :The RAID controller card temperature exceeds the overtemperature threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-CPU DIMMs VDDQ temperature exceeds the over major threshold" severity="yellow">
+	<EventID name="ibmc-CPU DIMMs VDDQ temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-00000069-hwCPUVDDQOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3591,32 +3591,32 @@
 			<description>ibmc alarm :The voltage of on RSWA is lower than the overvoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain data of the V voltage for switch module" severity="yellow">
+	<EventID name="ibmc-Failed to obtain data of the voltage for switch module" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-14000005-hwSwitchModuleAccessVoltageFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain data of the V voltage for switch module .</description>
+			<description>ibmc alarm :Failed to obtain data of the voltage for switch module .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-IO board voltage V at standby 3.3 V detection point over threshold" severity="yellow">
+	<EventID name="ibmc-IO board voltage V at standby 3.3V detection point over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000017-hwIOBoardStdby3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :IO board voltage V at standby 3.3 V detection point exceeds the overvoltage threshold V.</description>
+			<description>ibmc alarm :IO board voltage V at standby 3.3V detection point exceeds the overvoltage threshold V.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-IO board voltage V at standby 3.3 V  under threshold " severity="yellow">
+	<EventID name="ibmc-IO board voltage V at standby 3.3V under threshold " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000019-hwIOBoardStdby3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :IO board voltage V at standby 3.3 V detection point is lower than the undervoltage threshold V.</description>
+			<description>ibmc alarm :IO board voltage V at standby 3.3V detection point is lower than the undervoltage threshold V.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain data of the 3.3 V voltage for IO board" severity="yellow">
+	<EventID name="ibmc-Failed to obtain data of the 3.3V voltage for IO board" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2300001B-hwIOBoardAccessStdby3V3Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain data of the 3.3 V voltage for IO board </description>
+			<description>ibmc alarm :Failed to obtain data of the 3.3V voltage for IO board </description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-The power supplies to the clock chips of the IO board are abnormal" severity="yellow">
@@ -3710,32 +3710,32 @@
 			<description>ibmc alarm :Failed to configure CDR of NC board </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-PCIe Switch occurs uncorrectable error :" severity="yellow">
+	<EventID name="ibmc-PCIe Switch occurs uncorrectable error" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-3E00001D-hwPCIeSwitchUncorrectableError</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm : PCIe Switch occurs uncorrectable error :.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The voltage V of VCC 3.3 V on I/O board over threshold V" severity="yellow">
+	<EventID name="ibmc-The voltage of VCC 3.3V on IO board over threshold " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000023-hwIOBoardVCC3V3OverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :The voltage V of VCC 3.3 V on I/O board exceeds the overvoltage threshold V.</description>
+			<description>ibmc alarm :The voltage of VCC 3.3V on I/O board exceeds the overvoltage threshold.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The voltage V of VCC 3.3 V on I/O board is under threshold V" severity="yellow">
+	<EventID name="ibmc-The voltage of VCC 3.3V on IO board is under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000025-hwIOBoardVCC3V3LowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :The voltage V of VCC 3.3 V on I/O board is lower than the undervoltage threshold V.</description>
+			<description>ibmc alarm :The voltage of VCC 3.3V on I/O board is lower than the undervoltage threshold V.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain data of the VCC 3.3 V voltage for IO board" severity="yellow">
+	<EventID name="ibmc-Failed to obtain data of the VCC 3.3V voltage for IO board" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000027-hwIOBoardAccessVCC3V3Failure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain data of the VCC 3.3 V voltage for IO board </description>
+			<description>ibmc alarm :Failed to obtain data of the VCC 3.3V voltage for IO board </description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Failed to obtain data of the total system power" severity="yellow">
@@ -3843,7 +3843,7 @@
 			<description>ibmc alarm :Mainboard RAID chip voltage at detection point is lower than the undervoltage threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Mainboard RAID chip voltage at detection  over threshold" severity="yellow">
+	<EventID name="ibmc-Mainboard RAID chip voltage at detection over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-100000BD-hwMainboardRAIDOverVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3899,7 +3899,7 @@
 			<description>ibmc alarm :Failed to obtain the voltage at detection point on the EIUA board.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-GPU carrier board voltage at detection point  under threshold" severity="yellow">
+	<EventID name="ibmc-GPU carrier board voltage at detection point under threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-40000001-hwGPUCarrierBoardlowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -3920,11 +3920,11 @@
 			<description>ibmc alarm :Failed to obtain the voltage at detection point on the GPU carrier board.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-NC board voltage (xxx V) at 12 V detection point under threshold " severity="yellow">
+	<EventID name="ibmc-NC board voltage at 12V detection point under threshold " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-13000011-hwNCBoardAccess12VLowerVoltage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :NC board voltage (xxx V) at 12 V detection point is lower than the undervoltage threshold (xxx V).</description>
+			<description>ibmc alarm :NC board voltage at 12V detection point is lower than the undervoltage threshold (xxx V).</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Switch module Base plane CPU temperature over minor threshold" severity="yellow">
@@ -4039,11 +4039,11 @@
 			<description>ibmc alarm :Network bandwidth usage exceeds the threshold .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Abnormal voltage of optical module was detected on on" severity="yellow">
+	<EventID name="ibmc-Abnormal voltage of optical module was detected" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2900000F-hwPortOpticalModuleVoltageAlarm</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Abnormal voltage of optical module was detected on on . </description>
+			<description>ibmc alarm :Abnormal voltage of optical module was detected . </description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Network optical module voltage is under alarm threshold" severity="yellow">
@@ -4102,7 +4102,7 @@
 			<description>ibmc alarm :Network optical module channel Rx power is higher than the alarm upper threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Network optical module channel Rx power under  the alarm lower threshold" severity="yellow">
+	<EventID name="ibmc-Network optical module channel Rx power under the alarm lower threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-29000021-hwPortOpticalModuleLowerRxPowerAlarm</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4116,7 +4116,7 @@
 			<description>ibmc alarm :Network optical module channel Rx power is higher than the alarm upper threshold . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Network optical module channel Rx power under the alarm lower threshold" severity="yellow">
+	<EventID name="ibmc-Network optical module channel Rx power under the warn lower threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-29000025-hwPortOpticalModuleLowerRxPowerWarn</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4130,25 +4130,25 @@
 			<description>ibmc alarm :Network optical module transmission speed does not match the speed supported by the NIC. </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-OAM detected disconnection of the link to" severity="yellow">
+	<EventID name="ibmc-OAM detected disconnection of the link to Port" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-29000029-hwPortOAMLostLink</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :OAM detected disconnection of the link to .</description>
+			<description>ibmc alarm :OAM detected disconnection of the link to Port.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Error packets detected in the OAM check of the link to" severity="yellow">
+	<EventID name="ibmc-Error packets detected in the OAM check of the link to Port " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-2900002B-hwPortOAMErrorPackage</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Error packets detected in the OAM check of the link to . </description>
+			<description>ibmc alarm :Error packets detected in the OAM check of the link to Port . </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Failed to obtain data of the board id for" severity="yellow">
+	<EventID name="ibmc-Failed to obtain data of the board id " severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000029-hwIOBoardAccessBoardIDFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :Failed to obtain data of the board id for .</description>
+			<description>ibmc alarm :Failed to obtain data of the board id.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-IO board installed" severity="green">
@@ -4174,7 +4174,7 @@
 	</EventID>
 	<EventID name="ibmc-Failed to obtain the switch chip SVID value for the Fabric plane" severity="green">
 		<EventType>
-			<eventTypeID>ibmc-1E000041-hwFabricPlaneSWAccessSVIDFailure           hwFabricPlaneSWAccessSVIDFailureDeassert</eventTypeID>
+			<eventTypeID>ibmc-1E000041-hwFabricPlaneSWAccessSVIDFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Failed to obtain the switch chip SVID value for the Fabric plane.</description>
 		</EventType>
@@ -4242,7 +4242,7 @@
 			<description>ibmc alarm :Failed to obtain the voltage at detection point on the PCIe riser .</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-GPU carrier board temperature  over minor  threshold" severity="yellow">
+	<EventID name="ibmc-GPU carrier board temperature over minor threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-40000007-hwGPUCarrierBoardOverTempMinor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4342,21 +4342,21 @@
 	</EventID>
 	<EventID name="ibmc-Fan backplane power supply over temperature" severity="yellow">
 		<EventType>
-			<eventTypeID>ibmc-18000001-hwFanBoardOverTemp hwFanBoardOverTempDeassert</eventTypeID>
+			<eventTypeID>ibmc-18000001-hwFanBoardOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Fan backplane power supply over temperature.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Fan backplane power failure" severity="red">
 		<EventType>
-			<eventTypeID>ibmc-18000003-hwFanBoardPowerFailure hwFanBoardPowerFailureDeassert</eventTypeID>
+			<eventTypeID>ibmc-18000003-hwFanBoardPowerFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :Fan backplane power failure.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-PSU backplane power supply over temperature" severity="red">
 		<EventType>
-			<eventTypeID>ibmc-19000001-hwPWRBoardOverTemp hwPWRBoardOverTempDeassert</eventTypeID>
+			<eventTypeID>ibmc-19000001-hwPWRBoardOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :PSU backplane power supply over temperature.</description>
 		</EventType>
@@ -4389,7 +4389,7 @@
 			<description>ibmc alarm :The power signal of the disk is abnormal.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-Left part of the I/O board air inlet temperature over threshold" severity="yellow">
+	<EventID name="ibmc-Left part of the IO board air inlet temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000033-hwIOBoardInletLOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4454,7 +4454,7 @@
 	</EventID>
 	<EventID name="ibmc-PCIe riser card power failure" severity="yellow">
 		<EventType>
-			<eventTypeID>ibmc-0F000011-hwPCIeRiserPowerFailure hwPCIeRiserPowerFailureDeassert</eventTypeID>
+			<eventTypeID>ibmc-0F000011-hwPCIeRiserPowerFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :PCIe riser card power failure.</description>
 		</EventType>
@@ -4571,7 +4571,7 @@
 			<description>ibmc alarm : PCIe card health status degradation detected by PFAE.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-CPU QPI/UPI link health status degradation detected by PFAE" severity="green">
+	<EventID name="ibmc-CPU QPIUPI link health status degradation detected by PFAE" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-28000015-hwCableQPILinkCEHardFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4641,11 +4641,11 @@
 			<description>ibmc alarm :An earlier version of HMM is used.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-RAID card （RAID Card1） PHY0 bit error increased too fast" severity="green">
+	<EventID name="ibmc-RAID card PHY0 bit error increased too fast" severity="green">
 		<EventType>
 			<eventTypeID>ibmc-2B000003-hwSASPHYErrIncreasedTooFast</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
-			<description>ibmc alarm :RAID card （RAID Card1） PHY0 bit error increased too fast.</description>
+			<description>ibmc alarm :RAID card PHY0 bit error increased too fast.</description>
 		</EventType>
 	</EventID>
 	<EventID name="ibmc-Failed to configure the Retimer" severity="yellow">
@@ -4718,7 +4718,7 @@
 			<description>ibmc alarm :The SLIM cable to on is not present.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The RAID controller card BBU temperature  over threshold" severity="yellow">
+	<EventID name="ibmc-The RAID controller card BBU temperature over threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-06000019-hwRAIDCardBBUOverTemp</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4781,14 +4781,14 @@
 			<description>ibmc alarm :The PCIe card memory count exceeds the threshold.</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The power supply of is abnormal" severity="yellow">
+	<EventID name="ibmc-The power supply of NetworkCardPS is abnormal" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-0D000009-hwNetworkCardPSFault</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
 			<description>ibmc alarm :The power supply of is abnormal. </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-The failure" severity="yellow">
+	<EventID name="ibmc-The NetworkCard failure" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-0D00000B-hwNetworkCardFailure</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4837,7 +4837,7 @@
 			<description>ibmc alarm :MOS temperature of on GPU carrier board exceeds the protection point</description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-GPU carrier board temperature  over major  threshold" severity="yellow">
+	<EventID name="ibmc-GPU carrier board temperature over major threshold" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-4000001F-hwGPUCarrierBoardOverTempMajor</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
@@ -4914,7 +4914,7 @@
 			<description>ibmc alarm :The mezzanine card is not installed. </description>
 		</EventType>
 	</EventID>
-	<EventID name="ibmc-For the model, slot of the I/O board is unavailable" severity="yellow">
+	<EventID name="ibmc-For the model, slot of the IO board is unavailable" severity="yellow">
 		<EventType>
 			<eventTypeID>ibmc-23000035-hwIOBoardSlotUnavailable</eventTypeID>
 			<eventType>vim.event.EventEx</eventType>
