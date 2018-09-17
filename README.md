@@ -19,8 +19,6 @@ III. Supported Software Version
     vCenter Server 6.0U2a or later for Linux 
     vCenter Server 6.5 for Linux
     vCenter Server 6.0/6.5 for Windows  
-    vCenter Server 6.7.0/6.7.c for Linux 
-    vCenter Server 6.7.0/6.7.c for Windows
     
 IV.Software Requirements
 
