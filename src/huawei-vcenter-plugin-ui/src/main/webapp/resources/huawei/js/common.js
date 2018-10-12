@@ -281,13 +281,12 @@ function getEsightListAsync() {
 function getIn18() {
     var lang = localStorage.getItem('lang');
     if (lang) {
-        if (lang == 'en') {
-            ELEMENT.locale(ELEMENT.lang.en);
-            return i18n_en;
-        } else {
+        if (lang == 'zhCN') {
             ELEMENT.locale(ELEMENT.lang.zhCN);
             return i18n_zh_CN;
-
+        } else {
+            ELEMENT.locale(ELEMENT.lang.en);
+            return i18n_en;
         }
     } else {
         ELEMENT.locale(ELEMENT.lang.en);

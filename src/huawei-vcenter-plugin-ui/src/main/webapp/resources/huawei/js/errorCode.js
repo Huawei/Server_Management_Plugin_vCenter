@@ -1207,15 +1207,14 @@ var errorCode_en = {
  */
 function getErrorMsg(errorCode) {
     var lang = localStorage.getItem('lang');
-    if (lang === 'en') {
-        if (errorCode_en[errorCode]) {
-            return errorCode_en[errorCode];
-        }
-        return errorCode;
-
-    } else {
+    if (lang === 'zhCN') {
         if (errorCode_zh_CN[errorCode]) {
             return errorCode_zh_CN[errorCode];
+        }
+        return errorCode;
+    } else {
+        if (errorCode_en[errorCode]) {
+            return errorCode_en[errorCode];
         }
         return errorCode;
     }

@@ -47,27 +47,27 @@ public class Validations {
     public static Map onSubmit(String packageUrl, String vcenterUsername, String vcenterPassword, String vcenterIP, String vcenterPort) {
         String version = getPackageVersion();
         if ((version == null) || (version.trim().equals(""))) {
-            return Collections.singletonMap("error", "安装包版本号读取错误");
+            return Collections.singletonMap("error", "E001");
         }
         return onSubmit(packageUrl, vcenterUsername, vcenterPassword, vcenterIP, vcenterPort, version);
     }
 
     public static Map onSubmit(String packageUrl, String vcenterUsername, String vcenterPassword, String vcenterIP, String vcenterPort, String version) {
         if (!packageUrl.startsWith("https://")) {
-            return Collections.singletonMap("error", "URL必须以https开始");
+            return Collections.singletonMap("error", "E002");
         }
         if ((vcenterIP == null) || (vcenterIP.isEmpty())) {
-            return Collections.singletonMap("error", "vCenter IP不能为空");
+            return Collections.singletonMap("error", "E003");
         }
         if ((vcenterPort == null) || (vcenterPort.isEmpty())) {
-            return Collections.singletonMap("error", "vCenter端口号不能为空");
+            return Collections.singletonMap("error", "E004");
         }
         String serverThumbprint;
         try {
             serverThumbprint = KeytookUtil.getKeystoreServerThumbprint();
         } catch (IOException e) {
             e.printStackTrace();
-            return Collections.singletonMap("error", "获取证书指纹出错");
+            return Collections.singletonMap("error", "E005");
         }
         String pluginKey = "com.huawei.vcenterpluginui";
         String url;
@@ -113,10 +113,10 @@ public class Validations {
 
     public static Map unRegister(String packageUrl, String vcenterUsername, String vcenterPassword, String vcenterIP, String vcenterPort) {
         if ((vcenterIP == null) || (vcenterIP.isEmpty())) {
-            return Collections.singletonMap("error", "vCenter IP不能为空");
+            return Collections.singletonMap("error", "E003");
         }
         if ((vcenterPort == null) || (vcenterPort.isEmpty())) {
-            return Collections.singletonMap("error", "vCenter端口号不能为空");
+            return Collections.singletonMap("error", "E004");
         }
         String pluginKey = "com.huawei.vcenterpluginui";
         String response = unsubscribeAlarm(vcenterIP, vcenterUsername, vcenterPassword, "uninstall");
@@ -171,7 +171,7 @@ public class Validations {
 
         File keyFile = new File(Constants.KEYSTORE_FILE);
         if (!keyFile.exists()) {
-            return Collections.singletonMap("error", "tomcat.keystore证书文件不存在.");
+            return Collections.singletonMap("error", "E006");
         }
 
         List<String> packageNameList = new ArrayList<>();
@@ -195,7 +195,7 @@ public class Validations {
         }
 
         if (packageNameList.isEmpty()) {
-            return Collections.singletonMap("error", "未找到更新包程序，请放入zip包然后刷新页面.");
+            return Collections.singletonMap("error", "E007");
         }
 
         returnMap.put("packageNameList",packageNameList);

@@ -50,13 +50,15 @@
 
     <div id="app" v-cloak>
         <h1>{{i18ns.index.updateProgram}}</h1>
-        <el-form id="form" label-position="left" v-bind:label-width="indexNum > 0 ? '180px' : '150px'" label-suffix=":" v-bind:model="form" style="display:block">
+        <el-form id="form" label-position="left" v-bind:label-width="indexNum > 0 ? '180px' : '150px'" label-suffix=":"
+            v-bind:model="form" style="display:block">
             <el-form-item v-bind:label="i18ns.index.certificateFile">
                 {{form.key}}
             </el-form-item>
             <el-form-item v-bind:label="i18ns.index.updatePackage" v-show="register">
                 <el-col :span="11">
-                    <el-select v-model="form.index" @change="changePackage" v-bind:placeholder="form.packageNameList[0]" style="width:250px">
+                    <el-select v-model="form.index" @change="changePackage" v-bind:placeholder="form.packageNameList[0]"
+                        style="width:250px">
                         <el-option v-for="(item,index) in form.packageNameList" :key="item" :label="item" :value="index">
                         </el-option>
                     </el-select>
@@ -102,7 +104,8 @@
                 </el-col>
             </el-form-item>
             <div style="margin: 10px">
-                <el-button type="primary" @click="submit()" v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="i18ns.index.loading">{{i18ns.index.ok}}</el-button>
+                <el-button type="primary" @click="submit()" v-loading.fullscreen.lock="fullscreenLoading"
+                    v-bind:element-loading-text="i18ns.index.loading">{{i18ns.index.ok}}</el-button>
             </div>
         </el-form>
         <div id="info" style="display: none">
@@ -112,27 +115,27 @@
     </div>
     <script>
         var serviceManager = {
-            getInfo: function(callback) {
+            getInfo: function (callback) {
                 //获取数据
                 var serverListUrl = window.document.location.href + "rest";
                 //通过API获取数据
-                $.get(serverListUrl, function(response, textStatus, jqXHR) {
+                $.get(serverListUrl, function (response, textStatus, jqXHR) {
                     console.log(response);
                     console.log(jqXHR.getAllResponseHeaders());
-
-                    localStorage.setItem('lang', jqXHR.getResponseHeader("Accept-Language").slice(0, 2));
                     var lang = jqXHR.getResponseHeader("Accept-Language").slice(0, 2);
-                    if (lang == 'en') {
-                        app.indexNum = 1;
-                    } else {
+                    if (lang == 'zh') {
+                        localStorage.setItem('lang', 'zhCN');
                         app.indexNum = -1;
+                    } else {
+                        localStorage.setItem('lang', 'en');
+                        app.indexNum = 1;
                     }
                     app.i18ns = getIn18();
                     document.title = app.i18ns.index.updateProgram;
 
                     if (response.error != undefined) {
                         var h3 = document.getElementById("h3");
-                        h3.innerHTML = response.error;
+                        h3.innerHTML = getErrorMsg(response.error);
                         window.document.getElementById("form").setAttribute("style", "display: none");
                         window.document.getElementById("info").setAttribute("style", "display: block");
                         window.document.getElementById("button").setAttribute("style", "display: none");
@@ -168,7 +171,7 @@
                 fullscreenLoading: false,
                 register: true
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 document.title = this.i18ns.index.updateProgram;
                 var lang = localStorage.getItem('lang');
@@ -180,7 +183,7 @@
                 serviceManager.getInfo(this.bindInfo);
             },
             methods: {
-                submit: function() {
+                submit: function () {
                     this.fullscreenLoading = true;
                     var postData = {
                         packageUrl: this.form.path,
@@ -200,21 +203,26 @@
                         contentType: 'application/json;charset=utf-8',
                         url: serverPostUrl,
                         data: JSON.stringify(postData),
-                        success: function(response) {
+                        success: function (response) {
                             var h3 = document.getElementById("h3");
                             if (response.error != undefined) {
-                                h3.innerHTML = response.error;
+                                h3.innerHTML = getErrorMsg(response.error);;
                             } else {
                                 h3.innerHTML = app.i18ns.index.seeResult;
                             }
-                            window.document.getElementById("form").setAttribute("style", "display: none");
-                            window.document.getElementById("info").setAttribute("style", "display: block");
+                            window.document.getElementById("form").setAttribute("style",
+                                "display: none");
+                            window.document.getElementById("info").setAttribute("style",
+                                "display: block");
                             app.fullscreenLoading = false;
                         }
                     });
 
                 },
-                bindInfo: function(ret) {
+                bindInfo: function (ret) {
+                    if (!ret || !ret.packageNameList || !ret.versionList) {
+                        return;
+                    }
                     this.form.packageNameList = ret.packageNameList;
                     this.form.versionList = ret.versionList;
                     this.form.version = this.form.versionList[0];
@@ -222,15 +230,15 @@
                     this.form.path = ret.path + this.form.packageNameList[0];
                     this.form.key = ret.key;
                 },
-                showForm: function() {
+                showForm: function () {
                     window.document.getElementById("form").setAttribute("style", "display: block");
                     window.document.getElementById("info").setAttribute("style", "display: none");
                 },
-                changePackage: function() {
+                changePackage: function () {
                     this.form.version = this.form.versionList[this.form.index];
                     this.form.path = this.form.basePath + this.form.packageNameList[this.form.index];
                 },
-                changeType: function() {
+                changeType: function () {
                     if (this.form.radio == 1) {
                         this.register = true;
                     } else {
