@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="css/element.css" rel="stylesheet" />
+    <script src="scripts/vue.js"></script>
+    <script src="scripts/element.js"></script>
+    <script src="scripts/i18n/zh-CN.js"></script>
+    <script src="scripts/i18n/en.js"></script>
+    <script src="./huawei/i18n/zh-CN.js"></script>
+    <script src="./huawei/i18n/en.js"></script>
+    <script src="../assets/jquery-2.1.3.min.js"></script>
+    <script src="./js/web-platform.js"></script>
+    <script src="./huawei/js/common.js"></script>
+
+
+
+    <style type="text/css">
+        [v-cloak] {
+            display: none;
+        }
+
+        .table-basic,
+        .table-basic tr td {
+            font-size: 12px;
+            border: 1px solid #dfe6ec;
+        }
+
+        .table-basic td {
+            height: 28px;
+            padding-left: 10px;
+        }
+
+        .table-basic tr td:first-child {
+            padding-left: 20px;
+        }
+
+        .table-basic {
+            width: 100%;
+            border-collapse: collapse;
+            padding: 2px;
+        }
+
+        .td-label {
+            background-color: #eef1f6;
+            width: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mainapp" v-cloak>
+        <table cellspacing="0" class="table-basic">
+            <tr>
+                <td class="td-label">{{i18ns.deviceInfo.name}}</td>
+                <td>
+                    {{serverInfo.name}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">{{i18ns.deviceInfo.ibMacIp}}</td>
+                <td>
+                    {{serverInfo.ip}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">{{i18ns.deviceInfo.eSightIp}}</td>
+                <td>
+                    {{serverInfo.esightIp}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">{{i18ns.deviceInfo.serverModel}}</td>
+                <td>
+                    {{serverInfo.type}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">{{i18ns.deviceInfo.sn}}</td>
+                <td>
+                    {{serverInfo.sn}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">{{i18ns.common.status}}</td>
+                <td>
+                    {{getServerStatusTxt(serverInfo.status)}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">{{i18ns.deviceInfo.description}}</td>
+                <td>
+                    {{serverInfo.desc}}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: "#mainapp",
+            data: {
+                i18ns: {}, //国际化
+                serverInfo: {
+                    name: '',
+                    ip: '',
+                    type: '',
+                    sn: '',
+                    status: '',
+                    desc: '',
+                    esightIp: ''
+                },
+                objectId: ''
+
+            },
+            created: function () {
+                this.i18ns = getIn18();
+                this.objectId = this.getQueryString("objectId");
+                this.getInfo();
+            },
+            methods: {
+                getServerStatusTxt: function (status) {
+                    if (status === null || status === undefined || status === '') {
+                        return "";
+                    }
+                    switch (status.toString()) {
+                        case "-1":
+                            return this.i18ns.deviceInfo.offline;
+                            break;
+                        case "-2":
+                            return this.i18ns.deviceInfo.unknown;
+                            break;
+                        case "0":
+                            return this.i18ns.deviceInfo.normal;
+                            break;
+                        case "2":
+                        case "3":
+                        case "5":
+                        case "4":
+                        case "6":
+                        case "7":
+                        case "8":
+                            return this.i18ns.deviceInfo.fault;
+                            break;
+                        default:
+                            return this.i18ns.deviceInfo.unknown;
+                            break;
+                    }
+                },
+                getInfo: function () {
+                    var url = com_huawei_vcenterpluginui.webContextPath +
+                        '/rest/services/server/device/detail/host?objectId=' + this.objectId
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        dataType: "json",
+                        async: "false",
+                        success: function (res, status) {
+                            if (res.code == 0 && res.data.code == 0 && res.data.data.length > 0) {
+                                var info = res.data.data[0];
+                                app.serverInfo.name = info.name;
+                                app.serverInfo.ip = info.ipAddress;
+                                app.serverInfo.type = info.type;
+                                app.serverInfo.sn = info.productSn;
+                                app.serverInfo.status = info.status;
+                                app.serverInfo.desc = info.desc;
+                                app.serverInfo.esightIp = res.description
+                            }
+                        }
+                    });
+                },
+                getQueryString: function (name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null) return unescape(r[2]);
+                    return null;
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>

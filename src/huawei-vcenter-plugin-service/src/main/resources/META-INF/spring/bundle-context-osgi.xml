@@ -30,7 +30,32 @@
          
    <osgi:service id="SessionService" ref="SessionServiceImpl"
          interface="com.huawei.vcenterpluginui.services.SessionService" />
-         
+
+   <osgi:service id="SyncServerHostService" ref="SyncServerHostServiceImpl"
+         interface="com.huawei.vcenterpluginui.services.SyncServerHostService" />
+
+   <osgi:service id="VCenterHAService" ref="VCenterHAServiceImpl"
+         interface="com.huawei.vcenterpluginui.services.VCenterHAService" />
+
+
+   <osgi:service id="NotificationAlarmService" ref="NotificationAlarmServiceImpl"
+                 interface="com.huawei.vcenterpluginui.services.NotificationAlarmService" />
+
+   <osgi:service id="SystemKeepAliveService" ref="SystemKeepAliveServiceImpl"
+                 interface="com.huawei.vcenterpluginui.services.SystemKeepAliveService" />
+
+   <osgi:service id="VCenterInfoService" ref="VCenterInfoServiceImpl"
+                 interface="com.huawei.vcenterpluginui.services.VCenterInfoService" />
+
+   <osgi:service id="ESightHAServerService" ref="ESightHAServerServiceImpl"
+                 interface="com.huawei.vcenterpluginui.services.ESightHAServerService" />
+
+   <osgi:service id="VmActionService" ref="VmActionServiceImpl"
+                 interface="com.huawei.vcenterpluginui.services.VmActionService" />
+
    <osgi:reference id="userSessionService"
          interface="com.vmware.vise.usersession.UserSessionService"/>
+   <osgi:reference id="vimObjectReferenceService"
+                   interface="com.vmware.vise.vim.data.VimObjectReferenceService"/>
+
 </beans>

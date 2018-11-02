@@ -26,8 +26,12 @@ public class LogAspect {
                     }
                 }
             }
-			LOGGER.info("Request from " + requestFrom + ": " + joinPoint.getSignature().toShortString() + " "
-					+ Arrays.toString(joinPoint.getArgs()).replaceAll("\"password\":\"[^&]*\"", "\"password\":\"******\"").replaceAll("Password\":\"[^&]*\"", "Password\":\"******\""));
+            if ("NotificationController.unsubscribeAll(..)".equalsIgnoreCase(joinPoint.getSignature().toShortString())) {
+                LOGGER.info("Request from " + requestFrom + ": " + joinPoint.getSignature().toShortString());
+            } else {
+                LOGGER.info("Request from " + requestFrom + ": " + joinPoint.getSignature().toShortString() + " "
+                        + Arrays.toString(joinPoint.getArgs()).replaceAll("\"password\":\"[^&]*\"", "\"password\":\"******\"").replaceAll("Password\":\"[^&]*\"", "Password\":\"******\""));
+            }
         } catch (Exception e) {
             LOGGER.warn(e);
         }

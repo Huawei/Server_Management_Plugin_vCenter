@@ -20,12 +20,13 @@ public class ESight extends Esight implements Serializable {
 	private int id;
 	private String aliasName;
 	private String latestStatus;
-	private String reservedInt1;
-	private String reservedInt2;
+	private String reservedInt1; // -- HA状态：0/null-未同步 1-已同步 2-未同步(取消订阅)
+	private String reservedInt2; // -- 保活状态: 0/null-未订阅 1-已订阅 2-未订阅(取消订阅)
 	private String reservedStr1;
 	private String reservedStr2;
 	private String lastModify;
 	private String createTime;
+	private String systemId;
 
 	public String getLatestStatus() {
 		return latestStatus;
@@ -99,23 +100,21 @@ public class ESight extends Esight implements Serializable {
 		this.createTime = createTime;
 	}
 
-    @Override
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
+	public String getSystemId() {
+		return systemId;
+	}
+
+	@Override
     public String toString() {
         return "ESight [id=" + id + ", hostIp=" + getHostIp() + ", hostPort=" + getHostPort() + ", loginAccount=" + getLoginAccount()
                 + ", loginPwd=******" + ", latestStatus=" + latestStatus + ", reservedInt1=" + reservedInt1
                 + ", reservedInt2=" + reservedInt2 + ", reservedStr1=" + reservedStr1 + ", reservedStr2=" + reservedStr2
                 + ", lastModify=" + lastModify + ", createTime=" + createTime + "]";
     }
-
-	/**
-	 * 新建已解密密码的eSight对象
-	 * @param esight
-	 * @return 已解密密码对象
-	 */
-	public static Esight newEsightWithDecryptedPassword(Esight esight) {
-		return esight == null ? null :
-				new Esight(esight.getHostIp(), esight.getHostPort(), esight.getLoginAccount(), CipherUtils.aesDncode(esight.getLoginPwd()));
-	}
 
 	/**
 	 * 加密eSight对象的登录密码
@@ -126,4 +125,15 @@ public class ESight extends Esight implements Serializable {
 			esight.setLoginPwd(CipherUtils.aesEncode(esight.getLoginPwd()));
 		}
 	}
+
+	/**
+	 * 解密eSight对象的登录密码
+	 * @param esight
+	 */
+	public static void decryptedPassword(ESight esight) {
+		if (esight != null) {
+			esight.setLoginPwd(CipherUtils.aesDncode(esight.getLoginPwd()));
+		}
+	}
+
 }

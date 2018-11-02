@@ -67,8 +67,8 @@ public class ESightController extends BaseController {
      */
     @RequestMapping(value = "/rm", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBodyBean deleteESight(HttpServletRequest request, @RequestBody String ids) throws SQLException,IOException {
-        return _eSightService.deleteESights(ids) > 0 ? success() : failure();
+    public ResponseBodyBean deleteESight(HttpServletRequest request, @RequestBody String ids, HttpSession session) throws SQLException,IOException {
+        return _eSightService.deleteESights(ids, session) > 0 ? success() : failure();
     }
 
     /**
@@ -102,7 +102,7 @@ public class ESightController extends BaseController {
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBodyBean getVersion(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException{
-    	String rqHd = request.getHeader("Accept-Language"); 
+    	String rqHd = request.getHeader("Accept-Language");
     	if(rqHd != null){
     	    String rqHeader = URLEncoder.encode(rqHd,StandardCharsets.UTF_8.displayName());   
     	    response.addHeader("Accept-Language", rqHeader);

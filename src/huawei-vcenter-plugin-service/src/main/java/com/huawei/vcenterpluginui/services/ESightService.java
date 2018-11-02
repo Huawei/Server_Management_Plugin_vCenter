@@ -25,7 +25,11 @@ public interface ESightService {
 	
 	int getESightListCount(String ip) throws SQLException;
 	
-	int deleteESights(String ids) throws SQLException,IOException;
+	int deleteESights(String ids, HttpSession session) throws SQLException,IOException;
 
 	Map connect(ESight eSight);
+
+	boolean updateHAStatus(String ip, String status);
+
+	boolean updateSystemKeepAliveStatus(String ip, String status);
 }

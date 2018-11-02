@@ -5,61 +5,41 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
-import com.huawei.vcenterpluginui.constant.SqlFileConstant;
 
 public class SystemDao extends H2DataBaseDao {
 	/**
      * create table in h2
      *
-     * @param connection
-     * @param sql
+     * @param sqlFile
      * @throws SQLException
      */
-	public void createTable(String sqlFile) throws SQLException, IOException {
+	public void createTable(String sqlFile) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
 			con = getConnection();
-			if (sqlFile != null) {
-				if (SqlFileConstant.HW_ESIGHT_HOST.equals(sqlFile)) {
-					ps = con.prepareStatement(SqlFileConstant.HW_ESIGHT_HOST_SQL);
-					ps.executeUpdate();
-				} else if (SqlFileConstant.HW_ESIGHT_TASK.equals(sqlFile)) {
-					ps = con.prepareStatement(SqlFileConstant.HW_ESIGHT_TASK_SQL);
-					ps.executeUpdate();
-				} else if (SqlFileConstant.HW_TASK_RESOURCE.equals(sqlFile)) {
-					ps = con.prepareStatement(SqlFileConstant.HW_TASK_RESOURCE_SQL);
-					ps.executeUpdate();
-				}
-			}
+			ps = con.prepareStatement(sqlFile);
+			ps.executeUpdate();
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage(), e);
 			throw e;
 		} finally {
 			closeConnection(con, ps, null);
 		}
 	}
 
-	public boolean checkTable(String sqlFile) throws SQLException,IOException {
+	public boolean checkTable(String sqlFile) throws SQLException {
 		Connection con = null;
 		ResultSet ResultSet = null;
-		boolean tableExist = false;
+		boolean tableExist;
 		try {
 			con = getConnection();
-			if (SqlFileConstant.HW_ESIGHT_HOST.equals(sqlFile)) {
-				ResultSet = con.getMetaData().getTables(null, null, SqlFileConstant.HW_ESIGHT_HOST, null);
-				tableExist = ResultSet.next();
-			} else if (SqlFileConstant.HW_ESIGHT_TASK.equals(sqlFile)) {
-				ResultSet = con.getMetaData().getTables(null, null, SqlFileConstant.HW_ESIGHT_TASK, null);
-				tableExist = ResultSet.next();
-			} else if (SqlFileConstant.HW_TASK_RESOURCE.equals(sqlFile)) {
-				ResultSet = con.getMetaData().getTables(null, null, SqlFileConstant.HW_TASK_RESOURCE, null);
-				tableExist = ResultSet.next();
-			}
+			ResultSet = con.getMetaData().getTables(null, null, sqlFile, null);
+			tableExist = ResultSet.next();
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage(), e);
 			throw e;
 		} finally {
 			closeConnection(con, null, ResultSet);
@@ -67,7 +47,31 @@ public class SystemDao extends H2DataBaseDao {
 		
 		return tableExist;
 	}
-	
+
+    /**
+     * 判断表是否存在，不存在则创建表
+     * @param tableName 表名
+     * @param createTableSQL 创建表的SQL
+     */
+    public void checkExistAndCreateTable(String tableName, String createTableSQL) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            rs = con.getMetaData().getTables(null, null, tableName, null);
+            if (!rs.next()) {
+                ps = con.prepareStatement(createTableSQL);
+                ps.executeUpdate();
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw e;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+    }
+
     /**
      * get h2 DB file path from URL
      *
@@ -99,5 +103,31 @@ public class SystemDao extends H2DataBaseDao {
             }
         }
         return null;
+    }
+
+    public void checkExistTableColumnAnd(String tableName, String columnName,
+        String alterSql) throws Exception {
+      Connection con = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      try {
+        con = getConnection();
+        String sql = "SELECT * FROM " + tableName + " LIMIT 1";
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        ResultSetMetaData resultSetMetaData = rs.getMetaData();
+        for (int i = 0; i < resultSetMetaData.getColumnCount(); i++) {
+          if(resultSetMetaData.getColumnName(i+1).equals(columnName))
+            return;
+        }
+        ps = con.prepareStatement(alterSql);
+        ps.executeUpdate();
+
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage(), e);
+        throw e;
+      } finally {
+        closeConnection(con, ps, rs);
+      }
     }
 }

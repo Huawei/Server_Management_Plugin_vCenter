@@ -98,7 +98,7 @@ function getTemplateType() {
  * @param {string} value
  */
 function getOptionlabel(arry, value) {
-    var optionItem = _.find(arry, function(x) {
+    var optionItem = _.find(arry, function (x) {
         return x.value == value;
     });
     if (optionItem) {
@@ -211,22 +211,22 @@ function getEsightList(callback) {
 
     var eSightListUrl = com_huawei_vcenterpluginui.webContextPath + "/rest/services/esight?pageNo=-1&pageSize=-1&s=" + Math.random();
     //通过API获取数据
-    $.get(eSightListUrl, function(response){
-    	console.log(response);
+    $.get(eSightListUrl, function (response) {
+        console.log(response);
         if (typeof callback === "function") {
-        	esightData = response.data;
-            var ret = {code: response.code, msg: response.description, data: response.data}
+            esightData = response.data;
+            var ret = { code: response.code, msg: response.description, data: response.data }
             localStorage.setItem('esightList', JSON.stringify(esightData)); //code==0时
             callback(ret);
         }
-      },"json");
+    }, "json");
 }
 
 /**
  * 获取esight列表
  **/
 function getEsightListAsync() {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var esightData = [{
             id: 1,
             hostIp: '127.0.0.1',
@@ -281,17 +281,16 @@ function getEsightListAsync() {
 function getIn18() {
     var lang = localStorage.getItem('lang');
     if (lang) {
-        if (lang == 'en') {
-            ELEMENT.locale(ELEMENT.lang.en);
-            return i18n_en;
-        } else {
+        if (lang == 'zhCN') {
             ELEMENT.locale(ELEMENT.lang.zhCN);
             return i18n_zh_CN;
-
+        } else {
+            ELEMENT.locale(ELEMENT.lang.en);
+            return i18n_en;
         }
     } else {
-        ELEMENT.locale(ELEMENT.lang.zhCN);
-        return i18n_zh_CN;
+        ELEMENT.locale(ELEMENT.lang.en);
+        return i18n_en;
     }
 }
 
@@ -318,7 +317,7 @@ function alertMsg(msg, cb) {
     if (app) {
         app.$alert(msg, app.i18ns.common.prompt, {
             confirmButtonText: app.i18ns.common.confirm,
-            callback: function() {
+            callback: function () {
                 cb && cb();
             }
         });
@@ -387,24 +386,40 @@ function getFirmwareTypeList() {
     if (lang) {
         if (lang == 'en') {
             return [
-                { value: 'All', label: 'All' },
-                { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC DRIVE' },
-                { value: 'RAID_DRIVE', label: 'RAID DRIVE' },
+                { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC&IB Driver' },
+                { value: 'RAID_DRIVE', label: 'RAID Driver' },
                 { value: 'HMM', label: 'HMM' },
                 { value: 'iBMC', label: 'iBMC' },
                 { value: 'BIOS', label: 'BIOS' },
-                { value: 'CPLD', label: 'CPLD' }
+                { value: 'CPLD', label: 'CPLD' },
+                { value: 'LCD', label: 'LCD' },
+                { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
+                { value: 'RAID', label: 'RAID' },
+                { value: 'HDD', label: 'HDD' },
+                //{ value: 'NVME', label: 'NVME' }
+                { value: 'NVDIMM', label: 'NVDIMM' },
+                { value: 'SSD', label: 'SSD' },
+                //{ value: 'OTHERS', label: 'Others' }
+
             ];
         }
     }
     return [
-        { value: 'All', label: '全选' },
-        { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC 驱动' },
+        { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC&IB 驱动' },
         { value: 'RAID_DRIVE', label: 'RAID 驱动' },
         { value: 'HMM', label: 'HMM' },
         { value: 'iBMC', label: 'iBMC' },
         { value: 'BIOS', label: 'BIOS' },
-        { value: 'CPLD', label: 'CPLD' }
+        { value: 'CPLD', label: 'CPLD' },
+        { value: 'LCD', label: 'LCD' },
+        { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
+        { value: 'RAID', label: 'RAID' },
+        { value: 'HDD', label: 'HDD' },
+       // { value: 'NVME', label: 'NVME' },
+        { value: 'NVDIMM', label: 'NVDIMM' },
+        { value: 'SSD', label: 'SSD' }
+        //{ value: 'OTHERS', label: '其他' }
+
     ];
 }
 
@@ -418,7 +433,7 @@ function alertMsg(msg, cb) {
     if (app) {
         app.$alert(msg, app.i18ns.common.prompt, {
             confirmButtonText: app.i18ns.common.confirm,
-            callback: function() {
+            callback: function () {
                 cb && cb();
             }
         });
@@ -452,7 +467,7 @@ function alertCode(errCode, cb) {
             title: app.i18ns.common.prompt,
             message: context,
             confirmButtonText: app.i18ns.common.confirm,
-        }).then(function() {
+        }).then(function () {
             cb && cb();
         });
     } else {
@@ -483,13 +498,13 @@ function confirm(msg) {
  * notifySuccess("Success").then(()=>{console.log('callback')})
  */
 function notifySuccess(msg, duration) {
-    return new Promise(function(reslove) {
+    return new Promise(function (reslove) {
         app.$notify({
             message: msg || 'default msg',
             duration: duration || 2000,
             type: 'success'
         });
-        setTimeout(function() {
+        setTimeout(function () {
             reslove && reslove();
         }, duration || 2000);
     });
@@ -499,12 +514,12 @@ function notifySuccess(msg, duration) {
  * notifyInfo("Info").then(()=>{console.log('callback')})
  */
 function notifyInfo(msg, duration) {
-    return new Promise(function(reslove) {
+    return new Promise(function (reslove) {
         app.$notify({
             message: msg || 'default msg',
             duration: duration || 2000
         });
-        setTimeout(function() {
+        setTimeout(function () {
             reslove && reslove();
         }, duration || 2000);
     });
@@ -515,13 +530,13 @@ function notifyInfo(msg, duration) {
  * notifyWarn("Warn").then(()=>{console.log('callback')})
  */
 function notifyWarn(msg, duration) {
-    return new Promise(function(reslove) {
+    return new Promise(function (reslove) {
         app.$notify({
             message: msg || 'default msg',
             duration: duration || 2000,
             type: 'Warn'
         });
-        setTimeout(function() {
+        setTimeout(function () {
             reslove && reslove();
         }, duration || 2000);
     });
@@ -532,12 +547,12 @@ function notifyWarn(msg, duration) {
  * notifyError("error").then(()=>{console.log('callback')})
  */
 function notifyError(msg, duration) {
-    return new Promise(function(reslove) {
+    return new Promise(function (reslove) {
         app.$notify.error({
             message: msg || 'default msg',
             duration: duration || 2000
         });
-        setTimeout(function() {
+        setTimeout(function () {
             reslove && reslove();
         }, duration || 2000);
     })
@@ -587,7 +602,7 @@ function operationFailed(ret, faild) {
             title: app.i18ns.common.prompt,
             message: mgs,
             confirmButtonText: app.i18ns.common.confirm,
-        }).then(function() {
+        }).then(function () {
             if (faild) {
                 faild(ret);
             } else {
@@ -620,29 +635,29 @@ function getEsightaliasName(ip) {
     return ip;
 }
 var pageEvents = {
-        handleSizeChange: function(pageSize) {
-            localStorage.setItem("taskListPageSize", pageSize);
-            app.pageSize = pageSize;
-            app.getListData();
-        },
-        handleCurrentChange: function(pageNo) {
-            app.pageNo = pageNo;
-            app.getListData();
-        },
-    }
-    /**
-     * 封装返回列表页弹出提示
-     * @param {*} url 
-     */
+    handleSizeChange: function (pageSize) {
+        localStorage.setItem("taskListPageSize", pageSize);
+        app.pageSize = pageSize;
+        app.getListData();
+    },
+    handleCurrentChange: function (pageNo) {
+        app.pageNo = pageNo;
+        app.getListData();
+    },
+}
+/**
+ * 封装返回列表页弹出提示
+ * @param {*} url 
+ */
 function goBack(url) {
     app.$confirm(app.i18ns.common.beBackTips, app.i18ns.common.prompt, {
         confirmButtonText: app.i18ns.common.confirm,
         cancelButtonText: app.i18ns.common.cancel,
         closeOnClickModal: false,
         type: 'warning'
-    }).then(function() {
+    }).then(function () {
         location.href = url + '?s=' + Math.random();
-    }).catch(function() {});
+    }).catch(function () { });
 }
 
 function preventNonNum(event) {
@@ -655,42 +670,42 @@ function getSystemBootOption() {
     if (lang) {
         if (lang == 'en') {
             return [{
-                    value: '1',
-                    label: 'Default'
-                }, {
-                    value: '0',
-                    label: 'PXE'
-                },
-                {
-                    value: '2',
-                    label: 'CD/DVD/ ROM'
-                }, {
-                    value: '3',
-                    label: 'Hard Disk'
-                }, {
-                    value: '4',
-                    label: 'FDD'
-                }
+                value: '1',
+                label: 'Default'
+            }, {
+                value: '0',
+                label: 'PXE'
+            },
+            {
+                value: '2',
+                label: 'CD/DVD/ ROM'
+            }, {
+                value: '3',
+                label: 'Hard Disk'
+            }, {
+                value: '4',
+                label: 'FDD'
+            }
             ];
         }
     }
     return [{
-            value: '1',
-            label: '默认'
-        }, {
-            value: '0',
-            label: 'PXE'
-        },
-        {
-            value: '2',
-            label: 'CD/DVD/ ROM'
-        }, {
-            value: '3',
-            label: '硬盘'
-        }, {
-            value: '4',
-            label: '软盘'
-        }
+        value: '1',
+        label: '默认'
+    }, {
+        value: '0',
+        label: 'PXE'
+    },
+    {
+        value: '2',
+        label: 'CD/DVD/ ROM'
+    }, {
+        value: '3',
+        label: '硬盘'
+    }, {
+        value: '4',
+        label: '软盘'
+    }
     ];
 }
 //获取服务器源选项
@@ -802,10 +817,10 @@ function getSoftSourceVersion(type) {
 /**
  * 字符串扩展函数
  */
-String.prototype.format = function(args) {
+String.prototype.format = function (args) {
     var result = this;
     if (arguments.length > 0) {
-        if (arguments.length == 1 && typeof(args) == "object") {
+        if (arguments.length == 1 && typeof (args) == "object") {
             for (var key in args) {
                 if (args[key] != undefined) {
                     var reg = new RegExp("({" + key + "})", "g");
@@ -816,7 +831,7 @@ String.prototype.format = function(args) {
             for (var i = 0; i < arguments.length; i++) {
                 if (arguments[i] != undefined) {
                     //var reg = new RegExp("({[" + i + "]})", "g");//这个在索引大于9时会有问题，谢谢何以笙箫的指出
-                    　　　　　　　　　　　　
+
                     var reg = new RegExp("({)" + i + "(})", "g");
                     result = result.replace(reg, arguments[i]);
                 }
@@ -824,4 +839,64 @@ String.prototype.format = function(args) {
         }
     }
     return result;
+}
+
+/**
+ * 部件健康状态
+ * @param {*} status 
+ */
+function getHealthTxt(status) {
+    var lang = localStorage.getItem('lang');
+    switch (status.toString()) {
+        case "-1":
+            return lang == 'en' ? "Offline" : "离线";
+        case "-2":
+            return lang == 'en' ? "Unknown" : "未知";
+        case "0":
+            return lang == 'en' ? "Normal" : "正常";
+        case "2":
+        case "3":
+        case "5":
+        case "4":
+        case "6":
+        case "7":
+        case "8":
+            return lang == 'en' ? "Fault" : "故障";
+        default:
+            return lang == 'en' ? "Unknown" : "未知";
+    }
+}
+
+function StatusStatistics(list) {
+    var statistics = {
+        unknown: 0,
+        normal: 0,
+        fault: 0
+    }
+    for (var i = 0; i < list.length; i++) {
+        var status = list[i].healthState.toString();
+        switch (status) {
+            case "-1":
+                break;//离线不统计;
+            case "-2":
+                statistics.unknown++;
+                break;
+            case "0":
+                statistics.normal++;
+                break;
+            case "2":
+            case "3":
+            case "5":
+            case "4":
+            case "6":
+            case "7":
+            case "8":
+                statistics.fault++;
+                break;
+            default:
+                statistics.unknown++;
+                break;
+        }
+    }
+    return statistics;
 }

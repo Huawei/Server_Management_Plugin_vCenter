@@ -20,10 +20,11 @@ public class SessionOpenIdProvider extends DefaultOpenIdProvider {
     private HttpSession session;
 
     public SessionOpenIdProvider(Esight esight, HttpSession session) {
-        super(ESight.newEsightWithDecryptedPassword(esight));
+        super(esight);
         this.session = session;
     }
 
+    @Override
     public String provide() {
         String openId = OpenIdSessionManager.getOpenIdFromSession(session, esight.getHostIp());
         if (openId == null || "".equals(openId.trim())) {

@@ -1,5 +1,6 @@
 package com.huawei.vcenterpluginui.dao;
 
+import com.huawei.vcenterpluginui.constant.SqlFileConstant;
 import com.huawei.vcenterpluginui.entity.ESight;
 import com.huawei.vcenterpluginui.utils.VersionUtils;
 
@@ -25,17 +26,7 @@ public class ESightDao extends H2DataBaseDao {
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-                ESight eSight = new ESight();
-                eSight.setHostIp(rs.getString("HOST_IP"));
-                eSight.setAliasName(rs.getString("ALIAS_NAME"));
-                eSight.setLoginAccount(rs.getString("LOGIN_ACCOUNT"));
-                eSight.setLoginPwd(rs.getString("LOGIN_PWD"));
-                eSight.setId(rs.getInt("ID"));
-                eSight.setHostPort(rs.getInt("HOST_PORT"));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                eSight.setCreateTime(sdf.format(rs.getTimestamp("CREATE_TIME")));
-                eSight.setLastModify(sdf.format(rs.getTimestamp("LAST_MODIFY_TIME")));
-                return eSight;
+                return buildESight(rs);
             }
         } catch (SQLException e) {
             LOGGER.error(e);
@@ -58,17 +49,7 @@ public class ESightDao extends H2DataBaseDao {
             ps.setString(1, ip);
             rs = ps.executeQuery();
             if (rs.next()) {
-                ESight eSight = new ESight();
-                eSight.setHostIp(rs.getString("HOST_IP"));
-                eSight.setAliasName(rs.getString("ALIAS_NAME"));
-                eSight.setLoginAccount(rs.getString("LOGIN_ACCOUNT"));
-                eSight.setLoginPwd(rs.getString("LOGIN_PWD"));
-                eSight.setId(rs.getInt("ID"));
-                eSight.setHostPort(rs.getInt("HOST_PORT"));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                eSight.setCreateTime(sdf.format(rs.getTimestamp("CREATE_TIME")));
-                eSight.setLastModify(sdf.format(rs.getTimestamp("LAST_MODIFY_TIME")));
-                return eSight;
+                return buildESight(rs);
             }
         } catch (SQLException e) {
             LOGGER.error(e);
@@ -112,16 +93,8 @@ public class ESightDao extends H2DataBaseDao {
             rs = ps.executeQuery();
             List<ESight> eSightList = new ArrayList<>();
             while (rs.next()) {
-                ESight eSight = new ESight();
-                eSight.setHostIp(rs.getString("HOST_IP"));
-                eSight.setLoginAccount(rs.getString("LOGIN_ACCOUNT"));
-//                eSight.setLoginPwd(rs.getString("LOGIN_PWD"));
-                eSight.setAliasName(rs.getString("ALIAS_NAME"));
-                eSight.setId(rs.getInt("ID"));
-                eSight.setHostPort(rs.getInt("HOST_PORT"));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                eSight.setCreateTime(sdf.format(rs.getTimestamp("CREATE_TIME")));
-                eSight.setLastModify(sdf.format(rs.getTimestamp("LAST_MODIFY_TIME")));
+                ESight eSight = buildESight(rs);
+                eSight.setLoginPwd(null);
                 eSightList.add(eSight);
             }
             return eSightList;
@@ -133,7 +106,92 @@ public class ESightDao extends H2DataBaseDao {
         }
 
     }
-    
+
+    public List<ESight> getESightListWithPwd(String ip, int pageNo, int pageSize) throws SQLException {
+        checkNullIp(ip);
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            StringBuffer sql = new StringBuffer();
+            sql.append("select * from HW_ESIGHT_HOST");
+            if (ip != null && !ip.isEmpty()) {
+                sql.append(" where HOST_IP like ?");
+            }
+
+            if (pageSize > 0) {
+                sql.append(" limit ? offset ?");
+            }
+            ps = con.prepareStatement(sql.toString());
+
+            int i = 1;
+
+            if (ip != null && !ip.isEmpty()) {
+                ps.setString(i++, "%" + ip + "%");
+            }
+
+            if (pageSize > 0) {
+                ps.setInt(i++, pageSize);
+                ps.setInt(i++, (pageNo - 1) * pageSize);
+            }
+            rs = ps.executeQuery();
+            List<ESight> eSightList = new ArrayList<>();
+            while (rs.next()) {
+                ESight eSight = buildESight(rs);
+                eSightList.add(eSight);
+            }
+            return eSightList;
+        } catch (SQLException e) {
+            LOGGER.error(e);
+            throw e;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+
+    }
+
+    public List<ESight> getAllESights() throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement("SELECT * FROM " + SqlFileConstant.HW_ESIGHT_HOST);
+            rs = ps.executeQuery();
+            List<ESight> eSightList = new ArrayList<>();
+            while (rs.next()) {
+                eSightList.add(buildESight(rs));
+            }
+            return eSightList;
+        } catch (SQLException e) {
+            LOGGER.error(e);
+            throw e;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+
+    }
+
+    private ESight buildESight(ResultSet rs) throws SQLException {
+        ESight eSight = new ESight();
+        eSight.setHostIp(rs.getString("HOST_IP"));
+        eSight.setAliasName(rs.getString("ALIAS_NAME"));
+        eSight.setLoginAccount(rs.getString("LOGIN_ACCOUNT"));
+        eSight.setLoginPwd(rs.getString("LOGIN_PWD"));
+        eSight.setId(rs.getInt("ID"));
+        eSight.setHostPort(rs.getInt("HOST_PORT"));
+        eSight.setSystemId(rs.getString("SYSTEM_ID"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        eSight.setCreateTime(sdf.format(rs.getTimestamp("CREATE_TIME")));
+        eSight.setLastModify(sdf.format(rs.getTimestamp("LAST_MODIFY_TIME")));
+        eSight.setReservedInt1(rs.getString("RESERVED_INT1")); // HA状态
+        eSight.setReservedInt2(rs.getString("RESERVED_INT2")); // HA状态
+        ESight.decryptedPassword(eSight);
+        return eSight;
+    }
+
 	public int getESightListCount(String ip) throws SQLException {
 		checkNullIp(ip);
 		
@@ -178,13 +236,14 @@ public class ESightDao extends H2DataBaseDao {
         try {
             con = getConnection();
             ps = con.prepareStatement(
-                    "insert into HW_ESIGHT_HOST (HOST_IP,ALIAS_NAME,HOST_PORT,LOGIN_ACCOUNT,LOGIN_PWD,RESERVED_STR1,CREATE_TIME, LAST_MODIFY_TIME) values (?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)");
+                    "insert into HW_ESIGHT_HOST (HOST_IP,ALIAS_NAME,HOST_PORT,SYSTEM_ID,LOGIN_ACCOUNT,LOGIN_PWD,RESERVED_STR1,CREATE_TIME, LAST_MODIFY_TIME) values (?,?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)");
             ps.setString(1, eSight.getHostIp());
             ps.setString(2, eSight.getAliasName());
             ps.setInt(3, eSight.getHostPort());
-            ps.setString(4, eSight.getLoginAccount());
-            ps.setString(5, eSight.getLoginPwd());
-            ps.setString(6, VersionUtils.getVersion());
+            ps.setString(4, eSight.getSystemId());
+            ps.setString(5, eSight.getLoginAccount());
+            ps.setString(6, eSight.getLoginPwd());
+            ps.setString(7, VersionUtils.getVersion());
             
 			int re = ps.executeUpdate();
 			if (re > 0) {
@@ -211,13 +270,14 @@ public class ESightDao extends H2DataBaseDao {
         try {
             con = getConnection();
             ps = con.prepareStatement(
-                    "update HW_ESIGHT_HOST set HOST_IP = ? , ALIAS_NAME = ?, HOST_PORT = ? , LOGIN_ACCOUNT = ? , LOGIN_PWD = ? , LAST_MODIFY_TIME = CURRENT_TIMESTAMP where ID = ?");
+                    "update HW_ESIGHT_HOST set HOST_IP = ? , ALIAS_NAME = ?, HOST_PORT = ? , SYSTEM_ID = ? , LOGIN_ACCOUNT = ? , LOGIN_PWD = ? , LAST_MODIFY_TIME = CURRENT_TIMESTAMP where ID = ?");
             ps.setString(1, eSight.getHostIp());
             ps.setString(2, eSight.getAliasName());
             ps.setInt(3, eSight.getHostPort());
-            ps.setString(4, eSight.getLoginAccount());
-            ps.setString(5, eSight.getLoginPwd());
-            ps.setInt(6, eSight.getId());
+            ps.setString(4, eSight.getSystemId());
+            ps.setString(5, eSight.getLoginAccount());
+            ps.setString(6, eSight.getLoginPwd());
+            ps.setInt(7, eSight.getId());
             return ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e);
@@ -278,6 +338,42 @@ public class ESightDao extends H2DataBaseDao {
 		}
 	}
 
+    public boolean updateSystemKeepAliveStatus(String ip, String status) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(
+                    "update HW_ESIGHT_HOST set RESERVED_INT2 = ? where HOST_IP = ?");
+            ps.setString(1, status);
+            ps.setString(2, ip);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.error(e);
+            throw e;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean updateHAStatus(String ip, String status) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(
+                    "update HW_ESIGHT_HOST set RESERVED_INT1 = ? where HOST_IP = ?");
+            ps.setString(1, status);
+            ps.setString(2, ip);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.error(e);
+            throw e;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
 	private void checkNullIp(String ip) throws SQLException {
 		if (ip != null && ip.length() > 255) {
 			throw new SQLException("parameter ip is not correct");
@@ -289,6 +385,12 @@ public class ESightDao extends H2DataBaseDao {
 			throw new SQLException("parameter ip is not correct");
 		}
 	}
+
+  private void checkSystemId(String systemId) throws SQLException {
+    if (systemId == null || systemId.length() > 50) {
+      throw new SQLException("parameter systemId is not correct");
+    }
+  }
 
 	private void checkIds(List<Integer> ids) throws SQLException {
 		if (ids == null || ids.size() > 1000) {
@@ -325,5 +427,6 @@ public class ESightDao extends H2DataBaseDao {
 		checkAliasName(eSight.getAliasName());
 		checkLoginAccount(eSight.getLoginAccount());
 		checkLoginPwd(eSight.getLoginPwd());
+		checkSystemId(eSight.getSystemId());
 	}
 }

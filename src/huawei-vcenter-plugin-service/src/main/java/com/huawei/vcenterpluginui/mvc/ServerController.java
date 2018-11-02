@@ -1,5 +1,9 @@
 package com.huawei.vcenterpluginui.mvc;
 
+import com.huawei.vcenterpluginui.entity.Pair;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -74,4 +78,24 @@ public class ServerController extends BaseController{
 		
 		return getResultByData(serverApiService.queryDeviceDetail(ip, dn, session), ErrorPrefix.SERVER_ERROR_PREFIX);
 	}
+
+	@RequestMapping(value = "/device/detail/host", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseBodyBean getDeviceDetailByHost(HttpServletRequest request,
+			@RequestParam String objectId,
+			HttpSession session) throws IOException, SQLException {
+		// urn:vmomi:HostSystem:host-1473:5f0c44d4-fee6-4a3c-a50d-884c58258b34
+		String host = objectId.split(":")[3];
+		Map<String, String> ipDNMap = serverApiService.getIpAndDN(host);
+		if (ipDNMap.isEmpty()) {
+			return success(Collections.EMPTY_MAP);
+		} else {
+			Entry<String, String> entry = ipDNMap.entrySet().iterator().next();
+			ResponseBodyBean responseBodyBean = getResultByData(serverApiService.queryDeviceDetail(entry.getKey(), entry.getValue(), session),
+					ErrorPrefix.SERVER_ERROR_PREFIX);
+			responseBodyBean.setDescription(entry.getKey());
+			return responseBodyBean;
+		}
+	}
+
 }

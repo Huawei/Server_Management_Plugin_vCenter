@@ -50,7 +50,7 @@ var manager = {
             success: function(response){  
             	if (typeof cb === "function") {
                     var ret = {code: response.code, msg: response.description,data:response.data};
-                    dealResult(ret, cb);
+                    cb(ret);
                 }
             }
         });

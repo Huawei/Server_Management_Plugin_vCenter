@@ -2,10 +2,10 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
-    <meta charset="utf-8"/>
-    <link href="css/element.css" rel="stylesheet"/>
+    <meta charset="utf-8" />
+    <link href="css/element.css" rel="stylesheet" />
     <script src="scripts/vue.js"></script>
     <script src="scripts/element.js"></script>
     <script src="scripts/i18n/zh-CN.js"></script>
@@ -32,7 +32,7 @@
             }
         });
     </script>
-    
+
     <style type="text/css">
         [v-cloak] {
             display: none;
@@ -41,111 +41,139 @@
 </head>
 
 <body>
-<div id="mainapp" v-cloak>
-    <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item id="menu-eSight" index="huawei/eSight/eSightConfig.html">{{i18ns.menu_eSight}}</el-menu-item>
-        <el-submenu index="2">
-            <template slot="title"><a id="menu-server">{{i18ns.menu_server}}</a></template>
-            <el-menu-item id="menu-server-list" index="huawei/serverList/VServerList.html">{{i18ns.menu_server_list}}
+    <div id="mainapp" v-cloak>
+        <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+            <el-menu-item id="menu-eSight" index="huawei/eSight/eSightConfig.html">{{i18ns.menu_eSight}}</el-menu-item>
+            <el-submenu index="2">
+                <template slot="title"><a id="menu-server">{{i18ns.menu_server}}</a></template>
+                <el-menu-item id="menu-server-list" index="huawei/serverList/VServerList.html">{{i18ns.menu_server_list}}
+                </el-menu-item>
+                <el-menu-item id="menu-server-sourceManage" index="huawei/softwareManager/softManager.html">
+                    {{i18ns.menu_server_sourceManage}}
+                </el-menu-item>
+                <el-menu-item id="menu-server-moduleManage" index="huawei/template/List.html">
+                    {{i18ns.menu_server_moduleManage}}
+                </el-menu-item>
+                <el-menu-item id="menu-server-moduleManage-task" index="huawei/task/list.html">
+                    {{i18ns.menu_server_moduleManage_task}}
+                </el-menu-item>
+                <el-menu-item id="menu-server-firmware-upload" index="huawei/firmware/listFirmware.html">
+                    {{i18ns.menu_server_firmware_upload}}
+                </el-menu-item>
+                <el-menu-item id="menu-server-firmware-upgrade" index="huawei/firmware/listFirmwareTask.html">
+                    {{i18ns.menu_server_firmware_upgrade}}
+                </el-menu-item>
+            </el-submenu>
+            <!--  <el-submenu index="3"> -->
+            <!--    <template slot="title"><a id="menu-vcenter">{{i18ns.menu_vCenter_set}}</a></template> -->
+            <el-menu-item id="menu-vCenter-ha" index="huawei/vCenter/vCenterConfig.html">{{i18ns.menu_vCenter_set}}</el-menu-item>
+            <!--  </el-submenu> -->
+            <el-menu-item style="float: right;" index="huawei/about/about.html">
+                {{i18ns.menu_about}}
             </el-menu-item>
-            <el-menu-item id="menu-server-sourceManage" index="huawei/softwareManager/softManager.html">
-                {{i18ns.menu_server_sourceManage}}
-            </el-menu-item>
-            <el-menu-item id="menu-server-moduleManage" index="huawei/template/List.html">
-                {{i18ns.menu_server_moduleManage}}
-            </el-menu-item>
-            <el-menu-item id="menu-server-moduleManage-task" index="huawei/task/list.html">
-                {{i18ns.menu_server_moduleManage_task}}
-            </el-menu-item>
-            <el-menu-item id="menu-server-firmware-upload" index="huawei/firmware/listFirmware.html">
-                {{i18ns.menu_server_firmware_upload}}
-            </el-menu-item>
-            <el-menu-item id="menu-server-firmware-upgrade" index="huawei/firmware/listFirmwareTask.html">
-                {{i18ns.menu_server_firmware_upgrade}}
-            </el-menu-item>
-        </el-submenu>
-        <el-menu-item style="float: right;" index="huawei/about/about.html">
-        	{{i18ns.menu_about}}
-        </el-menu-item>
-    </el-menu>
-    <iframe width="100%" id="mainViewIframe" v-bind:height="iframeHeight" frameborder="0" v-bind:src="iframeSrc"
+        </el-menu>
+        <iframe width="100%" id="mainViewIframe" v-bind:height="iframeHeight" frameborder="0" v-bind:src="iframeSrc"
             scrolling="yes"></iframe>
-</div>
+    </div>
 
-<script>
-    var app = new Vue({
-        el: "#mainapp",
-        data: {
-            activeIndex: 'huawei/eSight/eSightConfig.html',
-            i18ns: {}, //国际化
-            iframeSrc: here + 'huawei/eSight/eSightConfig.html',
-            iframeHeight: 400
-        }, created: function () {
-        	if (navigator.languages != undefined) {
-                localStorage.setItem('lang', navigator.languages[0].slice(0, 2));
-            }else if (navigator.language != undefined) {
-                localStorage.setItem('lang', navigator.language.slice(0, 2));
+    <script>
+        var app = new Vue({
+            el: "#mainapp",
+            data: {
+                activeIndex: '',
+                i18ns: {}, //国际化
+                iframeSrc: '',
+                iframeHeight: 400
+            },
+            created: function () {
+                var currentLang = navigator.language; //判断除IE外其他浏览器使用语言 
+                if (!currentLang) {
+                    //判断IE浏览器使用语言
+                    currentLang = navigator.browserLanguage;
+                }
+                if (currentLang == 'zh-CN') {
+                    //表示中文
+                    localStorage.setItem('lang', 'zh-CN');
+                } else {
+                    //英文
+                    localStorage.setItem('lang', 'en');
+                }
+                this.i18ns = getVCenterIn18();
+                var eSightListUrl = com_huawei_vcenterpluginui.webContextPath +
+                    "/rest/services/esight/version?" + Math.random();
+                //通过API获取数据
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json;charset=utf-8',
+                    url: eSightListUrl,
+                    dataType: "json",
+                    async: "false",
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(jqXHR.getAllResponseHeaders());
+                        var lang = jqXHR.getResponseHeader("Accept-Language").slice(0, 2);
+                        if (lang == 'zh') {
+                            localStorage.setItem('lang', 'zhCN');
+                        } else {
+                            localStorage.setItem('lang', 'en');
+                        }
+                        app.i18ns = getVCenterIn18();
+                        app.activeIndex = "huawei/eSight/eSightConfig.html";
+                        app.iframeSrc = here + "huawei/eSight/eSightConfig.html";
+                    }
+                });
+            },
+            methods: {
+                handleSelect: function (key, keyPath) {
+                    activeIndex = key;
+                    this.iframeSrc = here + key + "?" + Math.random();
+                }
             }
-        	this.i18ns = getVCenterIn18();
-        	var eSightListUrl = com_huawei_vcenterpluginui.webContextPath + "/rest/services/esight/version?"+Math.random();
-            //通过API获取数据
-            $.get(eSightListUrl, function(data, textStatus, jqXHR){
-            	console.log(jqXHR.getAllResponseHeaders());
-            	localStorage.setItem('lang', jqXHR.getResponseHeader("accept-language").slice(0, 2));
-            	app.i18ns = getVCenterIn18();
-              },"json");
-        }, methods: {
-            handleSelect: function (key, keyPath) {
-                activeIndex = key;
-                this.iframeSrc = here + key + "?" + Math.random();
+        })
+
+        function doResize() {
+            var explorer = navigator.userAgent;
+            if (explorer.indexOf("Firefox") >= 0 || explorer.indexOf("Windows") >= 0) {
+                app.iframeHeight = $(window).height() - 80;
+            } else {
+                app.iframeHeight = document.body.scrollHeight - 80;
             }
         }
-    })
 
-    function doResize() {
-        var explorer = navigator.userAgent;
-        if (explorer.indexOf("Firefox") >= 0 || explorer.indexOf("Windows") >= 0) {
-            app.iframeHeight = $(document).height() - 80;
-        } else {
-            app.iframeHeight = document.body.scrollHeight - 80;
-        }
-    }
-
-    $(document).ready(function () {
-        doResize();
-        $(window).resize(function () {
+        $(document).ready(function () {
             doResize();
+            $(window).resize(function () {
+                doResize();
+            });
         });
-    });
-    
-    function _refresh(){ 
-    	var eSightListUrl = com_huawei_vcenterpluginui.webContextPath + "/rest/services/esight/version?"+Math.random();
-        //通过API获取数据
-        $.get(eSightListUrl, function(response){
-        	console.log(response);
-          },"json");
-    	} 
-    var timer = window.setInterval(_refresh,1*60*1000); 
 
-    /**
-     * vCenter菜单国际化
-     **/
-    function getVCenterIn18() {
-        var lang = localStorage.getItem('lang');
-        if (lang) {
-            if (lang == 'en') {
+        function _refresh() {
+            var eSightListUrl = com_huawei_vcenterpluginui.webContextPath + "/rest/services/esight/version?" + Math.random();
+            //通过API获取数据
+            $.get(eSightListUrl, function (response) {
+                console.log(response);
+            }, "json");
+        }
+        var timer = window.setInterval(_refresh, 1 * 60 * 1000);
+
+        /**
+         * vCenter菜单国际化
+         **/
+        function getVCenterIn18() {
+            var lang = localStorage.getItem('lang');
+            if (lang) {
+                if (lang == 'zhCN') {
+                    ELEMENT.locale(ELEMENT.lang.zhCN);
+                    return i18n_v_zh_CN;
+                } else {
+                    ELEMENT.locale(ELEMENT.lang.en);
+                    return i18n_v_en;
+                }
+            } else {
                 ELEMENT.locale(ELEMENT.lang.en);
                 return i18n_v_en;
-            } else {
-                ELEMENT.locale(ELEMENT.lang.zhCN);
-                return i18n_v_zh_CN;
             }
-        } else {
-            ELEMENT.locale(ELEMENT.lang.zhCN);
-            return i18n_v_zh_CN;
         }
-    }
-</script>
+    </script>
 
 </body>
 
