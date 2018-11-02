@@ -69,8 +69,9 @@
 
             <div style="margin-top:10px;">
                 <template>
-                    <el-table :data="taskListData" border style="width: 100%" v-loading="loading" v-bind:element-loading-text="Loadingtxt" @sort-change="sortChange"
-                        v-loading.fullscreen.lock="fullscreenLoading" @row-click="rowClick" @selection-change="handleSelectionChange">
+                    <el-table :data="taskListData" border style="width: 100%" v-loading="loading"
+                        v-bind:element-loading-text="Loadingtxt" @sort-change="sortChange" v-loading.fullscreen.lock="fullscreenLoading"
+                        @row-click="rowClick" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="55" :selectable="selectable">
                         </el-table-column>
                         <el-table-column prop="taskName" v-bind:label="i18ns.firmware.taskName" sortable>
@@ -85,7 +86,8 @@
                         </el-table-column>
                         <el-table-column v-bind:label="i18ns.common.operation">
                             <template scope="scope">
-                                <el-button type="text" size="small" @click.native.stop="delFirmwareTask(scope.row)" :disabled="scope.row.syncStatusTxt==='CREATED'">{{i18ns.common.delete}}</el-button>
+                                <el-button type="text" size="small" @click.native.stop="delFirmwareTask(scope.row)"
+                                    :disabled="scope.row.syncStatusTxt==='CREATED'">{{i18ns.common.delete}}</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -93,14 +95,16 @@
             </div>
             <el-row class="pagination-row">
                 <el-col v-bind:span="24" style="text-align: left;">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes"
-                        v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                        v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes" v-bind:page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
                         <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
                     </el-pagination>
                 </el-col>
             </el-row>
             <div>
-                <el-table :data="deviceListData" v-show="deviceListData.length>0" border style="width: 100%" v-loading="loading1" element-loading-text="Loading">
+                <el-table :data="deviceListData" v-show="deviceListData.length>0" border style="width: 100%" v-loading="loading1"
+                    element-loading-text="Loading">
                     <el-table-column type="expand">
                         <template scope="scope">
                             <el-table :data="scope.row.firmwarelist" border style="width: 100%">
@@ -129,7 +133,8 @@
                                                 <span>{{item}}</span>
                                             </div>
                                             <div slot="reference" class="name-wrapper">
-                                                <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ getErrorDetailTxt1(scope.row.details) }}</div>
+                                                <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{
+                                                    getErrorDetailTxt1(scope.row.details) }}</div>
                                             </div>
                                         </el-popover>
                                     </template>
@@ -195,7 +200,8 @@
                         return false;
                     }
                     return true;
-                }
+                },
+                isAutoRefresh: false
             },
             created: function () {
                 this.i18ns = getIn18();
@@ -205,6 +211,7 @@
                 if (_pageSize) {
                     this.pageSize = parseInt(_pageSize);
                 };
+                this.autoRefresh();
             },
             mounted: function () {
                 setTimeout(function () {
@@ -243,11 +250,11 @@
                         for (var i = 0; i < app.multipleSelection.length; i++) {
                             (function (id, taskName) {
                                 firmwareTaskManage.deleteFirmwareTask({
-                                    esight: app.currentESight,
-                                    param: {
-                                        taskId: id
-                                    }
-                                },
+                                        esight: app.currentESight,
+                                        param: {
+                                            taskId: id
+                                        }
+                                    },
                                     function (ret) {
                                         k--;
                                         if (ret.code != 0) {
@@ -274,7 +281,10 @@
                                             'display': 'block',
                                             'margin-bottom': '5px'
                                         },
-                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                    }, app.i18ns.common.deleteResultTips.replace(
+                                        '#', app.multipleSelection.length -
+                                        errorInfo.length).replace('&',
+                                        errorInfo.length)));
                                     for (var i = 0; i < errorInfo.length; i++) {
                                         nodes.push(h('tr', null, [
                                             h('td', {
@@ -291,14 +301,14 @@
                                         title: app.i18ns.common.prompt,
                                         message: context,
                                         confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function () { });
+                                    }).then(function () {});
                                 } else {
                                     alertMsg(app.i18ns.template.delSuccessMsg);
                                 }
                                 window.clearInterval(mysetInterval);
                             }
                         }, 100)
-                    }).catch(function () { });
+                    }).catch(function () {});
                 },
                 /**
                  * 跳转到添加固件任务列表页面
@@ -392,7 +402,10 @@
                  */
                 getTaskListData: function () {
                     this.deviceListData = [];
-                    this.loading = true;
+                    if (!this.isAutoRefresh) {
+                        this.loading = true;
+                    }
+                    this.isAutoRefresh=false;
                     var queryParam = {
                         "esight": this.currentESight,
                         "param": {
@@ -448,7 +461,15 @@
                     this.getTaskListData();
                     this.deviceListData = [];
                 },
-
+                /**
+                 * 定时刷新
+                 */
+                autoRefresh: function () {
+                    setInterval(function () {
+                        app.isAutoRefresh = true;
+                        app.refresh();
+                    }, 1000 * 10);
+                },
                 /**
                  * 删除任务
                  * 
@@ -555,15 +576,20 @@
                                                 }, function (ret) {
                                                     k++;
                                                     if (ret.code == '0') {
-                                                        if (ret.data.data.length > 0) {
-                                                            var _data = ret.data.data[0];
+                                                        if (ret.data.data.length >
+                                                            0) {
+                                                            var _data = ret.data.data[
+                                                                0];
                                                             _.assign(d, {
-                                                                name: _data.name,
+                                                                name: _data
+                                                                    .name,
                                                             });
                                                         }
                                                     } else {
                                                         errorInfo.push({
-                                                            msg: getErrorMsg(ret.code),
+                                                            msg: getErrorMsg(
+                                                                ret.code
+                                                            ),
                                                             dn: dn
                                                         });
                                                     }
@@ -598,7 +624,7 @@
                                         title: app.i18ns.firmware.getDNInfoErrorTips,
                                         message: context,
                                         confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function () { });
+                                    }).then(function () {});
                                 }
                                 window.clearInterval(mysetInterval);
                             }
@@ -617,13 +643,13 @@
                             return {
                                 Complete: 'Complete',
                                 Running: 'Running'
-                            }[v] || v;
+                            } [v] || v;
                         }
                     }
                     return {
                         Complete: '完成',
                         Running: '运行中'
-                    }[v] || v;
+                    } [v] || v;
                 },
                 /**
                  * 获取设备任务结果
@@ -638,14 +664,14 @@
                                 Success: 'Success',
                                 Failed: 'Failed',
                                 'Partion Success': 'Partion Success'
-                            }[v] || v;
+                            } [v] || v;
                         }
                     }
                     return {
                         Success: '全部成功',
                         Failed: '失败',
                         'Partion Success': '部分成功'
-                    }[v] || v;
+                    } [v] || v;
                 },
                 /**
                  * 获取设备结果
@@ -659,14 +685,14 @@
                             return {
                                 Success: 'Success',
                                 Failed: 'Failed'
-                            }[v] || v;
+                            } [v] || v;
                         }
                     }
                     return {
                         Success: '成功',
                         Failed: '失败'
 
-                    }[v] || v;
+                    } [v] || v;
                 },
                 /**
                  * 获取错误码对应的提示

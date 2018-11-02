@@ -5,7 +5,7 @@
 
 	<groupId>com.huawei.vcenter</groupId>
 	<artifactId>vcenter-deployer</artifactId>
-	<version>0.0.9-SNAPSHOT</version>
+	<version>0.0.10-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>vcenter-deployer</name>
@@ -44,6 +44,28 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/../../third_party/extension-registration-jar-with-dependencies.jar</systemPath>
 		</dependency>
+
+		<dependency>
+			<groupId>com.vmware.vim25</groupId>
+			<artifactId>vim25</artifactId>
+			<version>6.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../../third_party/vim25.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.vmware</groupId>
+			<artifactId>wssamples</artifactId>
+			<version>6.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../../third_party/wssamples.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.vmware</groupId>
+			<artifactId>sample-core</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../../third_party/samples-core-1.0.0.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -53,6 +75,9 @@
 				<targetPath>BOOT-INF/lib/</targetPath>
 				<includes>
 					<include>extension-registration-jar-with-dependencies.jar</include>
+					<include>vim25.jar</include>
+					<include>wssamples.jar</include>
+					<include>samples-core-1.0.0.jar</include>
 				</includes>
 			</resource>
 			<resource>

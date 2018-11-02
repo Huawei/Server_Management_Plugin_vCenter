@@ -108,14 +108,16 @@
                         </el-table-column>
                         <el-table-column prop="syncStatusTxt" v-bind:label="i18ns.software.taskState">
                         </el-table-column>
-                        <el-table-column prop="errorDetail" v-bind:label="i18ns.software.detail_soft" :show-overflow-tooltip="true">
+                        <el-table-column prop="errorDetail" v-bind:label="i18ns.software.detail_soft"
+                            :show-overflow-tooltip="true">
                             <template scope="scope">
                                 <el-popover trigger="hover" placement="top">
                                     <div v-for="item in getErrorDetailTxt(scope.row.taskCode)">
                                         <span>{{item}}</span>
                                     </div>
                                     <div slot="reference" class="name-wrapper">
-                                        <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ getErrorDetailTxt1(scope.row.taskCode) }}</div>
+                                        <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{
+                                            getErrorDetailTxt1(scope.row.taskCode) }}</div>
                                     </div>
                                 </el-popover>
                             </template>
@@ -140,14 +142,16 @@
                     </el-dropdown>
                     <span style="margin-left:10px; font-size:12px;">{{i18ns.software.inputName}}</span>
                     <el-input v-model.lazy="keyword" v-on:change="search(keyword)" placeholder="" style="margin-left:10px; width:240px;"></el-input>
-                    <el-button @click="batchDelete()" :disabled="doneListData.length===0||multipleSelection.length===0" style="margin-left:10px; font-size:12px;">{{i18ns.eSight.batchDelete}}</el-button>
+                    <el-button @click="batchDelete()" :disabled="doneListData.length===0||multipleSelection.length===0"
+                        style="margin-left:10px; font-size:12px;">{{i18ns.eSight.batchDelete}}</el-button>
                 </el-col>
             </el-row>
         </div>
         <div>
             <template>
                 <div>
-                    <el-table v-bind:data="doneListData" border style="width: 100%;" v-loading="secondloading" @selection-change="handleSelectionChange">
+                    <el-table v-bind:data="doneListData" border style="width: 100%;" v-loading="secondloading"
+                        @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="55">
                         </el-table-column>
                         <el-table-column prop="softwareName" v-bind:label="i18ns.software.name">
@@ -165,15 +169,17 @@
                 </div>
                 <el-row class="pagination-row">
                     <el-col v-bind:span="24" style="text-align:left;">
-                        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes"
-                            v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
+                        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                            v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes" v-bind:page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
                             <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
                         </el-pagination>
                     </el-col>
                 </el-row>
             </template>
         </div>
-        <el-dialog v-bind:title="i18ns.software.addSoftware" v-bind:visible.sync="dialogFormVisible" @close="closeDialog" top="10%">
+        <el-dialog v-bind:title="i18ns.software.addSoftware" v-bind:visible.sync="dialogFormVisible" @close="closeDialog"
+            top="10%">
             <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" label-width="130px" label-position="left">
                 <el-form-item v-bind:label="i18ns.software.softName" prop="softwareName">
                     <div>
@@ -182,7 +188,8 @@
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.softDesc" prop="softwareDescription">
                     <div>
-                        <el-input v-model="ruleForm.softwareDescription" type="textarea" auto-complete="off" @change="onVlaueChange()" style="width:520px;"></el-input>
+                        <el-input v-model="ruleForm.softwareDescription" type="textarea" auto-complete="off" @change="onVlaueChange()"
+                            style="width:520px;"></el-input>
                     </div>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.softType" prop="softwareType" class="softType">
@@ -196,7 +203,8 @@
                         <el-col v-bind:span="12">
                             <!--ruleForm.softwareType-->
                             <el-select v-model="ruleForm.softwareType" placeholder="" @change="systemTypeValueChange">
-                                <el-option v-for="item in systemTypeOptions" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option v-for="item in systemTypeOptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-col>
@@ -206,25 +214,30 @@
                     <div>
                         <el-col v-bind:span="12">
                             <el-select v-model="ruleForm.softwareVersion" placeholder="" @change="versionTypeValueChange">
-                                <el-option v-for="item in versionTypeOptions" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option v-for="item in versionTypeOptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-col>
                         <el-col v-bind:span="12">
                             <!--ruleForm.softwareVersion-->
-                            <el-select v-model="ruleForm.softwareEdition" placeholder="" @change="softwareEditionValueChange" v-show="showSoftEdition">
-                                <el-option v-for="item in softEditionOptions" :key="item.value" :label="item.label" :value="item.value">
+                            <el-select v-model="ruleForm.softwareEdition" placeholder="" @change="softwareEditionValueChange"
+                                v-show="showSoftEdition">
+                                <el-option v-for="item in softEditionOptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-col>
                     </div>
                 </el-form-item>
-                <el-form-item v-bind:label="i18ns.software.softLanguage" prop="softwareLanguage" v-show="showLanguage" class="softLanguage">
+                <el-form-item v-bind:label="i18ns.software.softLanguage" prop="softwareLanguage" v-show="showLanguage"
+                    class="softLanguage">
                     <div>
                         <el-col v-bind:span="12">
                             <!--ruleForm.softwareLanguage-->
                             <el-select v-model="ruleForm.softwareLanguage" placeholder="">
-                                <el-option v-for="item in languageValueOptions" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option v-for="item in languageValueOptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-col>
@@ -420,7 +433,9 @@
                         required: true,
                         validator: function (rule, value, callback) {
                             if (value) {
-                                if (!/^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/.test(value)) {
+                                if (!
+                                    /^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/
+                                    .test(value)) {
                                     return callback(new Error(app.i18ns.software.sftpIPError));
                                 } else
                                     return callback();
@@ -460,6 +475,7 @@
                 if (_pageSize) {
                     this.pageSize = parseInt(_pageSize);
                 };
+                this.autoRefresh();
             },
             mounted: function () {
                 setTimeout(function () {
@@ -496,7 +512,8 @@
                 search: function (keyword) {
                     app.doneListData = [];
                     for (var i = 0; i < app.allListData.length; i++) {
-                        if (app.allListData[i].softwareName.toUpperCase().indexOf(keyword.toUpperCase()) >= 0) {
+                        if (app.allListData[i].softwareName.toUpperCase().indexOf(keyword.toUpperCase()) >=
+                            0) {
                             app.doneListData.push(app.allListData[i]);
                         }
                     }
@@ -625,7 +642,8 @@
 
                                     for (var i = 0; i < app.failListData.length; i++) {
                                         var dd = app.failListData[i];
-                                        if (dd.syncStatus == 'CREATED' || dd.syncStatus == 'FINISHED') {
+                                        if (dd.syncStatus == 'CREATED' || dd.syncStatus ==
+                                            'FINISHED') {
                                             app.listData.push(dd);
                                         }
                                     }
@@ -649,11 +667,21 @@
                  * 刷新
                  * 
                  */
-                refresh: function () {
-                    this.loading = true;
-                    this.secondloading = true;
+                refresh: function (isAutoRefresh) {
+                    if (!isAutoRefresh) {
+                        this.loading = true;
+                        this.secondloading = true;
+                    }
                     softManager.getList({}, this.bindList);
                     this.getDoneListData(); //获取上传完成的软件源列表
+                },
+                /**
+                 * 定时刷新
+                 */
+                autoRefresh: function () {
+                    setInterval(function () {
+                        app.refresh(true);
+                    }, 1000 * 10);
                 },
                 /**
                  * 完成添加软件源页面所有必填项之后的 提交操作
@@ -794,7 +822,7 @@
                         this.$refs['ruleForm'].resetFields();
                     }
                 },
-                onVlaueChange: function () { },
+                onVlaueChange: function () {},
                 /**
                  * 获取页面 列表数据
                  * 
@@ -863,7 +891,7 @@
                                 });
                                 _listData.push(list[i]);
                                 _failListData.push(list[i]);
-                                if (d.syncStatus == 'SYNC_FAILED' || d.syncStatus == 'HW_FAILED') { }
+                                if (d.syncStatus == 'SYNC_FAILED' || d.syncStatus == 'HW_FAILED') {}
                             }
                             this.listData = _listData;
                             this.failListData = _failListData;
@@ -997,9 +1025,9 @@
                         for (var i = 0; i < app.multipleSelection.length; i++) {
                             (function (softwareName) {
                                 softManager.delete({
-                                    esight: app.menuKey,
-                                    param: softwareName
-                                },
+                                        esight: app.menuKey,
+                                        param: softwareName
+                                    },
                                     function (ret) {
                                         k--;
                                         if (ret.code != 0) {
@@ -1026,7 +1054,10 @@
                                             'display': 'block',
                                             'margin-bottom': '5px'
                                         },
-                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                    }, app.i18ns.common.deleteResultTips.replace(
+                                        '#', app.multipleSelection.length -
+                                        errorInfo.length).replace('&',
+                                        errorInfo.length)));
                                     for (var i = 0; i < errorInfo.length; i++) {
                                         nodes.push(h('tr', null, [
                                             h('td', {
@@ -1042,14 +1073,14 @@
                                         title: app.i18ns.common.prompt,
                                         message: context,
                                         confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function () { });
+                                    }).then(function () {});
                                 } else {
                                     alertMsg(app.i18ns.template.delSuccessMsg);
                                 }
                                 window.clearInterval(mysetInterval);
                             }
                         }, 100)
-                    }).catch(function () { });
+                    }).catch(function () {});
                 }
             }
         });

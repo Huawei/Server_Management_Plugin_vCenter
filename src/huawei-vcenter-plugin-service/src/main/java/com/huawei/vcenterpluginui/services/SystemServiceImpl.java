@@ -55,6 +55,14 @@ public class SystemServiceImpl implements SystemService {
                 SqlFileConstant.HW_ALARM_DEFINITION_DESCRIPTION,
                 SqlFileConstant.HW_ALARM_DEFINITION_DESCRIPTION_ALTER_SQL);
 
+            // 20180906: add esight columns for HA-provider state and Alarm-definition state
+            systemDao.checkExistTableColumnAnd(SqlFileConstant.HW_ESIGHT_HOST,
+                SqlFileConstant.HW_ESIGHT_HOST_HA_PROVIDER,
+                SqlFileConstant.HW_ESIGHT_HOST_HA_PROVIDER_ALTER_SQL);
+            systemDao.checkExistTableColumnAnd(SqlFileConstant.HW_ESIGHT_HOST,
+                SqlFileConstant.HW_ESIGHT_HOST_ALARM_DEFINITION,
+                SqlFileConstant.HW_ESIGHT_HOST_ALARM_DEFINITION_ALTER_SQL);
+
             LOGGER.info("Removing HA data...");
             vCenterInfoService.deleteHASyncAndDeviceData();
         } catch (Exception e) {

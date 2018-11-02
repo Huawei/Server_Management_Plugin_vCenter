@@ -108,26 +108,27 @@ public class SystemDao extends H2DataBaseDao {
     public void checkExistTableColumnAnd(String tableName, String columnName,
         String alterSql) throws Exception {
       Connection con = null;
-      PreparedStatement ps = null;
+      PreparedStatement ps1 = null;
+      PreparedStatement ps2 = null;
       ResultSet rs = null;
       try {
         con = getConnection();
         String sql = "SELECT * FROM " + tableName + " LIMIT 1";
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
+        ps1 = con.prepareStatement(sql);
+        rs = ps1.executeQuery();
         ResultSetMetaData resultSetMetaData = rs.getMetaData();
         for (int i = 0; i < resultSetMetaData.getColumnCount(); i++) {
           if(resultSetMetaData.getColumnName(i+1).equals(columnName))
             return;
         }
-        ps = con.prepareStatement(alterSql);
-        ps.executeUpdate();
+        ps2 = con.prepareStatement(alterSql);
+        ps2.executeUpdate();
 
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
         throw e;
       } finally {
-        closeConnection(con, ps, rs);
+        closeConnection(con, rs, ps1, ps2);
       }
     }
 }

@@ -77,9 +77,11 @@ public class ESightServiceImpl extends ESightOpenApiService implements ESightSer
     @Override
     public List<ESight> getESightList(String ip, int pageNo, int pageSize) throws SQLException {
         List<ESight> eSightList = eSightDao.getESightList(ip, pageNo, pageSize);
+
         if (eSightList.isEmpty()) {
             throw new NoEsightException();
         }
+
         return eSightList;
     }
 
@@ -104,6 +106,26 @@ public class ESightServiceImpl extends ESightOpenApiService implements ESightSer
             return eSightDao.updateSystemKeepAliveStatus(ip, status);
         } catch (SQLException e) {
             LOGGER.error("Failed to update system keep alive status", e);
+            throw new VcenterException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateHAProvider(int status) {
+        try {
+            return eSightDao.updateHAProvider(status);
+        } catch (SQLException e) {
+            LOGGER.error("Failed to update HA provider status", e);
+            throw new VcenterException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateAlarmDefinition(int status) {
+        try {
+            return eSightDao.updateAlarmDefinition(status);
+        } catch (SQLException e) {
+            LOGGER.error("Failed to update HA provider status", e);
             throw new VcenterException(e.getMessage());
         }
     }

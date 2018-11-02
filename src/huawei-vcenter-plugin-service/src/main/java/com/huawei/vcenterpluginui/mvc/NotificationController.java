@@ -3,6 +3,7 @@ package com.huawei.vcenterpluginui.mvc;
 import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.ResponseBodyBean;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
+import com.huawei.vcenterpluginui.services.ESightService;
 import com.huawei.vcenterpluginui.services.NotificationAlarmService;
 import com.huawei.vcenterpluginui.services.SystemKeepAliveService;
 import com.huawei.vcenterpluginui.services.VCenterHAService;
@@ -43,6 +44,9 @@ public class NotificationController extends BaseController {
   @Autowired
   private VCenterHAService vCenterHAService;
 
+  @Autowired
+  private ESightService eSightService;
+
   private HttpSession globalSession = OpenIdSessionManager.getGlobalSession();
 
   /**
@@ -67,14 +71,14 @@ public class NotificationController extends BaseController {
       @RequestParam(required = false) String action) throws SQLException {
     LOGGER.info("unsubscribeAll action: " + action);
     synchronized (globalSession) {
-      VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
+      final VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
       // unregister alarm definitions
       try {
         if ("uninstall".equals(action) && vCenterInfo != null) {
           List<AlarmDefinition> alarmDefinitions = vCenterInfoService
               .getAlarmDefinitions();
           if (!alarmDefinitions.isEmpty()) {
-            List<String> morValList = new ArrayList<>();
+            final List<String> morValList = new ArrayList<>();
             for (AlarmDefinition alarmDefinition : alarmDefinitions) {
               if (alarmDefinition.getMorValue() != null && !""
                   .equals(alarmDefinition.getMorValue().trim())) {
@@ -82,12 +86,25 @@ public class NotificationController extends BaseController {
               }
             }
             LOGGER.info("Unregistering " + morValList.size() + " alarm definitions.");
+            int alarmDefStatus = 0;
             if (!morValList.isEmpty()) {
-              vCenterHAService.unregisterAlarmDef(vCenterInfo, morValList);
+              try {
+                int removed = vCenterHAService.unregisterAlarmDef(vCenterInfo, morValList);
+                alarmDefStatus = removed == morValList.size() ? 0 : 2;
+              } catch (Exception e) {
+                LOGGER.error("Cannot delete alarm definitions in vCenter.", e);
+                alarmDefStatus = 2;
+              }
+              try {
+                vCenterInfoService.deleteAlarmDefinitions();
+              } catch (Exception e) {
+                LOGGER.error("Cannot delete alarm definitions in DB.", e);
+                alarmDefStatus = 2;
+              }
               LOGGER.info("Removed alarm definition from vCenter");
             }
+            eSightService.updateAlarmDefinition(alarmDefStatus);
           }
-          vCenterInfoService.deleteAlarmDefinitions();
         }
       } catch (Exception e) {
         LOGGER.error("Cannot remove alarm definitions", e);

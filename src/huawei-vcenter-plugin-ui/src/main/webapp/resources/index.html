@@ -93,7 +93,7 @@
                 }
                 if (currentLang == 'zh-CN') {
                     //表示中文
-                    localStorage.setItem('lang', 'zh-CN');
+                    localStorage.setItem('lang', 'zhCN');
                 } else {
                     //英文
                     localStorage.setItem('lang', 'en');
@@ -110,8 +110,9 @@
                     async: "false",
                     success: function (data, textStatus, jqXHR) {
                         console.log(jqXHR.getAllResponseHeaders());
-                        var lang = jqXHR.getResponseHeader("Accept-Language").slice(0, 2);
-                        if (lang == 'zh') {
+                        var acceptLanguage = jqXHR.getResponseHeader("Accept-Language").slice(0,
+                            2);
+                        if (acceptLanguage == 'zh') {
                             localStorage.setItem('lang', 'zhCN');
                         } else {
                             localStorage.setItem('lang', 'en');

@@ -37,10 +37,16 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
   private ESightDao eSightDao;
 
   @Autowired
+  private ESightService eSightService;
+
+  @Autowired
   private ESightHAServerDao eSightHAServerDao;
 
   @Autowired
   private VCenterHAService vCenterHAService;
+
+  @Autowired
+  private VmActionService vmActionService;
 
   @Override
   public int addVCenterInfo(VCenterInfo vCenterInfo) throws SQLException {
@@ -75,11 +81,17 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
         if (vCenterInfo1.isState()) {
           try {
             vCenterHAService.createProvider(connectedVim, false);
+            eSightService.updateHAProvider(1);
           } catch (VersionNotSupportException e) {
             LOGGER.info("Not supported HA");
             vCenterInfo1.setState(false);
             vCenterInfo.setState(false);
             supportHA = false;
+          } catch (Exception e) {
+            LOGGER.error("Cannot create provider", e);
+            vCenterInfo1.setState(false);
+            vCenterInfo.setState(false);
+            eSightService.updateHAProvider(2);
           }
         }
         returnValue = vCenterInfoDao.updateVCenterInfo(vCenterInfo1);
@@ -91,10 +103,15 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
         if (vCenterInfo.isState()) {
           try {
             vCenterHAService.createProvider(connectedVim, false);
+            eSightService.updateHAProvider(1);
           } catch (VersionNotSupportException e) {
             LOGGER.info("Not supported HA");
             vCenterInfo.setState(false);
             supportHA = false;
+          } catch (Exception e) {
+            LOGGER.error("Cannot create provider", e);
+            vCenterInfo.setState(false);
+            eSightService.updateHAProvider(2);
           }
         }
         returnValue = addVCenterInfo(vCenterInfo);
@@ -115,7 +132,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
             if ("1".equals(eSight.getReservedInt1())) {
               notificationAlarmService.unsubscribeAlarm(eSight, session, "unsubscribe_by_client");
             }
-            eSightHAServerDao.deleteAll(eSight.getId());
+            //eSightHAServerDao.deleteAll(eSight.getId());
           } catch (Exception e) {
             LOGGER.error("Failed to unsubscribe alarm: " + eSight, e);
           }
@@ -131,7 +148,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
   }
 
   @Override
-  public void syncAlarmDefinitions() {
+  public synchronized void syncAlarmDefinitions() {
     try {
       VCenterInfo vCenterInfo = getVCenterInfo();
       if (vCenterInfo == null || !vCenterInfo.isPushEvent()) {
@@ -145,6 +162,8 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
       LOGGER.info("AlarmDefinitions to be removed size: " + staleAlarmDefinitions.size());
       LOGGER.info("AlarmDefinitions to be created size: " + newAlarmDefinitions.size());
 
+      boolean success = true;
+
       // remove stale alarm definitions from vCenter and DB
       if (staleAlarmDefinitions != null && !staleAlarmDefinitions.isEmpty()) {
         List<String> morValues = new ArrayList<>();
@@ -157,7 +176,8 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
           ids.add(staleAlarmDefinition.getId());
         }
         if (!morValues.isEmpty()) {
-          vCenterHAService.unregisterAlarmDef(vCenterInfo, morValues);
+          int removed = vCenterHAService.unregisterAlarmDef(vCenterInfo, morValues);
+          success = (removed == morValues.size());
         }
         LOGGER.info("Removed alarmDefinitions from vCenter: " + morValues);
         vCenterInfoDao.deleteAlarmDefinitions(ids);
@@ -166,10 +186,12 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
 
       // add new alarm definitions into vCenter and DB
       if (newAlarmDefinitions != null && !newAlarmDefinitions.isEmpty()) {
-        vCenterHAService.registerAlarmDefInVcenterAndDB(vCenterInfo, newAlarmDefinitions);
+        vCenterHAService.registerAlarmDefInVcenterAndDB(vCenterInfo, newAlarmDefinitions, success);
       }
-    } catch (SQLException e) {
+      eSightService.updateAlarmDefinition(success ? 1 : 2);
+    } catch (Exception e) {
       LOGGER.error("Failed to sync alarm definitions", e);
+      eSightService.updateAlarmDefinition(2);
     }
   }
 
@@ -183,6 +205,23 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
       returnMap.put("HOST_IP", vCenterInfo.getHostIp());
       returnMap.put("PUSH_EVENT", vCenterInfo.isPushEvent());
       returnMap.put("PUSH_EVENT_LEVEL", vCenterInfo.getPushEventLevel());
+    }
+    boolean supportSetting = eSightService.getESightListCount(null) > 0;
+    returnMap.put("SUPPORT_SETTING", supportSetting);
+    returnMap.put("SUPPORT_ALARM", supportSetting ? true : false);
+    if (supportSetting) {
+      try {
+        String version = vmActionService.getVersion();
+        LOGGER.info("Current vCenter version is: " + version);
+        ConnectedVim.checkVersionCompatible(version);
+        returnMap.put("SUPPORT_HA", true);
+      } catch (VersionNotSupportException e) {
+        returnMap.put("SUPPORT_HA", false);
+      } catch (Exception e) {
+        returnMap.put("SUPPORT_HA", true);
+      }
+    } else {
+      returnMap.put("SUPPORT_HA", false);
     }
     return returnMap;
   }

@@ -32,4 +32,8 @@ public interface ESightService {
 	boolean updateHAStatus(String ip, String status);
 
 	boolean updateSystemKeepAliveStatus(String ip, String status);
+
+	boolean updateHAProvider(int status);
+
+	boolean updateAlarmDefinition(int status);
 }

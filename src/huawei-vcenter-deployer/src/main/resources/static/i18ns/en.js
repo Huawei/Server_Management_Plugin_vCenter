@@ -16,6 +16,7 @@ var i18n_en = {
         back: 'Back',
         seeResult: 'Please see the terminal for the results',
         ok: 'OK',
-        loading: 'Plugin updating...'
+        loading: 'Plugin updating...',
+        loading1: 'Huawei plugin is uninstalling...'
     }
 }

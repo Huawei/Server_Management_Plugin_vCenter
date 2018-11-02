@@ -173,6 +173,11 @@ public class VmActionServiceImpl implements VmActionService {
       }
    }
 
+   @Override
+   public String getVersion() {
+      return getServiceContent().getAbout().getVersion();
+   }
+
    private void loopVersion(Node node) {
       if ("version".equals(node.getNodeName())) {
          SUPPORTED_VERSIONS.add(node.getTextContent());

@@ -43,4 +43,6 @@ public interface VmActionService {
 
    Collection<String> getSupportedVersions();
 
+   String getVersion();
+
 }

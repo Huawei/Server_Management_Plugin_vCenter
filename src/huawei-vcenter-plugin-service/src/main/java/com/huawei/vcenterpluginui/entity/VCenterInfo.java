@@ -14,8 +14,8 @@ public class VCenterInfo implements Serializable {
     private String userName;
     private String password;
     private Date createTime;
-    private boolean state;
-    private boolean pushEvent;
+    private boolean state; 
+    private boolean pushEvent; 
     private int pushEventLevel; // 1:crtical 2:majorandcritical 3:all
 
     public int getPushEventLevel() {
