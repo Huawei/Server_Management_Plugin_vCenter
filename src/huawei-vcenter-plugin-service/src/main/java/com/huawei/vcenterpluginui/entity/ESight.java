@@ -28,6 +28,25 @@ public class ESight extends Esight implements Serializable {
 	private String createTime;
 	private String systemId;
 
+	private int haProvider; // -- HA Provider状态：0/null-未创建 1-已创建 2-创建失败
+	private int alarmDefinition; // -- 告警订阅创建状态：0/null-未创建 1-已创建 2-创建有失败
+
+	public int getHaProvider() {
+		return haProvider;
+	}
+
+	public void setHaProvider(int haProvider) {
+		this.haProvider = haProvider;
+	}
+
+	public int getAlarmDefinition() {
+		return alarmDefinition;
+	}
+
+	public void setAlarmDefinition(int alarmDefinition) {
+		this.alarmDefinition = alarmDefinition;
+	}
+
 	public String getLatestStatus() {
 		return latestStatus;
 	}

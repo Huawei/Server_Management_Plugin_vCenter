@@ -274,7 +274,12 @@ var i18n_en = {
         hostIPError: 'The first byte of the host IP address must be an integer ranging from 1 to 223 except 127. The other three bytes must be integers ranging from 0 to 255\, and the last byte cannot be 0.',
         userNameError: 'The loginAccount contains 1 to 100 characters, which can include letters, digits, hyphens (-), underscores (_), and periods (.).',
         passWordErrorMsg: 'The password contains 1 to 100 characters, which can include letters, digits,  and special characters',
-        changeInfo: 'Change Credentials'
+        changeInfo: 'Change Credentials',
+        ha:'HA',
+        alarm:'Alarm',
+        enable:'Enable',
+        disable:'Disable',
+        error:'Error'
     },
     serverList: {
         serverGetListFailed: 'Failed to obtain data',
@@ -587,7 +592,8 @@ var i18n_en = {
         switchBoard: "Switch Board",
         rackServer: 'Rack Server',
         ibMacIp:'iBMC IP',
-        eSightIp:'eSight IP'
+        eSightIp:'eSight IP',
+        serverInfoErrorTips:'The information could not be obtained; the error may be caused by: The right eSight is not configured, the basic vCenter information is not configured, or the server is not synchronized.'
     }
 
 }

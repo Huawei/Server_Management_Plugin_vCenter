@@ -37,7 +37,7 @@
         }
         if (currentLang == 'zh-CN') {
             //表示中文
-            localStorage.setItem('lang', 'zh-CN');
+            localStorage.setItem('lang', 'zhCN');
         } else {
             //英文
             localStorage.setItem('lang', 'en');
@@ -105,7 +105,7 @@
             </el-form-item>
             <div style="margin: 10px">
                 <el-button type="primary" @click="submit()" v-loading.fullscreen.lock="fullscreenLoading"
-                    v-bind:element-loading-text="i18ns.index.loading">{{i18ns.index.ok}}</el-button>
+                    v-bind:element-loading-text="loadingTxt">{{i18ns.index.ok}}</el-button>
             </div>
         </el-form>
         <div id="info" style="display: none">
@@ -122,6 +122,7 @@
                 $.get(serverListUrl, function (response, textStatus, jqXHR) {
                     console.log(response);
                     console.log(jqXHR.getAllResponseHeaders());
+                    //localStorage.setItem('lang', jqXHR.getResponseHeader("Accept-Language").slice(0, 2));
                     var lang = jqXHR.getResponseHeader("Accept-Language").slice(0, 2);
                     if (lang == 'zh') {
                         localStorage.setItem('lang', 'zhCN');
@@ -169,21 +170,24 @@
                     basePath: ''
                 },
                 fullscreenLoading: false,
-                register: true
+                register: true,
+                loadingTxt:''
             },
             created: function () {
                 this.i18ns = getIn18();
+                this.loadingTxt=this.i18ns.index.loading;
                 document.title = this.i18ns.index.updateProgram;
                 var lang = localStorage.getItem('lang');
-                if (lang == 'en') {
-                    this.indexNum = 1;
-                } else {
+                if (lang == 'zhCN') {
                     this.indexNum = -1;
+                } else {
+                    this.indexNum = 1;
                 }
                 serviceManager.getInfo(this.bindInfo);
             },
             methods: {
                 submit: function () {
+                    this.loadingTxt=this.form.radio=='1'?this.i18ns.index.loading:this.i18ns.index.loading1;
                     this.fullscreenLoading = true;
                     var postData = {
                         packageUrl: this.form.path,
@@ -206,7 +210,7 @@
                         success: function (response) {
                             var h3 = document.getElementById("h3");
                             if (response.error != undefined) {
-                                h3.innerHTML = getErrorMsg(response.error);;
+                                h3.innerHTML = getErrorMsg(response.error);
                             } else {
                                 h3.innerHTML = app.i18ns.index.seeResult;
                             }
@@ -246,7 +250,7 @@
                     }
                 }
             }
-        })
+        });
     </script>
 </body>
 

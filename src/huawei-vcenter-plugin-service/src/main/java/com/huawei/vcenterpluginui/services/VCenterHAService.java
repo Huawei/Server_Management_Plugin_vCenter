@@ -4,7 +4,6 @@ import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
 import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
-
 import com.huawei.vcenterpluginui.utils.ConnectedVim;
 import java.util.List;
 
@@ -13,46 +12,44 @@ import java.util.List;
  */
 public interface VCenterHAService {
 
-    List<ESightHAServer> getServerList(VCenterInfo vCenterInfo) throws Exception;
+  List<ESightHAServer> getServerList(VCenterInfo vCenterInfo) throws Exception;
 
-    void removeMonitored(VCenterInfo vCenterInfo, List<ESightHAServer> list);
+  void removeMonitored(VCenterInfo vCenterInfo, List<ESightHAServer> list);
 
-    @Deprecated
-    boolean pushHealth(ESightHAServer eSightHAServer, List<ServerDeviceDetail> serverDeviceDetails);
+  @Deprecated
+  boolean pushHealth(ESightHAServer eSightHAServer, List<ServerDeviceDetail> serverDeviceDetails);
 
-    boolean pushHealth(List<ESightHAServer> eSightHAServers, List<ServerDeviceDetail> serverDeviceDetails);
+  boolean pushHealth(List<ESightHAServer> eSightHAServers,
+      List<ServerDeviceDetail> serverDeviceDetails);
 
-    /**
-     * create provider if it doesn't exist
-     * @param enable Whether to enable
-     * @return providerId
-     */
-    String createProvider(ConnectedVim connectedVim, boolean enable);
+  /**
+   * create provider if it doesn't exist
+   *
+   * @param enable Whether to enable
+   * @return providerId
+   */
+  String createProvider(ConnectedVim connectedVim, boolean enable);
 
-    /**
-     * remove provider if it exist
-     * @param vCenterInfo vCenter account info
-     * @return  null: provider not exist<br/>
-     *          true: remove success<br/>
-     *          false: remove fail or other exception
-     */
-    Boolean removeProvider(VCenterInfo vCenterInfo);
+  /**
+   * remove provider if it exist
+   *
+   * @param vCenterInfo vCenter account info
+   * @return null: provider not exist<br/> true: remove success<br/> false: remove fail or other
+   * exception
+   */
+  Boolean removeProvider(VCenterInfo vCenterInfo);
 
-    /**
-     * create alarm definition in vcenter and DB in a new lowest priority thread
-     * @param vCenterInfo
-     * @param alarmDefinitionList
-     */
-    void registerAlarmDefInVcenterAndDB(VCenterInfo vCenterInfo,
-        List<AlarmDefinition> alarmDefinitionList);
+  /**
+   * create alarm definition in vcenter and DB in a new lowest priority thread
+   */
+  void registerAlarmDefInVcenterAndDB(VCenterInfo vCenterInfo,
+      List<AlarmDefinition> alarmDefinitionList, boolean result);
 
-    ConnectedVim getConnectedVim();
+  ConnectedVim getConnectedVim();
 
-    /**
-     * unregister alarm definitions from vCenter
-     * @param vCenterInfo
-     * @param morList
-     */
-    void unregisterAlarmDef(VCenterInfo vCenterInfo, List<String> morList);
+  /**
+   * unregister alarm definitions from vCenter
+   */
+  int unregisterAlarmDef(VCenterInfo vCenterInfo, List<String> morList);
 
 }

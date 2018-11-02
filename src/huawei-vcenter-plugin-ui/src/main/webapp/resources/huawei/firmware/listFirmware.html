@@ -59,7 +59,8 @@
         </el-row>
         <div class="margin-top-23" v-if="isShowTaskList">
             <template>
-                <el-table v-bind:data="taskListData" border style="width: 100%" v-loading="loading" element-loading-text="Loading">
+                <el-table v-bind:data="taskListData" border style="width: 100%" v-loading="loading"
+                    element-loading-text="Loading">
                     <el-table-column prop="softwareSourceName" v-bind:label="i18ns.firmware.packageName">
                     </el-table-column>
                     <el-table-column prop="reservedStr1" v-bind:label="i18ns.firmware.packageType">
@@ -77,7 +78,8 @@
                                     <span>{{item}}</span>
                                 </div>
                                 <div slot="reference" class="name-wrapper">
-                                    <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ getErrorDetailTxt1(scope.row.taskCode) }}</div>
+                                    <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{
+                                        getErrorDetailTxt1(scope.row.taskCode) }}</div>
                                 </div>
                             </el-popover>
                         </template>
@@ -105,8 +107,8 @@
         </div>
         <div class="margin-top-7">
             <template>
-                <el-table v-bind:data="firmwareListData" border style="width: 100%;" v-loading="loading" element-loading-text="Loading" @row-click="ShowFirmwareDetail"
-                    @selection-change="handleSelectionChange">
+                <el-table v-bind:data="firmwareListData" border style="width: 100%;" v-loading="loading"
+                    element-loading-text="Loading" @row-click="ShowFirmwareDetail" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="55">
                     </el-table-column>
                     <el-table-column prop="basepackageName" v-bind:label="i18ns.firmware.packageName">
@@ -126,8 +128,9 @@
         <div>
             <el-row class="pagination-row">
                 <el-col v-bind:span="24" style="text-align:left;">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes"
-                        v-bind:page-size="pageSize" layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                        v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes" v-bind:page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
                         <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
                     </el-pagination>
                 </el-col>
@@ -137,8 +140,8 @@
             <hr style="height:2px;background-color: black; border-width:0px;margin-bottom:3px;margin-top:10px" />
             <template>
                 <span style="font-size:12px; margin-top:2px">{{i18ns.firmware.package_firm}}</span>
-                <el-table v-bind:data="firmwareDetails" border style="width: 100%; cursor: default; margin-top:5px" v-loading="loading3"
-                    element-loading-text="Loading" @row-click="ShowFirmwareDetail2">
+                <el-table v-bind:data="firmwareDetails" border style="width: 100%; cursor: default; margin-top:5px"
+                    v-loading="loading3" element-loading-text="Loading" @row-click="ShowFirmwareDetail2">
                     <el-table-column prop="packageName" v-bind:label="i18ns.firmware.firmwareDetails_packageName">
                     </el-table-column>
                     <el-table-column prop="support" v-bind:label="i18ns.firmware.firmwareDetails_support">
@@ -154,7 +157,8 @@
             <hr style="height:2px;background-color: black; border-width:0px;margin-bottom:3px;margin-top:15px" />
             <template>
                 <span style="font-size:12px">{{i18ns.firmware.packageList_firm}}</span>
-                <el-table v-bind:data="firmwareDetails2" border style="width: 100%; margin-top:5px" v-loading="lowloading" element-loading-text="Loading">
+                <el-table v-bind:data="firmwareDetails2" border style="width: 100%; margin-top:5px" v-loading="lowloading"
+                    element-loading-text="Loading">
                     <el-table-column prop="firmwareType" v-bind:label="i18ns.firmware.firmwareType">
                     </el-table-column>
                     <el-table-column prop="type" v-bind:label="i18ns.firmware.type_firm">
@@ -210,6 +214,7 @@
                 if (_pageSize) {
                     this.pageSize = parseInt(_pageSize);
                 };
+                this.autoRefresh();
             },
             mounted: function () {
                 setTimeout(function () {
@@ -248,11 +253,11 @@
                         for (var i = 0; i < app.multipleSelection.length; i++) {
                             (function (basepackageName) {
                                 firmwareManage.deleteFirmware({
-                                    esight: app.currentESight,
-                                    param: {
-                                        basepackageName: basepackageName
-                                    }
-                                },
+                                        esight: app.currentESight,
+                                        param: {
+                                            basepackageName: basepackageName
+                                        }
+                                    },
                                     function (ret) {
                                         k--;
                                         if (ret.code != 0) {
@@ -279,7 +284,10 @@
                                             'display': 'block',
                                             'margin-bottom': '5px'
                                         },
-                                    }, app.i18ns.common.deleteResultTips.replace('#', app.multipleSelection.length - errorInfo.length).replace('&', errorInfo.length)));
+                                    }, app.i18ns.common.deleteResultTips.replace(
+                                        '#', app.multipleSelection.length -
+                                        errorInfo.length).replace('&',
+                                        errorInfo.length)));
                                     for (var i = 0; i < errorInfo.length; i++) {
                                         nodes.push(h('tr', null, [
                                             h('td', {
@@ -296,14 +304,14 @@
                                         title: app.i18ns.common.prompt,
                                         message: context,
                                         confirmButtonText: app.i18ns.common.confirm,
-                                    }).then(function () { });
+                                    }).then(function () {});
                                 } else {
                                     alertMsg(app.i18ns.template.delSuccessMsg);
                                 }
                                 window.clearInterval(mysetInterval);
                             }
                         }, 100)
-                    }).catch(function () { });
+                    }).catch(function () {});
                 },
                 /**
                  * 设置一页显示的数据总条数
@@ -357,7 +365,8 @@
                                     app.fullscreenLoading = false;
                                     for (var i = 0; i < app.failListData.length; i++) {
                                         var dd = app.failListData[i];
-                                        if (dd.syncStatus == 'CREATED' || dd.syncStatus == 'FINISHED') {
+                                        if (dd.syncStatus == 'CREATED' || dd.syncStatus ==
+                                            'FINISHED') {
                                             app.taskListData.push(dd);
                                         }
                                     }
@@ -381,15 +390,25 @@
                  * 刷新
                  * 
                  */
-                refresh: function () {
-                    this.loading = true;
-                    this.lowloading = true;
+                refresh: function (isAutoRefresh) {
+                    if (!isAutoRefresh) {
+                        this.loading = true;
+                        this.lowloading = true;
+                    }
                     this.isShowDetail = false;
                     this.isShowDetail2 = false;
                     this.firmwareDetails = [];
                     this.firmwareDetails2 = [];
                     this.getTaskListData(); //获取固件上传任务列表数据
                     this.getFirmwareListData(); //获取已上传成功的固件列表数据
+                },
+                /**
+                 * 定时刷新
+                 */
+                autoRefresh: function () {
+                    setInterval(function () {
+                        app.refresh(true);
+                    }, 1000 * 10);
                 },
                 /**
                  * 获取上传中的升级包 任务列表
@@ -435,7 +454,7 @@
                                     return x.value == data[i].syncStatus;
                                 }).label
                             });
-                            if (data[i].syncStatus == 'SYNC_FAILED' || data[i].syncStatus == 'HW_FAILED') { }
+                            if (data[i].syncStatus == 'SYNC_FAILED' || data[i].syncStatus == 'HW_FAILED') {}
                             _failListData.push(item);
                             _taskListData.push(item);
                         }
@@ -645,7 +664,8 @@
                                         type: this.type,
                                         version: basepackageProp[o].version || "",
                                         activeMode: basepackageProp[o].activeMode || "",
-                                        supportModel: basepackageProp[o]["supported device models"] || ""
+                                        supportModel: basepackageProp[o]["supported device models"] ||
+                                            ""
                                     };
                                     this.firmwareDetails2.push(item);
                                 }

@@ -131,6 +131,12 @@ public class SqlFileConstant {
 	public static final String HW_ESIGHT_HOST_SYSTEM_ID = "SYSTEM_ID";
 	public static final String HW_ESIGHT_HOST_ALTER_SQL = "ALTER TABLE HW_ESIGHT_HOST ADD SYSTEM_ID VARCHAR(50) NULL;";
 
+	public static final String HW_ESIGHT_HOST_HA_PROVIDER = "HA_PROVIDER";
+	public static final String HW_ESIGHT_HOST_HA_PROVIDER_ALTER_SQL = "ALTER TABLE HW_ESIGHT_HOST ADD HA_PROVIDER integer NULL";
+
+	public static final String HW_ESIGHT_HOST_ALARM_DEFINITION = "ALARM_DEFINITION";
+	public static final String HW_ESIGHT_HOST_ALARM_DEFINITION_ALTER_SQL = "ALTER TABLE HW_ESIGHT_HOST ADD ALARM_DEFINITION integer NULL";
+
 	public static final String HW_VCENTER_INFO_STATE = "STATE";
 	public static final String HW_VCENTER_INFO_PUSHEVENT = "PUSH_EVENT";
 	public static final String HW_VCENTER_INFO_PUSHEVENTLEVEL = "PUSH_EVENT_LEVEL";

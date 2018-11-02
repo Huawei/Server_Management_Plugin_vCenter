@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by Rays on 2018/4/9.
@@ -26,6 +27,9 @@ public class VCenterHAServiceImpl implements VCenterHAService {
   private String providerNamePrefix;
 
   private String providerNameVersion;
+
+  @Autowired
+  private ESightService eSightService;
 
   @Override
   public List<ESightHAServer> getServerList(VCenterInfo vCenterInfo) throws Exception {
@@ -107,7 +111,7 @@ public class VCenterHAServiceImpl implements VCenterHAService {
 
   @Override
   public void registerAlarmDefInVcenterAndDB(final VCenterInfo vCenterInfo,
-      final List<AlarmDefinition> alarmDefinitionList) {
+      final List<AlarmDefinition> alarmDefinitionList, final boolean result) {
     final ConnectedVim connectedVim = this.getConnectedVim();
     try {
       Thread t1 = new Thread(new Runnable() {
@@ -117,8 +121,13 @@ public class VCenterHAServiceImpl implements VCenterHAService {
             try {
               connectedVim.connect(vCenterInfo);
               List<AlarmDefinition> newAlarmDefinitionList = connectedVim
-                  .createAlarmDefinitions(vCenterInfo, alarmDefinitionList);
+                  .createAlarmDefinitions(alarmDefinitionList);
               vCenterInfoService.addAlarmDefinitions(newAlarmDefinitionList);
+              if (result && newAlarmDefinitionList.size() == alarmDefinitionList.size()) {
+                eSightService.updateAlarmDefinition(1);
+              } else {
+                eSightService.updateAlarmDefinition(2);
+              }
             } catch (Exception e) {
               LOGGER.error("Failed to create alarm definition", e);
             } finally {
@@ -140,9 +149,10 @@ public class VCenterHAServiceImpl implements VCenterHAService {
   }
 
   @Override
-  public void unregisterAlarmDef(VCenterInfo vCenterInfo, List<String> morList) {
+  public int unregisterAlarmDef(VCenterInfo vCenterInfo, List<String> morList) {
     int result = getConnectedVim().removeAlarmDefinitions(vCenterInfo, morList);
     LOGGER.info("Removed alarm definition: " + result);
+    return result;
   }
 
   public void setvCenterInfoService(VCenterInfoService vCenterInfoService) {

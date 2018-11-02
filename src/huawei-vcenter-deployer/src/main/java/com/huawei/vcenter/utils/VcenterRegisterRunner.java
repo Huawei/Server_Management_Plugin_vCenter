@@ -32,6 +32,11 @@ public class VcenterRegisterRunner {
 
 	public static void unRegister(String vcenterIP,
 								  String vcenterPort, String username, String password, String key) {
+		// unregister alarm definitions
+		// new event type id should be added in regex
+		new ConnectedVim().unregisterAlarmDefinitions(vcenterIP, username, password, "^ibmc-.+$");
+
+		// unregister plugin
 		Map<String, String> unRegParamMap = new HashMap();
 		unRegParamMap.put("-action", "unregisterPlugin");
 		unRegParamMap.put("-username", username);

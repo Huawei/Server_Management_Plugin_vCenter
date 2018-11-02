@@ -45,9 +45,13 @@ public class InstantiationBeanServiceImpl implements
         try {
             systemService.initDB();
             vCenterInfoService.syncAlarmDefinitions();
+
             // initialize supported version
             //Collection<String> supportedVersion = vmActionService.getSupportedVersions();
             //LOGGER.info("Supported version: " + supportedVersion);
+
+            // log current version
+            // LOGGER.info("Current version: " + vmActionService.getVersion());
         } catch (Exception e) {
             LOGGER.warn(e);
         }

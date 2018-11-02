@@ -109,12 +109,13 @@
                     {{i18ns.vCenter.alarmSetting}}
                 </div>
                 <el-form-item v-bind:label="i18ns.vCenter.isAlarmEnable">
-                    <el-checkbox v-model="ruleForm.pushEvent" @change="ruleForm.pushEvent?ruleForm.pushEventLevel=3:ruleForm.pushEventLevel=0">
+                    <el-checkbox v-model="ruleForm.pushEvent" @change="ruleForm.pushEvent?ruleForm.pushEventLevel=3:ruleForm.pushEventLevel=0"
+                        :disabled="support_alarm">
                         {{i18ns.vCenter.enable}}
                     </el-checkbox>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.vCenter.alarmLevel">
-                    <el-radio-group v-model="ruleForm.pushEventLevel" @change="pushEventLevelChange">
+                    <el-radio-group v-model="ruleForm.pushEventLevel" @change="pushEventLevelChange" :disabled="support_alarm">
                         <el-radio class="radio" :label="3"> {{i18ns.vCenter.all}}</el-radio>
                         <el-radio class="radio" :label="1"> {{i18ns.vCenter.critical}}</el-radio>
                         <el-radio class="radio" :label="2"> {{i18ns.vCenter.majorAndcritical}}</el-radio>
@@ -124,11 +125,13 @@
         </el-form>
         <!-- 保存按钮 -->
         <div slot="footer" class="dialog-footer">
-            <el-button @click="save()" v-loading.fullscreen.lock='loading' :element-loading-text='i18ns.vCenter.loadingText' :disabled="!isEsight">{{i18ns.vCenter.ok}}
+            <el-button @click="save()" v-loading.fullscreen.lock='loading' :element-loading-text='i18ns.vCenter.loadingText'
+                :disabled="!isEsight">{{i18ns.vCenter.ok}}
             </el-button>
         </div>
         <!-- 点击保弹出框-->
-        <el-dialog :title="i18ns.vCenter.prompt" :visible.sync="centerDialogVisible" width="30%" fullscreen='true' center size="large">
+        <el-dialog :title="i18ns.vCenter.prompt" :visible.sync="centerDialogVisible" width="30%" fullscreen='true'
+            center size="large">
             <div class="info">
                 <p>{{i18ns.vCenter.operationINfo}}</p>
                 <el-table :data="operationData" style="width: 100%">
@@ -138,7 +141,8 @@
                     </el-table-column>
                     <el-table-column prop="HAResult" :label="i18ns.vCenter.HAOperationResult" header-align="left" align="left">
                     </el-table-column>
-                    <el-table-column prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult" header-align="left" align="left">
+                    <el-table-column prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult" header-align="left"
+                        align="left">
                     </el-table-column>
                 </el-table>
             </div>
@@ -189,6 +193,9 @@
                 pushEvent: false,
                 pushEventLevel: 0
             },
+            support_alarm: false,
+            support_ha: false,
+            support_setting: false,
             old_state: false,
             old_pushEvent: false,
             loading: false,
@@ -267,8 +274,8 @@
             this.i18ns = getIn18();
             this.get();
             this.getIps();
-            this.getEsightData('');
-            this.judgmentStatus();
+           /*  this.getEsightData('');
+            this.judgmentStatus(); */
 
         },
         mounted: function () {
@@ -325,6 +332,13 @@
                         app.ruleForm.pushEventLevel = response.data['PUSH_EVENT_LEVEL'];
                         app.old_state = response.data['STATE'];
                         app.old_pushEvent = response.data['PUSH_EVENT'];
+                        app.support_alarm = !response.data['SUPPORT_ALARM'];
+                        app.checkDisabled = !response.data['SUPPORT_HA'];
+                        app.support_setting = !response.data['SUPPORT_SETTING'];
+                        app.isEsight = !app.support_setting;
+                        if(!app.isEsight){
+                            app.alertMsg(app.i18ns.vCenter.alertMsg);
+                        }
                     }
                 });
             },
@@ -343,12 +357,12 @@
                 vCenterManage.getList(queryParam, function (ret) {
                     app.getEsight(ret);
                     if (app.haCode) {
-                        app.checkDisabled = false;
-                        app.isEsight = true;
+                        //app.checkDisabled = false;
+                        // app.isEsight = true;
                     } else {
-                        app.checkDisabled = true;
-                        app.ruleForm.state = false;
-                        app.isEsight = false;
+                        // app.checkDisabled = true;
+                        // app.ruleForm.state = false;
+                        // app.isEsight = false;
                         this.alertMsg(app.i18ns.vCenter.alertMsg);
                     }
                 });
@@ -407,11 +421,11 @@
                 });
             },
             checkboxChange: function (val) {
-                if (val.target.checked != true) {
+               /*  if (val.target.checked != true) {
                     this.ruleForm.state = false;
                     app.checked = false;
-                }
-                app.judgmentStatus();
+                } */
+                /* app.judgmentStatus(); */
             },
             pushEventLevelChange: function (val) {
                 if (val === 1 || val === 2 || val === 3) {
@@ -475,7 +489,7 @@
                     });
                 }
                 app.old_state = app.ruleForm.state;
-                app.old_pushEvent =  app.ruleForm.pushEvent;
+                app.old_pushEvent = app.ruleForm.pushEvent;
                 app.centerDialogVisible = true;
             }
         }

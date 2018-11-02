@@ -92,7 +92,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
       String providerId = null;
       try {
         providerId = queryProviderId(getHealthUpdateManager());
-      } catch (RuntimeFaultFaultMsg | NotFoundFaultMsg e) {
+      } catch (Exception e) {
         LOGGER.warn("query providerId fail", e);
       }
       final boolean isRequestMonitorHost = StringUtils.hasLength(providerId);
@@ -123,7 +123,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
       }
 
       LOGGER.info("monitored host list: " + monitoredHostList.size());
-      if (!monitoredHostList.isEmpty()) {
+      if (isRequestMonitorHost && !monitoredHostList.isEmpty()) {
         try {
           addMonitored(getHealthUpdateManager(), providerId, monitoredHostList);
         } catch (NotFoundFaultMsg | RuntimeFaultFaultMsg e) {
@@ -325,6 +325,10 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     return host;
   }
 
+  /**
+   * 检查版本兼容性：是否支持provider和HA
+   * @param version
+   */
   public static void checkVersionCompatible(String version) {
     boolean isCompatibleVersion = true;
     try {
@@ -411,7 +415,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
         return 0;
       }
       connect(vCenterInfo);
-      int affected = 0;
+      int removed = 0;
       for (String morValue : morValues) {
         if (morValue != null && morValue.length() > 0) {
           ManagedObjectReference mor = new ManagedObjectReference();
@@ -419,13 +423,13 @@ public class ConnectedVim extends ConnectedVimServiceBase {
           mor.setValue(morValue);
           try {
             vimPort.removeAlarm(mor);
-            ++affected;
+            ++removed;
           } catch (Exception e) {
             LOGGER.info("Failed remove alarm definition " + morValue);
           }
         }
       }
-      return affected;
+      return removed;
     } catch (Exception e) {
       LOGGER.error("Cannot remove alarm from vCenter", e);
       return 0;
@@ -434,8 +438,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     }
   }
 
-  public List<AlarmDefinition> createAlarmDefinitions(VCenterInfo vCenterInfo,
-      List<AlarmDefinition> alarmDefinitionList) {
+  public List<AlarmDefinition> createAlarmDefinitions(List<AlarmDefinition> alarmDefinitionList) {
     LOGGER.info("start creating alarm definitions");
     if (alarmDefinitionList == null || alarmDefinitionList.isEmpty()) {
       LOGGER.info("alarmDefinitionList is empty");

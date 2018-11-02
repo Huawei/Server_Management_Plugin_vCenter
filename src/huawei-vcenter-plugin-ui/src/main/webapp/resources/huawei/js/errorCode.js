@@ -1218,5 +1218,4 @@ function getErrorMsg(errorCode) {
         }
         return errorCode;
     }
-
 };

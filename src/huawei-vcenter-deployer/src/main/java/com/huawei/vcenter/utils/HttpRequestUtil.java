@@ -30,7 +30,7 @@ public class HttpRequestUtil {
 
     private static final Logger LOGGER = Logger.getLogger(HttpRequestUtil.class.getSimpleName());
 
-    private static final int REQUEST_TIMEOUT = 30000; // millis
+    private static final int REQUEST_TIMEOUT = 600000; // millis
 
     static {
         System.setProperty("https.protocols", "TLSv1.2,TLSv1.1,TLSv1");

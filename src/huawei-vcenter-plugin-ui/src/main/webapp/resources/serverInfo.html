@@ -168,6 +168,19 @@
                                 app.serverInfo.status = info.status;
                                 app.serverInfo.desc = info.desc;
                                 app.serverInfo.esightIp = res.description
+                            } else {
+                                app.serverInfo.name ='';
+                                app.serverInfo.ip = '';
+                                app.serverInfo.type ='';
+                                app.serverInfo.sn ='';
+                                app.serverInfo.status ='';
+                                app.serverInfo.desc ='';
+                                app.serverInfo.esightIp =''
+                                app.$alert(app.i18ns.deviceInfo.serverInfoErrorTips, app.i18ns.common.prompt, {
+                                    confirmButtonText: app.i18ns.common.confirm,
+                                    callback: function () {
+                                    }
+                                });
                             }
                         }
                     });
