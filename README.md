@@ -8,7 +8,7 @@ I. General Information
 
     Name:     Management Plugin Pack for Huawei Server
     Category: Monitoring and Configuration
-    version : 1.4.18
+    version : 1.4.30
     
 II. Description
 
@@ -17,8 +17,8 @@ II. Description
 III. Supported Software Version
 
     vCenter Server 6.0U2a or later for Linux 
-    vCenter Server 6.5 for Linux
-    vCenter Server 6.0/6.5 for Windows  
+    vCenter Server 6.5/6.7 for Linux
+    vCenter Server 6.0/6.5/6.7 for Windows  
     
 IV.Software Requirements
 
