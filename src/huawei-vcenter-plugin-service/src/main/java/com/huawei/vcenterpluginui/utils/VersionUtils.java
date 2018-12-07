@@ -2,7 +2,7 @@ package com.huawei.vcenterpluginui.utils;
 
 public class VersionUtils {
 
-    private static final String NEW_VERSION = "1.4.30";
+    private static final String NEW_VERSION = "1.4.32";
     
 	public static String getVersion(){
 		return NEW_VERSION;
