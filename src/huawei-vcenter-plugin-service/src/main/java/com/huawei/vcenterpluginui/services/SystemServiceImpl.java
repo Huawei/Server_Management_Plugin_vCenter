@@ -63,6 +63,10 @@ public class SystemServiceImpl implements SystemService {
                 SqlFileConstant.HW_ESIGHT_HOST_ALARM_DEFINITION,
                 SqlFileConstant.HW_ESIGHT_HOST_ALARM_DEFINITION_ALTER_SQL);
 
+            // 20181112: esight server certificate thumbprints
+            systemDao.checkExistAndCreateTable(SqlFileConstant.HW_ESIGHT_THUMBPRINT,
+                SqlFileConstant.HW_ESIGHT_THUMBPRINT_SQL);
+
             LOGGER.info("Removing HA data...");
             vCenterInfoService.deleteHASyncAndDeviceData();
         } catch (Exception e) {

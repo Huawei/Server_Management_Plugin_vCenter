@@ -387,6 +387,11 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
   @Override
   public Boolean uninstallProvider() {
     try {
+//      try {
+//        SSLUtils.turnOffSslChecking();
+//      } catch (Exception e) {
+//        LOGGER.error("Cannot turn off ssl checking", e);
+//      }
       String version = vmActionService.getVersion();
       LOGGER.info("Current vCenter version: " + version);
       ConnectedVim.checkVersionCompatible(version);

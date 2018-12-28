@@ -48,6 +48,9 @@
             border: 0;
             box-shadow: 0 0 0 0 !important;
         }
+        .upload-demo{
+                width: 350px;
+            }
     </style>
 </head>
 
@@ -139,9 +142,9 @@
                     </el-table-column>
                     <el-table-column prop="aliasName" :label="i18ns.vCenter.tableAliasName" header-align="left" align="left">
                     </el-table-column>
-                    <el-table-column prop="HAResult" :label="i18ns.vCenter.HAOperationResult" header-align="left" align="left">
+                    <el-table-column v-if="isShowHAResult" prop="HAResult" :label="i18ns.vCenter.HAOperationResult" header-align="left" align="left">
                     </el-table-column>
-                    <el-table-column prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult" header-align="left"
+                    <el-table-column  v-if="isShowAlarmResult" prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult" header-align="left"
                         align="left">
                     </el-table-column>
                 </el-table>
@@ -151,6 +154,7 @@
             </span>
         </el-dialog>
     </div>
+
 </body>
 <script type="text/javascript">
     function getCookie(name) {
@@ -160,7 +164,6 @@
         else
             return null;
     }
-
     var app = new Vue({
         el: '#app',
         data: {
@@ -200,6 +203,9 @@
             old_pushEvent: false,
             loading: false,
             loadingText: '',
+            isShowHAResult: false,
+            isShowAlarmResult: false,
+
             // 验证规则设定
             rules: {
                 hostIp: {
@@ -274,8 +280,8 @@
             this.i18ns = getIn18();
             this.get();
             this.getIps();
-           /*  this.getEsightData('');
-            this.judgmentStatus(); */
+            /*  this.getEsightData('');
+             this.judgmentStatus(); */
 
         },
         mounted: function () {
@@ -336,7 +342,7 @@
                         app.checkDisabled = !response.data['SUPPORT_HA'];
                         app.support_setting = !response.data['SUPPORT_SETTING'];
                         app.isEsight = !app.support_setting;
-                        if(!app.isEsight){
+                        if (!app.isEsight) {
                             app.alertMsg(app.i18ns.vCenter.alertMsg);
                         }
                     }
@@ -421,10 +427,10 @@
                 });
             },
             checkboxChange: function (val) {
-               /*  if (val.target.checked != true) {
-                    this.ruleForm.state = false;
-                    app.checked = false;
-                } */
+                /*  if (val.target.checked != true) {
+                     this.ruleForm.state = false;
+                     app.checked = false;
+                 } */
                 /* app.judgmentStatus(); */
             },
             pushEventLevelChange: function (val) {
@@ -438,10 +444,14 @@
             },
             showDialog: function (sucessData, failData) {
                 app.operationData = [];
+                app.isShowHAResult = false;
+                app.isShowAlarmResult = false;
                 for (let i = 0; i < sucessData.length; i++) {
                     var item = sucessData[i];
                     var HAResult = "";
-                    if (app.old_state != app.ruleForm.state) {
+                    if (app.old_state != undefined && app.old_state !== '' && app.old_state != app.ruleForm
+                        .state) {
+                        app.isShowHAResult = true;
                         if (app.old_state) {
                             HAResult = app.i18ns.vCenter.unregisterSuccess
                         } else {
@@ -449,7 +459,9 @@
                         }
                     }
                     var alarmResult = "";
-                    if (app.old_pushEvent != app.ruleForm.pushEvent) {
+                    if (app.old_pushEvent !== "" && app.old_pushEvent !== undefined && app.old_pushEvent !=
+                        app.ruleForm.pushEvent) {
+                        app.isShowAlarmResult = true;
                         if (app.old_pushEvent) {
                             alarmResult = app.i18ns.vCenter.unalarmSuccess
                         } else {
@@ -466,7 +478,9 @@
                 for (let i = 0; i < failData.length; i++) {
                     var item = failData[i];
                     var HAResult = "";
-                    if (app.old_state != app.ruleForm.state) {
+                    if (app.old_state != undefined && app.old_state !== '' && app.old_state != app.ruleForm
+                        .state) {
+                        app.isShowHAResult = true;
                         if (app.old_state) {
                             HAResult = app.i18ns.vCenter.unregisterFail
                         } else {
@@ -474,7 +488,9 @@
                         }
                     }
                     var alarmResult = "";
-                    if (app.old_pushEvent != app.ruleForm.pushEvent) {
+                    if (app.old_pushEvent !== "" && app.old_pushEvent !== undefined && app.old_pushEvent !=
+                        app.ruleForm.pushEvent) {
+                        app.isShowAlarmResult = true;
                         if (app.old_pushEvent) {
                             alarmResult = app.i18ns.vCenter.unalarmFail
                         } else {

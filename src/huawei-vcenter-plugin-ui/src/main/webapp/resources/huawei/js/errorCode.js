@@ -12,7 +12,7 @@
     "-331002": "eSight license不具有调用openapi的功能",
     "-331024": "eSight 认证失败",
     "-33149201": "License数量不足。",
-
+    "-80002": '请先上传证书',
     "-99999": "操作失败：未知错误",
     "-90001": "系统内部错误，请先初始化", //系统内部错误 9xxxx
     "-90002": "请先配置eSight",
@@ -21,6 +21,7 @@
     "-90005": "eSight用户名或者密码错误",
     "-90006": "HA不支持当前版本",
     "-90007": "操作失败：请校验用户名和密码。",
+    "-90008": "证书或者密码错误",
     "-80009": "连接当前eSight失败:访问eSight服务器时发生错误。", //网络错误  8xxxx
     "-80010": "连接当前eSight失败:连接到eSight服务器时发生错误, 由于目标机积极拒绝。",
     "-80011": "没有找到对应的eSight",
@@ -575,7 +576,7 @@ var errorCode_en = {
     "-331002": "eSight license does not have the function to call openapi",
     "-331024": "eSight authentication failed",
     "-33149201": "License number is insufficient.",
-
+    "-80002": 'Please upload the certificate first. ',
     "149201": "License number is insufficient.",
     "-99999": "OperationFailed: unknownerror",
     "-90001": "System internal error, please initialize",
@@ -585,6 +586,7 @@ var errorCode_en = {
     "-90005": "The user name of eSight does not match the password or the account does not exist.",
     "-90006": "HA can not work in this version",
     "-90007": "Operation failed: Please verify user name and password.",
+    "-90008": "Wrong certificate or password",
     "-80009": "Failed to connect current eSight:A error occurred when connecting to the eSight server.",
     "-80010": "Failed to connect current eSight:An error occurred when connecting to the eSight server. No connection could be made because the target machine actively refused.",
     "-80011": "Sytem can not find this eSight",

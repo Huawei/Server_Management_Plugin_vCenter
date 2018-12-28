@@ -12,10 +12,17 @@ import com.huawei.vcenterpluginui.exception.VersionNotSupportException;
 import com.huawei.vcenterpluginui.utils.AlarmDefinitionConverter;
 import com.huawei.vcenterpluginui.utils.CipherUtils;
 import com.huawei.vcenterpluginui.utils.ConnectedVim;
+import com.huawei.vcenterpluginui.utils.ThumbprintsUtils;
 import com.vmware.connection.BasicConnection;
 import com.vmware.connection.ConnectionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,6 +225,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
       } catch (VersionNotSupportException e) {
         returnMap.put("SUPPORT_HA", false);
       } catch (Exception e) {
+        LOGGER.warn("Cannot get version", e);
         returnMap.put("SUPPORT_HA", true);
       }
     } else {
@@ -277,6 +285,41 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
   @Override
   public void deleteAlarmDefinitions() throws SQLException {
     vCenterInfoDao.deleteAlarmDefinitions();
+  }
+
+  @Override
+  public synchronized int saveJksThumbprints(InputStream inputStream, String password) {
+    try {
+      String[] thumbprints = ThumbprintsUtils.getThumbprintsFromJKS(inputStream, password);
+      String[] tp = vCenterInfoDao.mergeSaveAndLoadAllThumbprints(thumbprints);
+      LOGGER.info("Thumbprints have been saved, new list is: " + Arrays.asList(tp));
+      ThumbprintsUtils.updateContextTrustThumbprints(tp);
+      return RESULT_SUCCESS_CODE;
+    } catch (IOException e) {
+      LOGGER.warn("Cannot get thumbprints from JKS", e);
+      return RESULT_READ_CERT_ERROR;
+    } catch (Exception e) {
+      LOGGER.error("Cannot get/save thumbprints from JKS", e);
+      return FAIL_CODE;
+    }
+  }
+
+  @Override
+  public synchronized void saveThumbprints(String[] thumbprints) {
+    try {
+      String[] tp = vCenterInfoDao.mergeSaveAndLoadAllThumbprints(thumbprints);
+      LOGGER.info("Thumbprints have been saved, new list is: " + Arrays.asList(tp));
+      ThumbprintsUtils.updateContextTrustThumbprints(tp);
+    } catch (Exception e) {
+      LOGGER.warn("Cannot save thumbprints", e);
+    }
+  }
+
+  @Override
+  public String[] getThumbprints() throws SQLException {
+    String[] thumbprints = vCenterInfoDao.loadThumbprints();
+    LOGGER.info("Thumbprints have been loaded: " + Arrays.asList(thumbprints));
+    return thumbprints;
   }
 
 }

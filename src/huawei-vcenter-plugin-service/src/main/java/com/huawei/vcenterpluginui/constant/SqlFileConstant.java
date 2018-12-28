@@ -3,6 +3,7 @@ package com.huawei.vcenterpluginui.constant;
 public class SqlFileConstant {
 	public static final String HW_ESIGHT_HOST = "HW_ESIGHT_HOST";
 	public static final String HW_ESIGHT_TASK = "HW_ESIGHT_TASK";
+	public static final String HW_ESIGHT_THUMBPRINT = "HW_ESIGHT_THUMBPRINT";
 	public static final String HW_TASK_RESOURCE = "HW_TASK_RESOURCE";
 	public static final String HW_ESIGHT_HA_SERVER = "HW_ESIGHT_HA_SERVER";
 	public static final String HW_VCENTER_INFO = "HW_VCENTER_INFO";
@@ -51,7 +52,12 @@ public class SqlFileConstant {
 										            "\"LAST_MODIFY_TIME\"  datetime,\n" +
 										            "\"CREATE_TIME\"  datetime NOT NULL\n" +
 										            ");";
-	
+
+	public static final String HW_ESIGHT_THUMBPRINT_SQL = "DROP TABLE IF EXISTS \"HW_ESIGHT_THUMBPRINT\";\n"
+			+ "CREATE TABLE \"HW_ESIGHT_THUMBPRINT\" (\n"
+			+ "  \"THUMBPRINT\"  varchar(255) PRIMARY KEY\n"
+			+ ");";
+
 	public static final String HW_TASK_RESOURCE_SQL = "DROP TABLE IF EXISTS \"HW_TASK_RESOURCE\";\n" +
 											            "CREATE TABLE \"HW_TASK_RESOURCE\" (\n" +
 											            "\"ID\"  INTEGER  PRIMARY KEY AUTO_INCREMENT NOT NULL,\n" +

@@ -8,6 +8,7 @@ import com.huawei.vcenterpluginui.entity.VCenterInfo;
 import com.huawei.vcenterpluginui.utils.AlarmDefinitionConverter;
 import com.huawei.vcenterpluginui.utils.CipherUtils;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,5 +59,11 @@ public class VCenterInfoDaoTest extends ContextSupported {
     Pair pair = vCenterInfoDao.getAlarmDefinitionDiff(alarmDefinitionList);
     System.out.println(pair.getKey());
     System.out.println(pair.getValue());
+  }
+
+  @Test
+  public void mergeSaveAndLoadAllThumbprints() throws SQLException {
+    System.out.println(
+        Arrays.asList(vCenterInfoDao.mergeSaveAndLoadAllThumbprints(new String[]{"123", "abc"})));
   }
 }

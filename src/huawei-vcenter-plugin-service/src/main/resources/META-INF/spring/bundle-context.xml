@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:task="http://www.springframework.org/schema/task" 
@@ -11,7 +12,10 @@
       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
       http://www.springframework.org/schema/context
       http://www.springframework.org/schema/context/spring-context-3.0.xsd
-      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+      http://www.springframework.org/schema/task
+      http://www.springframework.org/schema/task/spring-task-3.0.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <context:property-placeholder location="classpath:application.properties"/>
 
@@ -116,8 +120,14 @@
         <property name="vmActionService" ref="VmActionServiceImpl"/>
     </bean>
 
-    <bean name="VmActionServiceImpl" class="com.huawei.vcenterpluginui.services.VmActionServiceImpl">
+    <bean name="VmActionServiceImpl" class="com.huawei.vcenterpluginui.services.VmActionServiceImpl" destroy-method="destroy">
         <constructor-arg ref="vimObjectReferenceService"/>
+    </bean>
+
+    <!-- File upload -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000" /> <!-- 100k -->
+        <property name="maxInMemorySize" value="4096" />
     </bean>
     
     <context:annotation-config />
@@ -126,6 +136,16 @@
       
     <!--开启这个配置，spring才能识别@Scheduled注解-->  
     <task:annotation-driven scheduler="qbScheduler" mode="proxy"/>  
-    <task:scheduler id="qbScheduler" pool-size="10"/> 
+    <task:scheduler id="qbScheduler" pool-size="10"/>
 
+    <!-- AOP -->
+    <!--<bean name="trustManagerBean" class="com.huawei.vcenterpluginui.services.TrustManagerAspect"/>-->
+
+    <!--<aop:config proxy-target-class="false">-->
+        <!--<aop:aspect ref="trustManagerBean">-->
+            <!--<aop:pointcut id="servicePointcut"-->
+              <!--expression="execution(* com.huawei.vcenterpluginui.services.*Service*.*(..))"/>-->
+            <!--<aop:before pointcut-ref="servicePointcut" method="updateTrustManager"/>-->
+        <!--</aop:aspect>-->
+    <!--</aop:config>-->
 </beans>

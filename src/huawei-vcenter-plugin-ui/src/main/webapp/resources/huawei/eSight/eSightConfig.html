@@ -12,6 +12,7 @@
     <script src="../../scripts/i18n/zh-CN.js"></script>
     <script src="../../scripts/i18n/en.js"></script>
     <script src="../i18n/en.js"></script>
+
     <script src="../i18n/zh-CN.js"></script>
     <script src="../js/common.js"></script>
     <script src="js/rest.js"></script>
@@ -66,6 +67,9 @@
                 </el-button>
                 <el-button @click="batchDeleteESight()" :disabled="listData.length===0||multipleSelection.length===0">
                     {{i18ns.eSight.batchDelete}}
+                </el-button>
+                <el-button @click="dialogCertVisible=true">
+                    {{i18ns.eSight.uploadCert}}
                 </el-button>
             </el-col>
         </el-row>
@@ -204,6 +208,30 @@
                 </el-button>
             </div>
         </el-dialog>
+        <el-dialog :title="i18ns.eSight.uploadCert" :visible.sync="dialogCertVisible" size="small" @close="certClose">
+            <div>
+                <form id="uploadForm" enctype="multipart/form-data"></form>
+                <el-form v-bind:model="certForm" ref="certForm" :rules="certRules" label-width="150px" label-position="left"
+                    label-suffix=":">
+                    <el-form-item :label="i18ns.eSight.changeCert" prop="fileName">
+                        <el-button size="small" type="primary" @click="changeCert">{{i18ns.eSight.changeCert}}</el-button>
+                        <input id="file" accept=".jks" type="file" name="file" style="display:none;" ref="file"
+                            v-on:change="handleFileUpload()" v-if="dialogCertVisible" />
+                        <el-tag type="gray" v-if="certForm.fileName" style="margin-left:20px;">{{certForm.fileName}}</el-tag>
+                        <el-input v-model="certForm.file" v-show="false"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="i18ns.eSight.certPassWord" prop="password">
+                        <el-input v-model="certForm.password" type="password"></el-input>
+                    </el-form-item>
+                </el-form>
+                </form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="certClose">{{i18ns.common.cancel}}</el-button>
+                <el-button @click="uploadCert" v-loading.fullscreen.lock="fullscreenLoading " element-loading-text="Loading">{{i18ns.common.save}}
+                </el-button>
+            </div>
+        </el-dialog>
     </div>
 </body>
 <script type="text/javascript">
@@ -234,7 +262,7 @@
             listData: [],
             loading: false,
             fullscreenLoading: false,
-            dialogTableVisible: false,
+            DTableVisible: false,
             dialogFormVisible: false,
             isUpdate: false,
             isSubmit: false,
@@ -379,6 +407,24 @@
                     },
                     trigger: 'change'
                 }
+            },
+            dialogCertVisible: false,
+            certForm: {
+                fileName: '',
+                password: '',
+                file: ''
+            },
+            certRules: {
+                fileName: {
+                    required: true,
+                    message: '',
+                    trigger: 'blur'
+                },
+                password: {
+                    required: true,
+                    message: '',
+                    trigger: 'blur'
+                }
             }
         },
         created: function () {
@@ -387,6 +433,9 @@
             if (_pageSize) {
                 this.pageSize = parseInt(_pageSize);
             };
+            this.certRules.fileName.message=this.i18ns.eSight.uploadCertTips;
+            this.certRules.password.message=this.i18ns.eSight.pwdNull;
+
         },
         mounted: function () {
             //获取列表数据
@@ -809,7 +858,68 @@
                 }).catch(function () {
 
                 });
+            },
+            /**
+             * 关闭上传证书弹窗
+             */
+            certClose: function () {
+                this.dialogCertVisible = false;
+                this.certForm = {
+                    fileName: '',
+                    password: '',
+                    file: ''
+                }
+            },
+            /**
+             * 触发隐藏的选择文件input
+             */
+            changeCert: function () {
+                this.$refs.file.click();
+            },
+
+            /**
+             * 选择文件
+             */
+            handleFileUpload: function () {
+                this.file = this.$refs.file.files[0];
+                this.certForm.fileName = this.$refs.file.files[0].name;
+                this.$refs['certForm'].validateField('fileName', function () {});
+            },
+
+            /**
+             * 上传证书
+             */
+            uploadCert: function () {
+                this.$refs['certForm'].validate(function (valid) {
+                    if (valid) {
+                        var formData = new FormData();
+                        formData.append('password', app.certForm.password);
+                        formData.append('file', app.$refs.file.files[0]);
+                        $.ajax({
+                            url: com_huawei_vcenterpluginui.webContextPath +
+                                '/rest/services/vcenter/cert',
+                            type: 'POST',
+                            cache: false,
+                            data: formData,
+                            processData: false,
+                            //contentType: 'multipart/form-data',
+                            contentType: false,
+                            success: function (response) {
+                                if (response.code == '0') {
+                                    alertMsg(app.i18ns.eSight.uploadSuccess);
+                                    app.certClose();
+                                } else {
+                                    var msg = getErrorMsg(response.code);
+                                    alertMsg(msg);
+                                }
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }
+
         }
     })
 </script>

@@ -117,6 +117,12 @@
         <property name="systemService" ref="systemService" />
     </bean>
 
+    <bean name="VmActionServiceImpl" class="com.huawei.vcenterpluginui.services.VmActionServiceImpl">
+        <constructor-arg>
+            <null />
+        </constructor-arg>
+    </bean>
+
     <!--<bean name="eSightService" class="com.huawei.vcenterpluginui.services.ESightServiceImpl">-->
     <!--<property name="eSightDao" ref="eSightDao"/>-->
     <!--</bean>-->

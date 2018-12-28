@@ -32,7 +32,8 @@ var i18n_en = {
         name: 'Name',
         required: "Required",
         refresh: 'Refresh',
-        deleteResultTips: '# successful, & failed'
+        deleteResultTips: '# successful, & failed',
+        save:'Save'
     },
     template: {
         templateOptin: { value: '', label: 'All template' },
@@ -279,7 +280,13 @@ var i18n_en = {
         alarm:'Alarm',
         enable:'Enable',
         disable:'Disable',
-        error:'Error'
+        error:'Error',
+        uploadCert:'Upload certificate',
+        changeCert:'Select certificate',
+        uploadSuccess:'Uploading successful',
+        uploadCertTips:'Please upload a certificate',
+        certPassWord: 'Password'
+
     },
     serverList: {
         serverGetListFailed: 'Failed to obtain data',
@@ -530,6 +537,8 @@ var i18n_en = {
         offline: "Offline",
         fault: "Faulty",
         unknown: "Unknown",
+        warning:'Warning',
+        critical:'Critical',
         motherboard: "Main Board",
         productSN: "SN",
         sn: "Serial Number",
@@ -593,7 +602,23 @@ var i18n_en = {
         rackServer: 'Rack Server',
         ibMacIp:'iBMC IP',
         eSightIp:'eSight IP',
-        serverInfoErrorTips:'The information could not be obtained; the error may be caused by: The right eSight is not configured, the basic vCenter information is not configured, or the server is not synchronized.'
+        serverInfoErrorTips:'The information could not be obtained; the error may be caused by: The right eSight is not configured, the basic vCenter information is not configured, or the server is not synchronized.',
+        port:'Port',
+        moid:'Moid',
+        linkStatus:'Link Status'
+    },
+    server:{
+        NoRecord: 'No Records',
+        normal: 'Health',
+        warning: 'Warning',
+        critical: 'Critical',
+        unknown: 'Unknown',
+        memory: 'Memory',
+        power: "Power",
+        fan: 'Fan',
+        nic: 'NIC',
+        disk: 'Disk',
+        cpu: 'CPU',
     }
 
 }

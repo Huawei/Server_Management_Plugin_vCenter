@@ -3,6 +3,7 @@ package com.huawei.vcenterpluginui.services;
 import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
 
+import java.io.InputStream;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
@@ -31,4 +32,10 @@ public interface VCenterInfoService {
     void addAlarmDefinitions(List<AlarmDefinition> alarmDefinitions);
 
     void deleteAlarmDefinitions() throws SQLException;
+
+    int saveJksThumbprints(InputStream inputStream, String password);
+
+    void saveThumbprints(String[] thumbprints);
+
+    String[] getThumbprints() throws SQLException;
 }
