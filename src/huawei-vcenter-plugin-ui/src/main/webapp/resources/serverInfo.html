@@ -117,38 +117,68 @@
 
             },
             created: function () {
+                var currentLang = navigator.language; //判断除IE外其他浏览器使用语言 
+                if (!currentLang) {
+                    //判断IE浏览器使用语言
+                    currentLang = navigator.browserLanguage;
+                }
+                if (currentLang == 'zh-CN') {
+                    //表示中文
+                    localStorage.setItem('lang', 'zhCN');
+                } else {
+                    //英文
+                    localStorage.setItem('lang', 'en');
+                }
                 this.i18ns = getIn18();
+                var eSightListUrl = com_huawei_vcenterpluginui.webContextPath +
+                    "/rest/services/esight/version?" + Math.random();
+                //通过API获取数据
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json;charset=utf-8',
+                    url: eSightListUrl,
+                    dataType: "json",
+                    async: "false",
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(jqXHR.getAllResponseHeaders());
+                        var acceptLanguage = jqXHR.getResponseHeader("Accept-Language").slice(0,
+                            2);
+                        if (acceptLanguage == 'zh') {
+                            localStorage.setItem('lang', 'zhCN');
+                        } else {
+                            localStorage.setItem('lang', 'en');
+                        }
+                        app.i18ns = getIn18();
+                    }
+                });
                 this.objectId = this.getQueryString("objectId");
                 this.getInfo();
             },
             methods: {
                 getServerStatusTxt: function (status) {
+                    var lang = localStorage.getItem('lang');
                     if (status === null || status === undefined || status === '') {
                         return "";
                     }
                     switch (status.toString()) {
                         case "-1":
-                            return this.i18ns.deviceInfo.offline;
-                            break;
                         case "-2":
-                            return this.i18ns.deviceInfo.unknown;
-                            break;
+                            return lang == 'zhCN' ? "未知" : "Unknown";
                         case "0":
-                            return this.i18ns.deviceInfo.normal;
-                            break;
+                            return lang == 'zhCN' ? "正常" : "Normal";
                         case "2":
                         case "3":
                         case "5":
+                            return lang == 'zhCN' ? "警告" : "Warning";
                         case "4":
                         case "6":
                         case "7":
                         case "8":
-                            return this.i18ns.deviceInfo.fault;
-                            break;
+                            return lang == 'zhCN' ? "紧急" : "Critical";
                         default:
-                            return this.i18ns.deviceInfo.unknown;
-                            break;
+                            return lang == 'zhCN' ? "未知" : "Unknown";
                     }
+
                 },
                 getInfo: function () {
                     var url = com_huawei_vcenterpluginui.webContextPath +
@@ -169,18 +199,18 @@
                                 app.serverInfo.desc = info.desc;
                                 app.serverInfo.esightIp = res.description
                             } else {
-                                app.serverInfo.name ='';
+                                app.serverInfo.name = '';
                                 app.serverInfo.ip = '';
-                                app.serverInfo.type ='';
-                                app.serverInfo.sn ='';
-                                app.serverInfo.status ='';
-                                app.serverInfo.desc ='';
-                                app.serverInfo.esightIp =''
-                                app.$alert(app.i18ns.deviceInfo.serverInfoErrorTips, app.i18ns.common.prompt, {
-                                    confirmButtonText: app.i18ns.common.confirm,
-                                    callback: function () {
-                                    }
-                                });
+                                app.serverInfo.type = '';
+                                app.serverInfo.sn = '';
+                                app.serverInfo.status = '';
+                                app.serverInfo.desc = '';
+                                app.serverInfo.esightIp = ''
+                                app.$alert(app.i18ns.deviceInfo.serverInfoErrorTips, app.i18ns.common
+                                    .prompt, {
+                                        confirmButtonText: app.i18ns.common.confirm,
+                                        callback: function () {}
+                                    });
                             }
                         }
                     });

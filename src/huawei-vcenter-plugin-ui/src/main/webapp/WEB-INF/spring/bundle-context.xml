@@ -67,6 +67,12 @@
 
   <bean name="vCenterController" class="com.huawei.vcenterpluginui.mvc.VCenterController"/>
 
+  <!-- File upload -->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="100000" /> <!-- 100k -->
+    <property name="maxInMemorySize" value="4096" />
+  </bean>
+
   <!-- AOP -->
   <bean name="aspectBean" class="com.huawei.vcenterpluginui.services.LogAspect"/>
 

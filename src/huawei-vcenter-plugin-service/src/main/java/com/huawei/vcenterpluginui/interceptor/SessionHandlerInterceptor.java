@@ -1,10 +1,17 @@
 package com.huawei.vcenterpluginui.interceptor;
 
 import com.huawei.vcenterpluginui.services.SessionService;
+import com.huawei.vcenterpluginui.services.VCenterInfoService;
 import com.huawei.vcenterpluginui.services.VmActionService;
+import com.huawei.vcenterpluginui.utils.ThumbprintsUtils;
+import com.vmware.vise.usersession.ServerInfo;
+import com.vmware.vise.usersession.UserSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -26,9 +33,14 @@ public class  SessionHandlerInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private VmActionService vmActionService;
 
+	@Autowired
+	private VCenterInfoService vCenterInfoService;
+
 	private static final Log LOGGER = LogFactory.getLog(SessionHandlerInterceptor.class);
 
 	private static boolean IS_VIEW_RESOLVER_LOADED = false;
+
+	private static boolean IS_VCENTER_THUMBPRINT_LOADED = false;
 
 	@Autowired
     public SessionHandlerInterceptor(@Qualifier("sessionService") SessionService sessionService) {
@@ -102,6 +114,32 @@ public class  SessionHandlerInterceptor extends HandlerInterceptorAdapter {
 			int endIndex = request.getRequestURL().length() - request.getPathInfo().length() + 1;
 			String url = request.getRequestURL().substring(0, endIndex);
 			LOGGER.info("current user:" + sessionService.getUserSession().userName + "   current domain:" + url);
+		}
+
+		// add vCenter thumbprints
+		if (!IS_VCENTER_THUMBPRINT_LOADED) {
+			try {
+				UserSession userSession = sessionService.getUserSession();
+				if (userSession != null) {
+					ServerInfo[] serverInfos = userSession.serversInfo;
+					Set<String> newThumbprints = new HashSet<>();
+					for (ServerInfo serverInfo : serverInfos) {
+						String serverThumbprint = serverInfo.thumbprint.replaceAll(":", "").toLowerCase();
+						if (serverInfo != null && !ThumbprintsUtils.getRuntimeThumbprints()
+								.contains(serverThumbprint)) {
+							newThumbprints.add(serverThumbprint);
+						}
+					}
+					if (!newThumbprints.isEmpty()) {
+						LOGGER.info("Saving server thumbprints, count: " + newThumbprints.size());
+						vCenterInfoService
+								.saveThumbprints(newThumbprints.toArray(new String[newThumbprints.size()]));
+					}
+					IS_VCENTER_THUMBPRINT_LOADED = true;
+				}
+			} catch (Exception e) {
+				LOGGER.error("Failed to add vCenter thumbprints", e);
+			}
 		}
 		return true;
 	}

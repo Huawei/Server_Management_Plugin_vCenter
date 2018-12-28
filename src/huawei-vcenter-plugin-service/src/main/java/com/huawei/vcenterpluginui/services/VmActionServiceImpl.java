@@ -57,38 +57,38 @@ public class VmActionServiceImpl implements VmActionService {
     * Static Initialization block, which will make this client trust all
     * certificates. USE THIS ONLY FOR TESTING.
     */
-   static {
-      HostnameVerifier hostNameVerifier = new HostnameVerifier() {
-         @Override
-         public boolean verify(String urlHostName, SSLSession session) {
-            return true;
-         }
-      };
-      HttpsURLConnection.setDefaultHostnameVerifier(hostNameVerifier);
-
-      javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[1];
-      javax.net.ssl.TrustManager tm = new TrustAllTrustManager();
-      trustAllCerts[0] = tm;
-      javax.net.ssl.SSLContext sc = null;
-
-      try {
-         sc = javax.net.ssl.SSLContext.getInstance("SSL");
-      } catch (NoSuchAlgorithmException e) {
-         _logger.info(e);
-      }
-
-      if (sc != null) {
-         javax.net.ssl.SSLSessionContext sslsc = sc.getServerSessionContext();
-         sslsc.setSessionTimeout(0);
-         try {
-            sc.init(null, trustAllCerts, null);
-         } catch (KeyManagementException e) {
-            _logger.info(e);
-         }
-         javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(
-                 sc.getSocketFactory());
-      }
-   }
+//   static {
+//      HostnameVerifier hostNameVerifier = new HostnameVerifier() {
+//         @Override
+//         public boolean verify(String urlHostName, SSLSession session) {
+//            return true;
+//         }
+//      };
+//      HttpsURLConnection.setDefaultHostnameVerifier(hostNameVerifier);
+//
+//      javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[1];
+//      javax.net.ssl.TrustManager tm = new TrustAllTrustManager();
+//      trustAllCerts[0] = tm;
+//      javax.net.ssl.SSLContext sc = null;
+//
+//      try {
+//         sc = javax.net.ssl.SSLContext.getInstance("SSL");
+//      } catch (NoSuchAlgorithmException e) {
+//         _logger.info(e);
+//      }
+//
+//      if (sc != null) {
+//         javax.net.ssl.SSLSessionContext sslsc = sc.getServerSessionContext();
+//         sslsc.setSessionTimeout(0);
+//         try {
+//            sc.init(null, trustAllCerts, null);
+//         } catch (KeyManagementException e) {
+//            _logger.info(e);
+//         }
+//         javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(
+//                 sc.getSocketFactory());
+//      }
+//   }
 
    /**
     * Constructor used to inject the utility services (see the declaration
@@ -99,6 +99,14 @@ public class VmActionServiceImpl implements VmActionService {
    public VmActionServiceImpl(
          VimObjectReferenceService vimObjectReferenceService) {
       _vimObjectReferenceService = vimObjectReferenceService;
+   }
+
+   /**
+    Used by the VimObjectServiceImpl bean, in order to destroy the VimPortType on
+    bundle undeploy
+    */
+   private void destroy() {
+      _vimPort = null;
    }
 
    /* (non-Javadoc)

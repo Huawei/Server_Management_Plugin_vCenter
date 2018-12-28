@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Rays on 2018/4/9.
@@ -356,6 +359,73 @@ public class VCenterInfoDao extends H2DataBaseDao {
       LOGGER.error(e.getMessage(), e);
     } finally {
       closeConnection(con, ps, null);
+    }
+  }
+
+  public String[] mergeSaveAndLoadAllThumbprints(String[] thumbprints) throws SQLException {
+    if (thumbprints != null && thumbprints.length > 0) {
+      Connection con = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      String sql1 = "DELETE FROM HW_ESIGHT_THUMBPRINT";
+      String sql2 = "INSERT INTO HW_ESIGHT_THUMBPRINT(THUMBPRINT) VALUES(?)";
+      Set<String> thumbprintSet = new HashSet<>();
+      try {
+        con = getConnection();
+        con.setAutoCommit(false);
+        thumbprintSet.addAll(Arrays.asList(loadThumbprints()));
+
+        // sql1
+        ps = con.prepareStatement(sql1);
+        ps.executeUpdate();
+        ps.close(); // manually close
+
+        // sql2
+        thumbprintSet.addAll(Arrays.asList(thumbprints));
+        ps = con.prepareStatement(sql2);
+        for (String thumbprint : thumbprintSet) {
+          ps.setString(1, thumbprint);
+          ps.addBatch();
+        }
+        ps.executeBatch(); // close in finally
+
+        con.commit();
+        return thumbprintSet.toArray(new String[thumbprintSet.size()]);
+      } catch (SQLException e) {
+        if(con != null) {
+          con.rollback();
+        }
+        LOGGER.error(e.getMessage(), e);
+        throw e;
+      } finally {
+        closeConnection(con, ps, rs);
+      }
+    }
+    return new String[0];
+  }
+
+  public String[] loadThumbprints() throws SQLException {
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql = "SELECT THUMBPRINT FROM HW_ESIGHT_THUMBPRINT";
+    Set<String> thumbprintSet = new HashSet<>();
+    try {
+      con = getConnection();
+      ps = con.prepareStatement(sql);
+      rs = ps.executeQuery();
+      while (rs.next()) {
+        thumbprintSet.add(rs.getString("THUMBPRINT"));
+      }
+      return thumbprintSet.toArray(new String[thumbprintSet.size()]);
+    } catch (SQLException e) {
+      if(con != null) {
+        con.rollback();
+      }
+      LOGGER.error(e.getMessage(), e);
+      throw e;
+    } finally {
+      closeConnection(con, ps, rs);
     }
   }
 

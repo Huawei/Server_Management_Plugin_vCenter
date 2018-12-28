@@ -849,35 +849,35 @@ function getHealthTxt(status) {
     var lang = localStorage.getItem('lang');
     switch (status.toString()) {
         case "-1":
-            return lang == 'en' ? "Offline" : "离线";
         case "-2":
-            return lang == 'en' ? "Unknown" : "未知";
+            return lang == 'zhCN' ? "未知" : "Unknown";
         case "0":
-            return lang == 'en' ? "Normal" : "正常";
+            return lang == 'zhCN' ? "正常" : "Normal";
         case "2":
         case "3":
         case "5":
+        return lang == 'zhCN' ? "警告" : "Warning";
         case "4":
         case "6":
         case "7":
         case "8":
-            return lang == 'en' ? "Fault" : "故障";
+            return lang == 'zhCN' ? "紧急" : "Critical";
         default:
-            return lang == 'en' ? "Unknown" : "未知";
+            return lang == 'zhCN' ? "未知" : "Unknown";
     }
 }
 
 function StatusStatistics(list) {
     var statistics = {
-        unknown: 0,
         normal: 0,
-        fault: 0
+        warning: 0,
+        critical: 0,
+        unknown: 0
     }
     for (var i = 0; i < list.length; i++) {
         var status = list[i].healthState.toString();
         switch (status) {
             case "-1":
-                break;//离线不统计;
             case "-2":
                 statistics.unknown++;
                 break;
@@ -887,11 +887,13 @@ function StatusStatistics(list) {
             case "2":
             case "3":
             case "5":
+                statistics.warning++;
+                break;
             case "4":
             case "6":
             case "7":
             case "8":
-                statistics.fault++;
+                statistics.critical++;
                 break;
             default:
                 statistics.unknown++;

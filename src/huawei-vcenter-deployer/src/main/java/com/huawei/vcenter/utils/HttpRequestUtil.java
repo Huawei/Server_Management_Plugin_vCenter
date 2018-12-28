@@ -114,21 +114,21 @@ public class HttpRequestUtil {
     static class SSLUtil {
 
         private static final TrustManager[] UNQUESTIONING_TRUST_MANAGER = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return new X509Certificate[0];
-                    }
-
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                    }
+            new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
                 }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }
         };
 
         public static void turnOffSslChecking()
-                throws NoSuchAlgorithmException, KeyManagementException {
+            throws NoSuchAlgorithmException, KeyManagementException {
             // Install the all-trusting trust manager
             final SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, UNQUESTIONING_TRUST_MANAGER, null);

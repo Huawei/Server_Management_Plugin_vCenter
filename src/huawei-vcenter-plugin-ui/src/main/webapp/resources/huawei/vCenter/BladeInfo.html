@@ -57,18 +57,7 @@
             background-color: lightgray;
         }
 
-        #cpu,
-        #memory,
-        #fan,
-        #psu,
-        #disk,
-        #PCIE,
-        #Raid {
-            margin-top: 10%;
-            max-width: 100px;
-            height: 15px;
-            background-color: limegreen;
-        }
+        
 
         #serverStatusImage {
             width: 15px;
@@ -147,6 +136,113 @@
             -webkit-border-radius: 8px;
             border-radius: 8px;
         }
+
+        .yellowClass {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border: 2px #FFBB33 solid;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
+        }
+
+        .pieChart {
+            margin-top: 10px;
+            max-width: 300px;
+            min-width: 260px;
+        }
+
+        .pieChart .pieChart-content {
+            display: flex;
+            align-items: center;
+            margin-top: 12px;
+            margin-left: 30px;
+        }
+
+        .pieChart .pieChart-content span:nth-child(1) {
+            line-height: 10px;
+            padding-left: 3px;
+        }
+
+        .pieChart .pieChart-content span:nth-child(2) {
+            line-height: 10px;
+            padding-left: 10px;
+            padding-right: 5px;
+        }
+
+        .pieChart div:nth-child(2) {
+            margin-top: 10px;
+        }
+
+        .pieChart .pieChart-title {
+            line-height: 10px;
+            padding-left: 10px;
+            padding-bottom: 20px;
+            padding-top: 5px;
+            font-size: 14px;
+            position: relative;
+            top: -65px;
+            text-align: center;
+            height: 30px;
+        }
+        .pieChart .pieChart-title1 {
+            line-height: 10px;
+            padding-left: 13px;
+            padding-bottom: 20px;
+            padding-top: 5px;
+            font-size: 14px;
+            position: relative;
+            top: -70px;
+            text-align: center;
+            height: 30px;
+        }
+        .pieChart .pieChart-chart {
+            height: 120px;
+            width: 120px;
+            margin-top: 15px;
+            float: right;
+        }
+
+        .pieChart .pieChart-error {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .normalClass {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border: 2px #32CD32 solid;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
+        }
+
+        .warningClass {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border: 2px #FFBB33 solid;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
+        }
+
+        .criticalClass {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border: 2px #FF0000 solid;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
+        }
+
+        .unknownClass {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border: 2px #4169E1 solid;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 
@@ -170,277 +266,162 @@
                 <td>&nbsp;{{serverInfos.ipAddress}}</td>
                 <td class="td1">&nbsp;{{i18ns.deviceInfo.servertype}}</td>
                 <td>&nbsp;{{i18ns.deviceInfo.bladeServer}}</td>
-                <tr>
-                    <td class="td1">&nbsp;{{i18ns.deviceInfo.deviceModel}}</td>
-                    <td>&nbsp;{{serverInfos.serverModel}}</td>
-                    <td class="td1">&nbsp;{{i18ns.deviceInfo.productSn}}</td>
-                    <td>&nbsp;{{serverInfos.productSn}}</td>
-                </tr>
-                <tr>
-                    <td class="td1">&nbsp;{{i18ns.template.templateDesc}}</td>
-                    <td colspan="3">&nbsp;{{serverInfos.description}}</td>
-                </tr>
+            <tr>
+                <td class="td1">&nbsp;{{i18ns.deviceInfo.deviceModel}}</td>
+                <td>&nbsp;{{serverInfos.serverModel}}</td>
+                <td class="td1">&nbsp;{{i18ns.deviceInfo.productSn}}</td>
+                <td>&nbsp;{{serverInfos.productSn}}</td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;{{i18ns.template.templateDesc}}</td>
+                <td colspan="3">&nbsp;{{serverInfos.description}}</td>
+            </tr>
         </table>
 
         <h4>{{i18ns.deviceInfo.installedComponentHealthState}}</h4>
-        <el-row v-if="!isSmallScreen">
-            <el-col v-bind:span="3">
-                <div style="height: 120px; width: 120px; margin-top: 10px;float:right;" v-show="isShowBlade">
-                    <canvas id="blade" width="120" height="120"></canvas>
-                </div>
 
-                <div style="margin-top: 80px; text-align: center" v-show="!isShowBlade">{{i18ns.deviceInfo.NoRecord}}</div>
-            </el-col>
-            <el-col v-bind:span="3">
-                <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                    <div class="whiteClass"></div>
-                    <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.blade}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="limegreenClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{normalBladeNum}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="redClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{faultBladeNum}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="royalblueClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{unknownBladeNum}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
-                </div>
-            </el-col>
-
-            <el-col v-bind:span="3">
-                <div style="height: 120px; width: 120px; margin-top: 10px;float:right;" v-show="isShowBoard">
-                    <canvas id="board" width="120" height="120"></canvas>
-                </div>
-
-                <div style="margin-top: 80px; text-align: center" v-show="!isShowBoard">{{i18ns.deviceInfo.NoRecord}}</div>
-            </el-col>
-            <el-col v-bind:span="3">
-                <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                    <div class="whiteClass"></div>
-                    <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.switchBoard}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="limegreenClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{normalBoard}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="redClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{faultBoard}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                </div>
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="royalblueClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{unknownBoard}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
-                </div>
-            </el-col>
-
-            <el-col v-bind:span="3">
-                <div style="height: 120px; width: 120px;margin-top: 10px;float:right;" v-show="isShowPSU">
-                    <canvas id="PSU" width="120" height="120"></canvas>
-                </div>
-                <div style="margin-top: 80px; text-align: center" v-show="!isShowPSU">{{i18ns.deviceInfo.NoRecord}}</div>
-            </el-col>
-            <el-col v-bind:span="3">
-                <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                    <div class="whiteClass"></div>
-                    <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.psu}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="limegreenClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{normalPSU}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="redClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{faultPSU}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="royalblueClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{unknownPSU}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
-                </div>
-            </el-col>
-
-            <el-col v-bind:span="3">
-                <div style="height: 120px; width: 120px;margin-top: 10px;float:right;" v-show="isShowFan">
-                    <canvas id="Fan" width="120" height="120"></canvas>
-                </div>
-                <div style="margin-top: 80px; text-align: center" v-show="!isShowFan">{{i18ns.deviceInfo.NoRecord}}</div>
-            </el-col>
-            <el-col v-bind:span="3">
-                <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                    <div class="whiteClass"></div>
-                    <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.fan}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="limegreenClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{normalFan}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
-                </div>
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="redClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{faultFan}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                </div>
-
-                <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                    <div class="royalblueClass"></div>
-                    <span style="line-height: 10px;padding-left: 1px">{{unknownFan}}</span>
-                    <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
-                </div>
-            </el-col>
-        </el-row>
-        <div v-if="isSmallScreen">
-            <el-row>
-                <!--刀片饼状图-->
-                <el-col v-bind:span="4">
-                    <div style="height: 120px; width: 120px; margin-top: 10px;float:right;" v-show="isShowBlade">
+        <div style="display:flex; flex-wrap: wrap;">
+            <el-row class="pieChart">
+                <!--刀片-->
+                <el-col :span="12">
+                    <div class="pieChart-chart" v-show="isShowBlade">
                         <canvas id="blade" width="120" height="120"></canvas>
                     </div>
-
-                    <div style="margin-top: 80px; text-align: center" v-show="!isShowBlade">{{i18ns.deviceInfo.NoRecord}}</div>
-                </el-col>
-                <el-col v-bind:span="4">
-                    <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                        <div class="whiteClass"></div>
-                        <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.blade}}</span>
+                    <div class="pieChart-chart" v-show="!isShowBlade">
+                        <canvas id="blade_noRecords" width="124" height="124"></canvas>
                     </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="limegreenClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{normalBladeNum}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
-                    </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="redClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{faultBladeNum}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                    </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="royalblueClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{unknownBladeNum}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
+                    <div v-bind:class="isShowBlade?'pieChart-title':'pieChart-title1'">{{i18ns.deviceInfo.blade}}
                     </div>
                 </el-col>
-
-                <!--交换板饼状图-->
-                <el-col v-bind:span="4">
-                    <div style="height: 120px; width: 120px; margin-top: 10px;float:right;" v-show="isShowBoard">
-                        <canvas id="board" width="120" height="120"></canvas>
+                <el-col :span="12">
+                    <div class="pieChart-content">
+                        <div class="normalClass"></div>
+                        <span>{{bladeHealthState.normal}}</span>
+                        <span>{{i18ns.server.normal}}</span>
                     </div>
-
-                    <div style="margin-top: 80px; text-align: center" v-show="!isShowBoard">{{i18ns.deviceInfo.NoRecord}}</div>
-                </el-col>
-                <el-col v-bind:span="4">
-                    <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                        <div class="whiteClass"></div>
-                        <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.switchBoard}}</span>
+                    <div class="pieChart-content">
+                        <div class="warningClass"></div>
+                        <span>{{bladeHealthState.warning}}</span>
+                        <span>{{i18ns.server.warning}}</span>
                     </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="limegreenClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{normalBoard}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
+                    <div class="pieChart-content">
+                        <div class="criticalClass"></div>
+                        <span>{{bladeHealthState.critical}}</span>
+                        <span>{{i18ns.server.critical}}</span>
                     </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="redClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{faultBoard}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                    </div>
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="royalblueClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{unknownBoard}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
-                    </div>
-                </el-col>
-
-                <!--电源饼状图-->
-                <el-col v-bind:span="4">
-                    <div style="height: 120px; width: 120px;margin-top: 10px;float:right;" v-show="isShowPSU">
-                        <canvas id="PSU" width="120" height="120"></canvas>
-                    </div>
-                    <div style="margin-top: 80px; text-align: center" v-show="!isShowPSU">{{i18ns.deviceInfo.NoRecord}}</div>
-                </el-col>
-                <el-col v-bind:span="4">
-                    <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                        <div class="whiteClass"></div>
-                        <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.psu}}</span>
-                    </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="limegreenClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{normalPSU}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
-                    </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="redClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{faultPSU}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
-                    </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="royalblueClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{unknownPSU}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
+                    <div class="pieChart-content">
+                        <div class="unknownClass"></div>
+                        <span>{{bladeHealthState.unknown}}</span>
+                        <span>{{i18ns.server.unknown}}</span>
                     </div>
                 </el-col>
             </el-row>
-            <el-row>
-                <!--风扇饼状图-->
-                <el-col v-bind:span="4">
-                    <div style="height: 120px; width: 120px;margin-top: 10px;float:right;" v-show="isShowFan">
-                        <canvas id="Fan" width="120" height="120"></canvas>
+            <el-row class="pieChart">
+                <!--交换板饼状图-->
+                <el-col :span="12">
+                    <div class="pieChart-chart" v-show="isShowBoard">
+                        <canvas id="board" width="120" height="120"></canvas>
                     </div>
-                    <div style="margin-top: 80px; text-align: center" v-show="!isShowFan">{{i18ns.deviceInfo.NoRecord}}</div>
+                    <div class="pieChart-chart" v-show="!isShowBoard">
+                        <canvas id="board_noRecords" width="124" height="124"></canvas>
+                    </div>
+                    <div v-bind:class="isShowBoard?'pieChart-title':'pieChart-title1'">{{i18ns.deviceInfo.switchBoard}}
+                    </div>
                 </el-col>
-                <el-col v-bind:span="4">
-                    <div style="display:flex;align-items:center;margin-top:20px;margin-left:40px">
-                        <div class="whiteClass"></div>
-                        <span style="line-height: 10px;padding-left: 10px;padding-bottom:20px">{{i18ns.deviceInfo.fan}}</span>
+                <el-col :span="12">
+                    <div class="pieChart-content">
+                        <div class="normalClass"></div>
+                        <span>{{boardHealthState.normal}}</span>
+                        <span>{{i18ns.server.normal}}</span>
                     </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="limegreenClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{normalFan}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.normal}}</span>
+                    <div class="pieChart-content">
+                        <div class="warningClass"></div>
+                        <span>{{boardHealthState.warning}}</span>
+                        <span>{{i18ns.server.warning}}</span>
                     </div>
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="redClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{faultFan}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.fault}}</span>
+                    <div class="pieChart-content">
+                        <div class="criticalClass"></div>
+                        <span>{{boardHealthState.critical}}</span>
+                        <span>{{i18ns.server.critical}}</span>
                     </div>
-
-                    <div style="display:flex;align-items:center;margin-top:10px;margin-left:40px">
-                        <div class="royalblueClass"></div>
-                        <span style="line-height: 10px;padding-left: 1px">{{unknownFan}}</span>
-                        <span style="line-height: 10px;padding-left: 10px">{{i18ns.deviceInfo.unknown}}</span>
+                    <div class="pieChart-content">
+                        <div class="unknownClass"></div>
+                        <span>{{boardHealthState.unknown}}</span>
+                        <span>{{i18ns.server.unknown}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row class="pieChart">
+                <!--风扇饼状图-->
+                <el-col :span="12">
+                    <div class="pieChart-chart" v-show="isShowFan">
+                        <canvas id="fan" width="120" height="120"></canvas>
+                    </div>
+                    <div class="pieChart-chart" v-show="!isShowFan">
+                        <canvas id="fan_noRecords" width="124" height="124"></canvas>
+                    </div>
+                    <div v-bind:class="isShowFan?'pieChart-title':'pieChart-title1'">{{i18ns.server.fan}}
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="pieChart-content">
+                        <div class="normalClass"></div>
+                        <span>{{fanHealthState.normal}}</span>
+                        <span>{{i18ns.server.normal}}</span>
+                    </div>
+                    <div class="pieChart-content">
+                        <div class="warningClass"></div>
+                        <span>{{fanHealthState.warning}}</span>
+                        <span>{{i18ns.server.warning}}</span>
+                    </div>
+                    <div class="pieChart-content">
+                        <div class="criticalClass"></div>
+                        <span>{{fanHealthState.critical}}</span>
+                        <span>{{i18ns.server.critical}}</span>
+                    </div>
+                    <div class="pieChart-content">
+                        <div class="unknownClass"></div>
+                        <span>{{fanHealthState.unknown}}</span>
+                        <span>{{i18ns.server.unknown}}</span>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row class="pieChart">
+                <!--电源饼状图-->
+                <el-col :span="12">
+                    <div class="pieChart-chart" v-show="isShowPower">
+                        <canvas id="power" width="120" height="120"></canvas>
+                    </div>
+                    <div class="pieChart-chart" v-show="!isShowPower">
+                        <canvas id="power_noRecords" width="124" height="124"></canvas>
+                    </div>
+                    <div v-bind:class="isShowPower?'pieChart-title':'pieChart-title1'">{{i18ns.server.power}}
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="pieChart-content">
+                        <div class="normalClass"></div>
+                        <span>{{powerHealthState.normal}}</span>
+                        <span>{{i18ns.server.normal}}</span>
+                    </div>
+                    <div class="pieChart-content">
+                        <div class="warningClass"></div>
+                        <span>{{powerHealthState.warning}}</span>
+                        <span>{{i18ns.server.warning}}</span>
+                    </div>
+                    <div class="pieChart-content">
+                        <div class="criticalClass"></div>
+                        <span>{{powerHealthState.critical}}</span>
+                        <span>{{i18ns.server.critical}}</span>
+                    </div>
+                    <div class="pieChart-content">
+                        <div class="unknownClass"></div>
+                        <span>{{powerHealthState.unknown}}</span>
+                        <span>{{i18ns.server.unknown}}</span>
                     </div>
                 </el-col>
             </el-row>
         </div>
-
         <h4>{{i18ns.deviceInfo.onlineDeviceStatus}}</h4>
         <el-collapse style="margin-top:20px;" @change="handleChange">
             <el-collapse-item v-bind:title="i18ns.deviceInfo.blade " name="1">
@@ -608,29 +589,35 @@
                 isSmallScreen: false,
                 loading: false,
                 isShowFan: false,
-                isShowPSU: false,
+                isShowPower: false,
                 isShowBlade: false,
                 isShowBoard: false,
                 i18ns: {}, //国际化
                 isBlade: false,
-                normalBlade: 0,
-                faultBlade: 0,
-                unknownBlade: 0,
-                normalPSU: 0,
-                faultPSU: 0,
-                unknownPSU: 0,
-                normalPSU: 0,
-                faultPSU: 0,
-                unknownPSU: 0,
-                normalFan: 0,
-                faultFan: 0,
-                unknownFan: 0,
-                normalBladeNum: 0,
-                unknownBladeNum: 0,
-                faultBladeNum: 0,
-                normalBoard: 0,
-                faultBoard: 0,
-                unknownBoard: 0,
+                bladeHealthState: {
+                    normal: 0,
+                    warning: 0,
+                    critical: 0,
+                    unknown: 0
+                },
+                boardHealthState: {
+                    normal: 0,
+                    warning: 0,
+                    critical: 0,
+                    unknown: 0
+                },
+                fanHealthState: {
+                    normal: 0,
+                    warning: 0,
+                    critical: 0,
+                    unknown: 0
+                },
+                powerHealthState: {
+                    normal: 0,
+                    warning: 0,
+                    critical: 0,
+                    unknown: 0
+                },
                 childBladesCount: 0,
                 bladeListData: [],
                 bladeName: "",
@@ -674,47 +661,83 @@
             methods: {
                 /**
                  * 获取部件健康状态
-                **/
+                 **/
                 getHealthStausTxt: function (status) {
                     return getHealthTxt(status);
                 },
                 /**
                  * 绘制饼状图的方法
                  * **/
-                draw: function (id, normal, fault, unknown) {
-                    var ctx = document.getElementById(id);
-                    var myPieChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            datasets: [{
-                                data: [normal, fault, unknown],
-                                backgroundColor: [
-                                    '#32CD32',
-                                    '#FF0000',
-                                    '#4169E1'
-                                ],
-                                borderWidth: [0, 0, 0]
-                            }],
-                            labels: [
-                                app.i18ns.deviceInfo.normal,
-                                app.i18ns.deviceInfo.fault,
-                                app.i18ns.deviceInfo.unknown
-                            ]
-
-                        },
-                        options: {
-                            cutoutPercentage: 80,
-
-                            tooltips: {
+                draw: function (id, data) {
+                    if ((data.normal + data.warning + data.critical + data.unknown) > 0) {
+                        var ctx = document.getElementById(id);
+                        var myPieChart = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                datasets: [{
+                                    data: [data.normal, data.warning, data.critical, data.unknown],
+                                    backgroundColor: [
+                                        '#32CD32',
+                                        '#FFBB33',
+                                        '#FF0000',
+                                        '#4169E1'
+                                    ],
+                                    borderWidth: [0, 0, 0]
+                                }],
+                                labels: [
+                                    app.i18ns.deviceInfo.normal,
+                                    app.i18ns.deviceInfo.warning,
+                                    app.i18ns.deviceInfo.critical,
+                                    app.i18ns.deviceInfo.unknown
+                                ]
 
                             },
-                            legend: {
-                                display: false
+                            options: {
+                                cutoutPercentage: 80,
 
+                                tooltips: {
+
+                                },
+                                legend: {
+                                    display: false
+
+                                }
                             }
+                        });
+                    } else {
+                        var myCanvas = document.getElementById(id + "_noRecords");
+                        var context = myCanvas.getContext("2d");
+                        var center_x = myCanvas.width / 2;
+                        var center_y = myCanvas.height / 2;
+                        var rad = Math.PI * 2 / 100;
+                        // 绘制背景圆圈
+                        function backgroundCircle() {
+                            context.save();
+                            context.beginPath();
+                            context.lineWidth = 10; //设置线宽
+                            var radius = center_x - context.lineWidth;
+                            context.lineCap = "round";
+                            context.strokeStyle = '#ccc';
+                            context.arc(center_x, center_y, radius, 0, Math.PI * 2, false);
+                            context.stroke();
+                            context.closePath();
+                            context.restore();
                         }
-                    });
+                        //绘制文字
+                        function text(n) {
+                            context.save(); //save和restore可以保证样式属性只运用于该段canvas元素
+                            context.fillStyle = '#000';
+                            var font_size = 12;
+                            context.font = font_size + "px Helvetica";
+                            var text_width = context.measureText(n).width;
+                            context.fillText(n, center_x - text_width / 2, center_y + font_size / 2+8);
+                            context.restore();
+                        }
+                        backgroundCircle();
+                        text(this.i18ns.server.NoRecord);
+                    }
                 },
+
 
                 /* 返回按钮方法 */
                 back: function () {
@@ -726,9 +749,6 @@
                     var status = this.serverInfos.status.toString();
                     switch (status) {
                         case "-1":
-                            obj.style.backgroundColor = "gray";
-                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.offline;
-                            break;
                         case "-2":
                             obj.style.backgroundColor = "royalblue";
                             this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.unknown;
@@ -740,12 +760,15 @@
                         case "2":
                         case "3":
                         case "5":
+                            obj.style.backgroundColor = "#FFBB33";
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.warning;
+                            break;
                         case "4":
                         case "6":
                         case "7":
                         case "8":
                             obj.style.backgroundColor = "red";
-                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.fault;
+                            this.serverInfos.serverInfosStatus = this.i18ns.deviceInfo.critical;
                             break;
                         default:
                             obj.style.backgroundColor = "royalblue";
@@ -756,55 +779,61 @@
                 /* 获取风扇状态 */
                 getFanStatus: function () {
                     var statistics = StatusStatistics(this.deviceInfos.Fan);
-                    this.normalFan = statistics.normal;
-                    this.faultFan = statistics.fault;
-                    this.unknownFan = statistics.unknown;
-                    if ((this.normalFan + this.faultFan + this.unknownFan) > 0) {
+                    this.fanHealthState.normal = statistics.normal;
+                    this.fanHealthState.warning = statistics.warning;
+                    this.fanHealthState.critical = statistics.critical;
+                    this.fanHealthState.unknown = statistics.unknown;
+                    if ((this.fanHealthState.normal + this.fanHealthState.warning + this.fanHealthState.unknown +
+                            this.fanHealthState.critical) > 0) {
                         this.isShowFan = true;
-                        this.draw('Fan', this.normalFan, this.faultFan, this.unknownFan);
                     } else {
                         this.isShowFan = false;
                     }
+                    this.draw('fan', this.fanHealthState);
                 },
                 /**
                  * 获取交换板状态
                  * **/
                 getBoardStatus: function () {
                     var statistics = StatusStatistics(this.deviceInfos.board);
-                    this.normalBoard = statistics.normal;
-                    this.faultBoard = statistics.fault;
-                    this.unknownBoard = statistics.unknown;
-                    if ((this.normalBoard + this.faultBoard + this.unknownBoard) > 0) {
+                    this.boardHealthState.normal = statistics.normal;
+                    this.boardHealthState.warning = statistics.warning;
+                    this.boardHealthState.critical = statistics.critical;
+                    this.boardHealthState.unknown = statistics.unknown;
+                    if ((this.boardHealthState.normal + this.boardHealthState.warning + this.boardHealthState
+                            .unknown + this.boardHealthState.critical) > 0) {
                         this.isShowBoard = true;
-                        this.draw('board', this.normalBoard, this.faultBoard, this.unknownBoard);
                     } else {
                         this.isShowBoard = false;
                     }
+                    this.draw('board', this.boardHealthState);
                 },
                 /* 获取电源状态 */
                 getPowerStatus: function () {
                     var statistics = StatusStatistics(this.deviceInfos.PSU);
-                    this.normalPSU = statistics.normal;
-                    this.faultPSU = statistics.fault;
-                    this.unknownPSU = statistics.unknown;
-                    if ((this.normalPSU + this.faultPSU + this.unknownPSU) > 0) {
-                        this.isShowPSU = true;
-                        this.draw('PSU', this.normalPSU, this.faultPSU, this.unknownPSU);
+                    this.powerHealthState.normal = statistics.normal;
+                    this.powerHealthState.warning = statistics.warning;
+                    this.powerHealthState.critical = statistics.critical;
+                    this.powerHealthState.unknown = statistics.unknown;
+                    if ((this.powerHealthState.normal + this.powerHealthState.warning + this.powerHealthState
+                            .unknown + this.powerHealthState.critical) > 0) {
+                        this.isShowPower = true;
                     } else {
-                        this.isShowPSU = false;
+                        this.isShowPower = false;
                     }
+                    this.draw('power', this.powerHealthState);
                 },
                 /**
                  * 绘制刀片信息饼状图
                  * **/
                 drwaBlade: function () {
-                    var total = this.normalBladeNum + this.unknownBladeNum + this.faultBladeNum;
-                    if (this.normalBladeNum > 0 || this.unknownBladeNum > 0 || this.faultBladeNum > 0) {
+                    if ((this.bladeHealthState.normal + this.bladeHealthState.unknown + this.bladeHealthState
+                            .warning + this.bladeHealthState.critical) > 0) {
                         this.isShowBlade = true;
-                        this.draw('blade', this.normalBladeNum, this.faultBladeNum, this.unknownBladeNum);
                     } else {
                         this.isShowBlade = false;
                     }
+                    this.draw('blade', this.bladeHealthState);
 
                 },
                 /* 获取所有设备信息 */
@@ -822,9 +851,10 @@
                         app.serverInfos.status = bladeData.status;
                         app.getServerStatus();
                         var ip = getCurrentEsight();
-                        var normalBlade = [];
-                        var unknownBlade = [];
-                        var faultBlade = [];
+                        var normalBlade = 0;
+                        var unknownBlade = 0;
+                        var warningBlade = 0;
+                        var criticalBlade = 0;
                         var k = 0;
                         var l = bladeData.childBlades.length;
                         for (var i = 0; i < l; i++) {
@@ -838,14 +868,16 @@
                                     //刀片服务器健康状态判断
                                     k++;
                                     if (data.status == 0) {
-                                        normalBlade.push(data.status);
-                                    } else if (data.status != -1 && data.status != -2 && data.status != 0) {
-                                        faultBlade.push(data.status);
-                                    } else if (data.status == -2) {
-                                        unknownBlade.push(data.status)
+                                        normalBlade++;
+                                    } else if (data.status == 2 || data.status == 3 || data.status ==
+                                        5) {
+                                        warningBlade++;
+                                    } else if (data.status == 4 || data.status == 6 || data.status ==
+                                        7 || data.status == 8) {
+                                        criticalBlade++;
+                                    } else {
+                                        unknownBlade++;
                                     }
-
-
 
                                 }
                             });
@@ -894,9 +926,10 @@
                         });
                         var mysetInterval = setInterval(function () {
                             if (k == l) {
-                                app.normalBladeNum = normalBlade.length;
-                                app.unknownBladeNum = unknownBlade.length;
-                                app.faultBladeNum = faultBlade.length;
+                                app.bladeHealthState.normal = normalBlade;
+                                app.bladeHealthState.unknown = unknownBlade;
+                                app.bladeHealthState.warning = warningBlade;
+                                app.bladeHealthState.critical = criticalBlade;
                                 app.drwaBlade();
                                 window.clearInterval(mysetInterval);
                             }
@@ -910,7 +943,8 @@
                             if (activeNames[i] == '1') {
                                 if (app.bladeListData.length == 0) {
                                     var bladeData = JSON.parse(localStorage.getItem('bladeData'));
-                                    if (localStorage.getItem('bladeData') && bladeData.childBlades.length > 0) {
+                                    if (localStorage.getItem('bladeData') && bladeData.childBlades.length >
+                                        0) {
                                         app.loading = true;
                                         var rqc = 0;
                                         for (var k = 0; k < bladeData.childBlades.length; k++) {

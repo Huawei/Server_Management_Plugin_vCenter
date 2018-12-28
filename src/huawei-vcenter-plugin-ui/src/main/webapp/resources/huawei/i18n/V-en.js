@@ -1,5 +1,5 @@
 var i18n_v_en = {
-		menu_eSight:"eSight Setting",
+		menu_eSight:"eSight",
 		menu_vCenter_set:"Setting",
 		menu_vCenter_ha_set:"HA And Alarm Setting",
 		menu_server:"Server",
