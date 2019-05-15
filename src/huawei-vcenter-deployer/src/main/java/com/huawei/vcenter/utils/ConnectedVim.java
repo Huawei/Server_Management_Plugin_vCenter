@@ -5,6 +5,7 @@ import com.vmware.common.ssl.TrustAll;
 import com.vmware.connection.BasicConnection;
 import com.vmware.connection.ConnectedVimServiceBase;
 import com.vmware.connection.Connection;
+import com.vmware.vim25.AlarmExpression;
 import com.vmware.vim25.AlarmInfo;
 import com.vmware.vim25.DynamicProperty;
 import com.vmware.vim25.EventAlarmExpression;
@@ -12,6 +13,7 @@ import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.ObjectContent;
 import com.vmware.vim25.ObjectSpec;
+import com.vmware.vim25.OrAlarmExpression;
 import com.vmware.vim25.PropertyFilterSpec;
 import com.vmware.vim25.PropertySpec;
 import com.vmware.vim25.RetrieveOptions;
@@ -42,11 +44,11 @@ public class ConnectedVim extends ConnectedVimServiceBase {
   /**
    * 连接vim
    */
-  private void connect(String host, String username, String password) {
+  private void connect(String host, String username, String password, String port) {
     Connection basicConnection = new BasicConnection();
     URL sdkUrl = null;
     try {
-      sdkUrl = new URL("https", host, "/sdk");
+      sdkUrl = new URL("https", host, Integer.parseInt(port), "/sdk");
     } catch (MalformedURLException e) {
       throw new RuntimeException("connect vim fail.");
     }
@@ -83,10 +85,10 @@ public class ConnectedVim extends ConnectedVimServiceBase {
    * @param password
    * @param eventTypeIdRegex
    */
-  public void unregisterAlarmDefinitions(String host, String username, String password,
+  public void unregisterAlarmDefinitions(String host, String username, String password, String port,
       String eventTypeIdRegex) {
     try {
-      connect(host, username, password);
+      connect(host, username, password, port);
       List<ManagedObjectReference> alarmList = getAlarmDefinitions();
       Set<String> alarmValueToBeRemoved = new HashSet<>();
       for (ManagedObjectReference mor : alarmList) {
@@ -105,12 +107,28 @@ public class ConnectedVim extends ConnectedVimServiceBase {
           for (DynamicProperty dynamicProperty : oc.getPropSet()) {
             if (dynamicProperty.getVal() instanceof AlarmInfo) {
               AlarmInfo alarmInfo = (AlarmInfo) dynamicProperty.getVal();
-              key = alarmInfo.getKey();
+              // key = alarmInfo.getKey();
+              key = alarmInfo.getAlarm().getValue();
             } else if (dynamicProperty.getVal() instanceof EventAlarmExpression) {
               EventAlarmExpression alarmExpression = (EventAlarmExpression) dynamicProperty
                   .getVal();
               if (alarmExpression.getEventTypeId().matches(eventTypeIdRegex)) {
                 removeAlarm = true;
+              }
+            } else if (dynamicProperty.getVal() instanceof OrAlarmExpression) {
+              OrAlarmExpression alarmExpression = (OrAlarmExpression) dynamicProperty
+                  .getVal();
+              List<AlarmExpression> expressions = alarmExpression.getExpression();
+              if (expressions != null) {
+                for (AlarmExpression expression : expressions) {
+                  if (expression instanceof EventAlarmExpression) {
+                    if (((EventAlarmExpression) expression).getEventTypeId()
+                        .matches(eventTypeIdRegex)) {
+                      removeAlarm = true;
+                      break;
+                    }
+                  }
+                }
               }
             }
           }

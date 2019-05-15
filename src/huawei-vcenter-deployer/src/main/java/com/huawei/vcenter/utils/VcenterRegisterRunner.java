@@ -24,6 +24,7 @@ public class VcenterRegisterRunner {
 		regParamMap.put("-key", key);
 		regParamMap.put("-version", version);
 		regParamMap.put("-pluginUrl", packageUrl);
+		regParamMap.put("-company", "Huawei");
 		regParamMap.put("--serverThumbprint", serverThumbprint);
 		regParamMap.put("-url", "https://" + vcenterIP + ":" + vcenterPort + "/sdk");
 
@@ -34,7 +35,8 @@ public class VcenterRegisterRunner {
 								  String vcenterPort, String username, String password, String key) {
 		// unregister alarm definitions
 		// new event type id should be added in regex
-		new ConnectedVim().unregisterAlarmDefinitions(vcenterIP, username, password, "^ibmc-.+$");
+		new ConnectedVim()
+				.unregisterAlarmDefinitions(vcenterIP, username, password, vcenterPort, "^(ibmc|hmm)-.+$");
 
 		// unregister plugin
 		Map<String, String> unRegParamMap = new HashMap();

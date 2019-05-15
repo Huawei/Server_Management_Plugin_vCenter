@@ -52,10 +52,10 @@ public class TemplateApiServiceImpl extends ESightOpenApiService implements Temp
 					responseData.putAll(getNoEsightMap());
 				}
 			} catch (EsightException e) {
-				LOGGER.error(e.getMessage());
+				LOGGER.error("Failed to post template: " + e.getMessage());
 				responseData.putAll(getEsightExceptionMap(e));
 			} catch (Exception e) {
-				LOGGER.error(e.getMessage());
+				LOGGER.error("Failed to post template: " + e.getMessage());
 				responseData.putAll(getExceptionMap());
 			}
 			dataMapList.add(responseData);
@@ -147,10 +147,10 @@ public class TemplateApiServiceImpl extends ESightOpenApiService implements Temp
 					taskDao.saveTaskStatus(task);
 				}
 			} catch (RuntimeException e) {
-				LOGGER.error(e.getMessage());
+				LOGGER.error("Cannot get template task list: " + e.getMessage());
 				throw e;
 			}  catch (Exception e) {
-				LOGGER.error(e.getMessage());
+				LOGGER.error("Cannot get template task list : " + e.getMessage());
 			}
 		}
 		// 同步时会更新状态，需要重新拿

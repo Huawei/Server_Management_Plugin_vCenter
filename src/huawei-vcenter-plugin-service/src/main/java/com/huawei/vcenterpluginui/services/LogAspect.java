@@ -26,7 +26,8 @@ public class LogAspect {
                     }
                 }
             }
-            if ("NotificationController.unsubscribeAll(..)".equalsIgnoreCase(joinPoint.getSignature().toShortString())) {
+            if ("NotificationController.unsubscribeAll(..)".equalsIgnoreCase(joinPoint.getSignature().toShortString())
+                || "VCenterController.importCert(..)".equalsIgnoreCase(joinPoint.getSignature().toShortString())) {
                 LOGGER.info("Request from " + requestFrom + ": " + joinPoint.getSignature().toShortString());
             } else {
                 LOGGER.info("Request from " + requestFrom + ": " + joinPoint.getSignature().toShortString() + " "

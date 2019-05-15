@@ -113,7 +113,8 @@
                     desc: '',
                     esightIp: ''
                 },
-                objectId: ''
+                objectId: '',
+                isShowMessageBox: true,
 
             },
             created: function () {
@@ -131,7 +132,7 @@
                 }
                 this.i18ns = getIn18();
                 var eSightListUrl = com_huawei_vcenterpluginui.webContextPath +
-                    "/rest/services/esight/version?" + Math.random();
+                    "/rest/services/esight/version?s=" + Math.random();
                 //通过API获取数据
                 $.ajax({
                     type: 'GET',
@@ -141,18 +142,25 @@
                     async: "false",
                     success: function (data, textStatus, jqXHR) {
                         console.log(jqXHR.getAllResponseHeaders());
-                        var acceptLanguage = jqXHR.getResponseHeader("Accept-Language").slice(0,
-                            2);
+                        var acceptLanguage = jqXHR.getResponseHeader("Accept-Language");
+                        if (acceptLanguage) {
+                            acceptLanguage = acceptLanguage.slice(0, 2);
+                        }
                         if (acceptLanguage == 'zh') {
                             localStorage.setItem('lang', 'zhCN');
                         } else {
                             localStorage.setItem('lang', 'en');
                         }
                         app.i18ns = getIn18();
+                        app.getInfo();
                     }
                 });
                 this.objectId = this.getQueryString("objectId");
-                this.getInfo();
+                var that = this;
+                setInterval(function () {
+                    that.getInfo();
+                }, 1000 * 60 * 5);
+
             },
             methods: {
                 getServerStatusTxt: function (status) {
@@ -182,14 +190,16 @@
                 },
                 getInfo: function () {
                     var url = com_huawei_vcenterpluginui.webContextPath +
-                        '/rest/services/server/device/detail/host?objectId=' + this.objectId
+                        '/rest/services/server/device/detail/host?objectId=' + this.objectId + "?s=" + Math
+                        .random();
                     $.ajax({
                         type: 'GET',
                         url: url,
                         dataType: "json",
                         async: "false",
                         success: function (res, status) {
-                            if (res.code == 0 && res.data.code == 0 && res.data.data.length > 0) {
+                            if (res.code == 0 && res.data.code == 0 && res.data.data.length >
+                                0) {
                                 var info = res.data.data[0];
                                 app.serverInfo.name = info.name;
                                 app.serverInfo.ip = info.ipAddress;
@@ -206,11 +216,19 @@
                                 app.serverInfo.status = '';
                                 app.serverInfo.desc = '';
                                 app.serverInfo.esightIp = ''
-                                app.$alert(app.i18ns.deviceInfo.serverInfoErrorTips, app.i18ns.common
-                                    .prompt, {
-                                        confirmButtonText: app.i18ns.common.confirm,
-                                        callback: function () {}
-                                    });
+                                if (app.isShowMessageBox) {
+                                    app.isShowMessageBox = false;
+                                    app.$alert(app.i18ns.deviceInfo.serverInfoErrorTips, app
+                                        .i18ns
+                                        .common
+                                        .prompt, {
+                                            confirmButtonText: app.i18ns.common.confirm,
+                                            callback: function () {
+                                                app.isShowMessageBox = true;
+                                            }
+                                        });
+                                }
+
                             }
                         }
                     });

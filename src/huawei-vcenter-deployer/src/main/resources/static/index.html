@@ -68,10 +68,18 @@
                 {{form.version}}
             </el-form-item>
             <el-form-item v-bind:label="i18ns.index.operationType">
-                <el-col :span="11">
+                <el-col>
                     <el-radio-group v-model="form.radio" @change="changeType">
                         <el-radio class="radio" label="1">{{i18ns.index.install}}</el-radio>
-                        <el-radio class="radio" label="2">{{i18ns.index.uninstall}}</el-radio>
+                        <el-radio class="radio" label="2">{{form.radio == '2' ? i18ns.index.uninstallTips : i18ns.index.uninstall}}</el-radio>
+                    </el-radio-group>
+                </el-col>
+            </el-form-item>
+            <el-form-item v-bind:label="i18ns.index.keepData" v-show="!register">
+                <el-col :span="11">
+                    <el-radio-group v-model="form.keepData">
+                        <el-radio class="radio" label="1">{{i18ns.index.yes}}</el-radio>
+                        <el-radio class="radio" label="0">{{i18ns.index.no}}</el-radio>
                     </el-radio-group>
                 </el-col>
             </el-form-item>
@@ -167,7 +175,8 @@
                     index: 0,
                     packageNameList: '',
                     radio: '1',
-                    basePath: ''
+                    basePath: '',
+                    keepData: '1'
                 },
                 fullscreenLoading: false,
                 register: true,
@@ -195,7 +204,8 @@
                         vcenterPassword: this.form.pwd,
                         vcenterIP: this.form.ip,
                         vcenterPort: this.form.port,
-                        version: this.form.version
+                        version: this.form.version,
+                        keepData: this.form.keepData
                     };
                     var serverPostUrl = window.document.location.href + "rest/register";
                     if (this.form.radio === '2') {

@@ -1,21 +1,21 @@
 Manifest-Version: 1.0
 Bundle-Vendor: VMware
-Bundle-Version: 1.4.68
+Bundle-Version: 1.5.111
 Tool: Bundlor 1.1.0.RELEASE
 Bundle-Name: huawei-vcenter-plugin-service
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.huawei.vcenterpluginui.huawei-vcenter-plugin-service
-Export-Package: com.huawei.vcenterpluginui.services;version="1.4.68",
- com.huawei.vcenterpluginui.mvc;version="1.4.68",
- com.huawei.vcenterpluginui.interceptor;version="1.4.68",
- com.huawei.vcenterpluginui.entity;version="1.4.68",
- com.huawei.vcenterpluginui.exception;version="1.4.68",
- com.huawei.vcenterpluginui.provider;version="1.4.68",
- com.huawei.esight.exception;version="1.1.2",
+Export-Package: com.huawei.vcenterpluginui.services;version="1.5.111",
+ com.huawei.vcenterpluginui.mvc;version="1.5.111",
+ com.huawei.vcenterpluginui.interceptor;version="1.5.111",
+ com.huawei.vcenterpluginui.entity;version="1.5.111",
+ com.huawei.vcenterpluginui.exception;version="1.5.111",
+ com.huawei.vcenterpluginui.provider;version="1.5.111",
+ com.huawei.esight.exception;version="1.1.5",
  org.springframework.cglib.proxy;version="4.3.9",
  org.springframework.cglib.core;version="4.3.9",
  org.springframework.cglib.reflect;version="4.3.9"
-Bundle-ClassPath: .,h2-1.4.192.jar,esight-api-1.1.2.jar,gson-2.7.jar,jna-4.4.0.jar,wssamples.jar,samples-core-1.0.0.jar,vim25.jar
+Bundle-ClassPath: .,h2-1.4.192.jar,esight-api-1.1.5.jar,gson-2.7.jar,jna-4.4.0.jar,wssamples.jar,samples-core-1.0.0.jar,vim25.jar
 Import-Package: org.apache.commons.logging;version="1.1.1",
  com.vmware.vise.data;version="0",
  com.vmware.vise.data.query;version="0",

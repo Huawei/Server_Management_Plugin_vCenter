@@ -61,10 +61,11 @@
     "firmware.error.400100": "eSight返回，操作失败，升级包校验失败",
     "firmware.error.300509": "eSight返回，操作失败，查询列表失败",
     "deploy.error.200008": "eSight返回，上传软件源失败，eSight剩余空间不足5G。",
-    "deploy.error.1100": "eSight返回，上传文件失败,可能因为网络异常或者管理用户认证失败导致设备管理异常。",
+    "deploy.error.1100": "eSight返回，上传文件失败，可能因为网络异常或者管理用户认证失败导致设备管理异常。",
     "deploy.error.52105": "eSight返回，任务正在运行。",
     "deploy.error.52104": "eSight返回，删除任务失败，系统错误。",
     "device.error.-1": "eSight返回，由于参数错误(DN)，无法查询服务器详细信息。",
+    "4004": "URL不存在",
 
 
     //-------------------自定义---------------------------------------------
@@ -378,7 +379,7 @@
 
     "deploy.error.148801": "虚拟媒体连接失败，可能原因：</br>1.服务器连接失败；</br>2.服务器虚拟媒体连接已被占用；</br>3.机架、高密服务器支持VMM加密时没有采用SNMP V3协议接入；</br>4.固件版本太低，不支持该功能。",
     "deploy.error.148802": "设置服务器重启失败。可能原因：与设备通信异常，请检查网络配置。",
-    "deploy.error.148803": "加载SimpleOS失败。可能原因：</br>1.与设备业务通信异常；</br>2.部署过程中设备被进行了其它操作。",
+    "deploy.error.148803": "加载SimpleOS失败。可能原因：</br>1.与设备业务通信异常；</br>2.部署过程中设备被进行了其它操作；</br>3.请检查端口配置文件中是否开启端口，操作方法参考联机帮助DHCP相关章节。",
     "deploy.error.148804": "下载配置工具包失败。可能原因：eSight侧SFTP服务未启动。",
     "deploy.error.148805": "配置BIOS失败。",
     "deploy.error.148806": "RAID卡配置失败。可能原因：</br>1.RAID卡型号不匹配；</br>2.硬盘槽位不匹配；</br>3.磁盘已有RAID，部署时没有删除原RAID。",
@@ -557,7 +558,9 @@
     "deploy.error.150313": "导入的静默文件不存在。",
     "deploy.error.150314": "挂载静默文件夹失败。",
     "deploy.error.150315": "serviceCD获取静默文件失败。",
-    "deploy.error.150316": "静默文件内容非法，请参看联机帮助中生成方法。"
+    "deploy.error.150316": "静默文件内容非法，请参看联机帮助中生成方法。",
+    "deploy.error.150317": "SmartProvisioning工具不存在或其文件名不正确，参考联机帮助中FAQ和典型故障处理中“如何处理部署OS时系统提示Smart Provisioning不存在或其文件名不正确问题”。",
+    "deploy.error.150318": "ServiceCD或SmartProvisioning工具不存在或其文件名不正确，参考联机帮助中FAQ和典型故障处理中“如何处理部署OS时系统提示ServiceCD(Smart Provisioning)不存在或其文件名不正确问题”。",
 
     //------------------模板管理-------------
 
@@ -631,6 +634,7 @@ var errorCode_en = {
     "deploy.error.52105": "eSight returns, task is running.",
     "deploy.error.52104": "eSight returns, Deleting task failed, system error.",
     "device.error.-1": "Failed to query server details due to a parameter error.",
+    "4004": "The URL is not exist.",
     //-------------------自定义---------------------------------------------
     //------------------模板管理-----------------------
     "deploy.error.-1": "Parameter error.",
@@ -665,7 +669,7 @@ var errorCode_en = {
     "deploy.error.51993": "Failed to deploy the template because the software path or password does not exist. Modify the template and try again.",
     "deploy.error.52001": "Failed to getting the deployDeviceList.",
     "deploy.error.52101": "Failed to deploy the template.",
-    "deploy.error.53101": "Failed to add the software source.",
+    "deploy.error.53101": "Failed to add the software source because the file upload is not complete.",
     "deploy.error.53201": "Failed to delete the software source.",
     "deploy.error.53202": "Partially succeeded in deleting the software source.",
 
@@ -847,7 +851,7 @@ var errorCode_en = {
 
     "deploy.error.148802": "Failed to restart the server. Possible cause: The communication between the device and eSight is abnormal. Check the network configurations.",
 
-    "deploy.error.148803": "Failed to load the SimpleOS. Possible cause: </br>1. The communication between the device and eSight is abnormal. </br>2. Other operations are performed on the device during the deployment process.",
+    "deploy.error.148803": "Failed to load the SimpleOS. Possible cause: </br>1. The communication between the device and eSight is abnormal. </br>2. Other operations are performed on the device during the deployment process. </br>3.Please check the port config file whether the port status is on. Please refer to the online help about DHCP.",
 
     "deploy.error.148804": "Failed to download the configuration tool package. Possible cause: The SFTP service on eSight had not started.",
 
@@ -1035,6 +1039,9 @@ var errorCode_en = {
     "deploy.error.150314": "Failed to mount the autoinst folder.",
     "deploy.error.150315": "Failed to obtain the autoinst file using the ServiceCD.",
     "deploy.error.150316": "Invalid autoinst file content.For details, see the generation method in the online help.",
+    "deploy.error.150316": "Invalid autoinst file content.For details, see the generation method in the online help.",
+    "deploy.error.150317": "The SmartProvisioning image does not exist or its file name is incorrect. To resolve the problem, see \"How to Resolve the Smart Provisioning Inexistence or File Name Error During Operating System Deployment\" in the \"FAQ and Troubleshooting Typical Configuration Examples\" in the online help.",
+    "deploy.north.error.150318": "The ServiceCD or SmartProvisioning image do not exist or its file name is incorrect. To resolve the problem, see \"How to Resolve the Smart Provisioning(ServiceCD) Inexistence or File Name Error During Operating System Deployment\" in the \"FAQ and Troubleshooting Typical Configuration Examples\" in the online help.",
     //------------------模板管理-----------------------
 
     //------------------固件升级-----------------------

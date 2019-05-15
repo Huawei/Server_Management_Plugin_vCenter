@@ -24,7 +24,7 @@
         [v-cloak] {
             display: none;
         }
-        
+
         form input {
             max-width: 217px;
         }
@@ -41,14 +41,16 @@
                 {{details.templateName}}
             </el-form-item>
             <el-form-item v-bind:label="i18ns.template.templateDesc">
-                <pre style="max-width:500px;  white-space: pre-wrap;margin:0px; word-wrap:break-word;">{{details.templateDesc}}</pre>
+                <pre
+                    style="max-width:500px;  white-space: pre-wrap;margin:0px; word-wrap:break-word;">{{details.templateDesc}}</pre>
             </el-form-item>
             <el-form-item v-bind:label="i18ns.template.systemBootOption">
                 {{details.templateProp.systemBootOption|getLabel(systemBootOptions)}}
             </el-form-item>
             <el-form-item v-bind:label="i18ns.template.serviceSettings">
                 <el-checkbox-group v-model="serviceChecked">
-                    <el-checkbox disabled v-for="item in serviceOptions" v-bind:label="item.label" v-bind:key="item.value" v-bind:value="item.value">{{item.label}}</el-checkbox>
+                    <el-checkbox disabled v-for="item in serviceOptions" v-bind:label="item.label"
+                        v-bind:key="item.value" v-bind:value="item.value">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <!--NTP折叠框-->
@@ -56,12 +58,14 @@
                 <el-row>
                     <el-col v-bind:span="24" v-show="_.find(this.serviceChecked,function(x){return x=='NTP'})">
                         <div class="nem_component_content_title" v-on:click="classData.isNTPOpen=!classData.isNTPOpen">
-                            <span v-bind:class="[classData.isNTPOpen ? classData.openClass : classData.closeClass]"></span>
+                            <span
+                                v-bind:class="[classData.isNTPOpen ? classData.openClass : classData.closeClass]"></span>
                             <span class="nem_component_content_title_lbl">NTP</span>
                         </div>
                     </el-col>
                 </el-row>
-                <div v-show="classData.isNTPOpen &&_.find(this.serviceChecked,function(x){return x=='NTP'})" style="margin-top: 10px; margin-bottom:10px;">
+                <div v-show="classData.isNTPOpen &&_.find(this.serviceChecked,function(x){return x=='NTP'})"
+                    style="margin-top: 10px; margin-bottom:10px;">
                     <el-form-item v-bind:label="i18ns.template.ntpStatus">
                         {{details.templateProp.ntpConfig.ntpStatus?i18ns.template.enabled:i18ns.template.disabled}}
                     </el-form-item>
@@ -74,6 +78,12 @@
                     <el-form-item v-bind:label="i18ns.template.secondaryNtpServer">
                         {{details.templateProp.ntpConfig.secondaryNtpServer}}
                     </el-form-item>
+                    <el-form-item v-bind:label="i18ns.template.NTPMixPollingInterval">
+                        {{getPollingIntervalTxt(details.templateProp.ntpConfig.mixPollingInterval)}}
+                    </el-form-item>
+                    <el-form-item v-bind:label="i18ns.template.NTPMaxPollingInterval">
+                        {{getPollingIntervalTxt(details.templateProp.ntpConfig.maxPollingInterval)}}
+                    </el-form-item>
                 </div>
             </div>
             <!--DNS折叠框-->
@@ -81,12 +91,14 @@
                 <el-row style="margin-top:10px;">
                     <el-col v-bind:span="24" v-show="_.find(this.serviceChecked,function(x){return x=='DNS'})">
                         <div class="nem_component_content_title" v-on:click="classData.isDNSOpen=!classData.isDNSOpen">
-                            <span v-bind:class="[classData.isDNSOpen ? classData.openClass : classData.closeClass]"></span>
+                            <span
+                                v-bind:class="[classData.isDNSOpen ? classData.openClass : classData.closeClass]"></span>
                             <span class="nem_component_content_title_lbl">DNS</span>
                         </div>
                     </el-col>
                 </el-row>
-                <div v-show="classData.isDNSOpen&&_.find(this.serviceChecked,function(x){return x=='DNS'})" style="margin-top: 10px; margin-bottom:10px;">
+                <div v-show="classData.isDNSOpen&&_.find(this.serviceChecked,function(x){return x=='DNS'})"
+                    style="margin-top: 10px; margin-bottom:10px;">
                     <el-form-item :label="i18ns.template.dnsSource">
                         {{details.templateProp.dnsConfig.dnsSource=="1"?i18ns.template.ManuallySet:i18ns.template.AutomaticallyObtain}}
                     </el-form-item>
@@ -108,13 +120,16 @@
             <div v-if="isShowLdapConfig">
                 <el-row style="margin-top:10px;">
                     <el-col v-bind:span="24" v-show="_.find(this.serviceChecked,function(x){return x=='LDAP'})">
-                        <div class="nem_component_content_title" v-on:click="classData.isLDAPOpen=!classData.isLDAPOpen">
-                            <span v-bind:class="[classData.isLDAPOpen ? classData.openClass : classData.closeClass]"></span>
+                        <div class="nem_component_content_title"
+                            v-on:click="classData.isLDAPOpen=!classData.isLDAPOpen">
+                            <span
+                                v-bind:class="[classData.isLDAPOpen ? classData.openClass : classData.closeClass]"></span>
                             <span class="nem_component_content_title_lbl">LDAP</span>
                         </div>
                     </el-col>
                 </el-row>
-                <div v-show="classData.isLDAPOpen&&_.find(this.serviceChecked,function(x){return x=='LDAP'})" style="margin-top: 10px; margin-bottom:10px;">
+                <div v-show="classData.isLDAPOpen&&_.find(this.serviceChecked,function(x){return x=='LDAP'})"
+                    style="margin-top: 10px; margin-bottom:10px;">
                     <el-form-item :label="i18ns.template.ldapStatus">
                         {{details.templateProp.ldapConfig.ldapStatus?i18ns.template.enabled:i18ns.template.disabled}}
                     </el-form-item>
@@ -128,23 +143,23 @@
                         <el-table :data="details.templateProp.ldapConfig.roleGroup" border style="width: 100%">
                             <el-table-column :label="i18ns.template.roleGroup">
                                 <template scope="scope">
-                                {{i18ns.template.roleGroup}}{{scope.$index+1}}
-                            </template>
+                                    {{i18ns.template.roleGroup}}{{scope.$index+1}}
+                                </template>
                             </el-table-column>
                             <el-table-column :label="i18ns.template.groupName">
                                 <template scope="scope">
-                                 {{scope.row.groupName}}
-                            </template>
+                                    {{scope.row.groupName}}
+                                </template>
                             </el-table-column>
                             <el-table-column :label="i18ns.template.groupDomain">
                                 <template scope="scope">
-                                 {{scope.row.groupDomain}}
-                            </template>
+                                    {{scope.row.groupDomain}}
+                                </template>
                             </el-table-column>
                             <el-table-column :label="i18ns.template.groupPrivilege">
                                 <template scope="scope">
-                                {{scope.row.groupPrivilege|getLabel(groupPrivileges)}}
-                            </template>
+                                    {{scope.row.groupPrivilege|getLabel(groupPrivileges)}}
+                                </template>
                             </el-table-column>
                         </el-table>
                     </div>
@@ -194,9 +209,74 @@
                 },
                 isShowDNSConfig: false,
                 isShowLdapConfig: false,
-                isShowNtpConfig: false
+                isShowNtpConfig: false,
+                pollingIntervalOptions: [{
+                        'label': '请选择',
+                        'value': '0'
+                    },
+                    {
+                        'label': '8s',
+                        'value': '3'
+                    },
+                    {
+                        'label': '16s',
+                        'value': '4'
+                    },
+                    {
+                        'label': '32s',
+                        'value': '5'
+                    },
+                    {
+                        'label': '64s',
+                        'value': '6'
+                    },
+                    {
+                        'label': '128s',
+                        'value': '7'
+                    },
+                    {
+                        'label': '256s',
+                        'value': '8'
+                    },
+                    {
+                        'label': '512s',
+                        'value': '9'
+                    },
+                    {
+                        'label': '1024s',
+                        'value': '10'
+                    },
+                    {
+                        'label': '34m',
+                        'value': '11'
+                    },
+                    {
+                        'label': '68m',
+                        'value': '12'
+                    },
+                    {
+                        'label': '2h',
+                        'value': '13'
+                    },
+                    {
+                        'label': '4h',
+                        'value': '14'
+                    },
+                    {
+                        'label': '9h',
+                        'value': '15'
+                    },
+                    {
+                        'label': '18h',
+                        'value': '16'
+                    },
+                    {
+                        'label': '36h',
+                        'value': '17'
+                    }
+                ],
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 var lang = localStorage.getItem('lang');
                 if (lang) {
@@ -211,13 +291,13 @@
                 this.groupPrivileges = getGroupPrivileges();
                 this.checkEsight = getEsightaliasName(getCurrentEsight());
             },
-            mounted: function() {
+            mounted: function () {
                 this.getDetails();
             },
             filters: {
-                getLabel: function(v, arry) {
-                    if (typeof(v) != "undefined") {
-                        var c = _.find(arry, function(x) {
+                getLabel: function (v, arry) {
+                    if (typeof (v) != "undefined") {
+                        var c = _.find(arry, function (x) {
                             return x.value.toString() == v.toString();
                         });
                         return c ? c.label : "";
@@ -225,7 +305,16 @@
                 }
             },
             methods: {
-                getntpServerSourceTxt: function(v) {
+                getPollingIntervalTxt: function (v) {
+                    var item = _.find(this.pollingIntervalOptions, function (x) {
+                        return x.value == v;
+                    })
+                    if (item) {
+                        return item.label;
+                    }
+                    return '';
+                },
+                getntpServerSourceTxt: function (v) {
                     var arr = getNTPServerSources();
                     if (v == '0') {
                         for (var i = 0; i < arr.length; i++) {
@@ -242,27 +331,30 @@
                         }
                     }
                 },
-                getDetails: function() {
-                    setTimeout(function() {
+                getDetails: function () {
+                    setTimeout(function () {
                         var param = {
                             esight: getCurrentEsight(),
                             param: {
                                 templateName: localStorage.getItem('templateName')
                             }
                         }
-                        templateManage.getTemplateDetail(param, function(result) {
+                        templateManage.getTemplateDetail(param, function (result) {
                             console.log(JSON.stringify(result));
                             var prop = result.data.templateProp;
                             if (prop.hasOwnProperty("dnsConfig")) {
-                                typeof(prop.dnsConfig) != "undefined" ? app.serviceChecked.push("DNS"): prop.dnsConfig = {};
+                                typeof (prop.dnsConfig) != "undefined" ? app.serviceChecked
+                                    .push("DNS"): prop.dnsConfig = {};
                                 app.isShowDNSConfig = true;
                             }
                             if (prop.hasOwnProperty("ldapConfig")) {
-                                typeof(prop.ldapConfig) != "undefined" ? app.serviceChecked.push("LDAP"): prop.ldapConfig = {};
+                                typeof (prop.ldapConfig) != "undefined" ? app.serviceChecked
+                                    .push("LDAP"): prop.ldapConfig = {};
                                 app.isShowLdapConfig = true;
                             }
                             if (prop.hasOwnProperty("ntpConfig")) {
-                                typeof(prop.ntpConfig) != "undefined" ? app.serviceChecked.push("NTP"): prop.ntpConfig = {};
+                                typeof (prop.ntpConfig) != "undefined" ? app.serviceChecked
+                                    .push("NTP"): prop.ntpConfig = {};
                                 app.isShowNtpConfig = true;
                             }
 

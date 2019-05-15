@@ -215,7 +215,11 @@ function getEsightList(callback) {
         console.log(response);
         if (typeof callback === "function") {
             esightData = response.data;
-            var ret = { code: response.code, msg: response.description, data: response.data }
+            var ret = {
+                code: response.code,
+                msg: response.description,
+                data: response.data
+            }
             localStorage.setItem('esightList', JSON.stringify(esightData)); //code==0时
             callback(ret);
         }
@@ -270,7 +274,11 @@ function getEsightListAsync() {
             lastModify: '2017-05-22',
             createTime: '2017-05-22 17:28:46'
         }];
-        var ret = { code: '0', msg: '', data: esightData }
+        var ret = {
+            code: '0',
+            msg: '',
+            data: esightData
+        }
         dealResult(ret, resolve, reject);
     });
 }
@@ -333,21 +341,49 @@ function getTaskStatus() {
     var lang = localStorage.getItem('lang');
     if (lang) {
         if (lang == 'en') {
-            return [
-                { value: 'CREATED', label: 'Running' },
-                { value: 'SYNC_FAILED', label: 'Sync Failed' },
-                { value: 'HW_FAILED', label: 'Failed' },
-                { value: 'PARTION_FAILED', label: 'Partion Success' },
-                { value: 'FINISHED', label: 'Complete' }
+            return [{
+                    value: 'CREATED',
+                    label: 'Running'
+                },
+                {
+                    value: 'SYNC_FAILED',
+                    label: 'Sync Failed'
+                },
+                {
+                    value: 'HW_FAILED',
+                    label: 'Failed'
+                },
+                {
+                    value: 'PARTION_FAILED',
+                    label: 'Partion Success'
+                },
+                {
+                    value: 'FINISHED',
+                    label: 'Complete'
+                }
             ];
         }
     }
-    return [
-        { value: 'CREATED', label: '运行中' },
-        { value: 'SYNC_FAILED', label: '同步失败' },
-        { value: 'HW_FAILED', label: '失败' },
-        { value: 'PARTION_FAILED', label: '部分成功' },
-        { value: 'FINISHED', label: '完成' }
+    return [{
+            value: 'CREATED',
+            label: '运行中'
+        },
+        {
+            value: 'SYNC_FAILED',
+            label: '同步失败'
+        },
+        {
+            value: 'HW_FAILED',
+            label: '失败'
+        },
+        {
+            value: 'PARTION_FAILED',
+            label: '部分成功'
+        },
+        {
+            value: 'FINISHED',
+            label: '完成'
+        }
     ];
 }
 
@@ -358,23 +394,57 @@ function getSearchTaskStatus() {
     var lang = localStorage.getItem('lang');
     if (lang) {
         if (lang == 'en') {
-            return [
-                { value: '', label: 'All' },
-                { value: 'CREATED', label: 'Running' },
-                { value: 'SYNC_FAILED', label: 'Sync Failed' },
-                { value: 'HW_FAILED', label: 'Failed' },
-                { value: 'PARTION_FAILED', label: 'Partion Success' },
-                { value: 'FINISHED', label: 'Complete' }
+            return [{
+                    value: '',
+                    label: 'All'
+                },
+                {
+                    value: 'CREATED',
+                    label: 'Running'
+                },
+                {
+                    value: 'SYNC_FAILED',
+                    label: 'Sync Failed'
+                },
+                {
+                    value: 'HW_FAILED',
+                    label: 'Failed'
+                },
+                {
+                    value: 'PARTION_FAILED',
+                    label: 'Partion Success'
+                },
+                {
+                    value: 'FINISHED',
+                    label: 'Complete'
+                }
             ];
         }
     }
-    return [
-        { value: '', label: '全部' },
-        { value: 'CREATED', label: '运行中' },
-        { value: 'SYNC_FAILED', label: '同步失败' },
-        { value: 'HW_FAILED', label: '失败' },
-        { value: 'PARTION_FAILED', label: '部分成功' },
-        { value: 'FINISHED', label: '完成' }
+    return [{
+            value: '',
+            label: '全部'
+        },
+        {
+            value: 'CREATED',
+            label: '运行中'
+        },
+        {
+            value: 'SYNC_FAILED',
+            label: '同步失败'
+        },
+        {
+            value: 'HW_FAILED',
+            label: '失败'
+        },
+        {
+            value: 'PARTION_FAILED',
+            label: '部分成功'
+        },
+        {
+            value: 'FINISHED',
+            label: '完成'
+        }
     ];
 }
 
@@ -385,39 +455,109 @@ function getFirmwareTypeList() {
     var lang = localStorage.getItem('lang');
     if (lang) {
         if (lang == 'en') {
-            return [
-                { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC&IB Driver' },
-                { value: 'RAID_DRIVE', label: 'RAID Driver' },
-                { value: 'HMM', label: 'HMM' },
-                { value: 'iBMC', label: 'iBMC' },
-                { value: 'BIOS', label: 'BIOS' },
-                { value: 'CPLD', label: 'CPLD' },
-                { value: 'LCD', label: 'LCD' },
-                { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
-                { value: 'RAID', label: 'RAID' },
-                { value: 'HDD', label: 'HDD' },
+            return [{
+                    value: 'CNA_DRIVE',
+                    label: 'CNA&HBA&NIC&IB Driver'
+                },
+                {
+                    value: 'RAID_DRIVE',
+                    label: 'RAID Driver'
+                },
+                {
+                    value: 'HMM',
+                    label: 'HMM'
+                },
+                {
+                    value: 'iBMC',
+                    label: 'iBMC'
+                },
+                {
+                    value: 'BIOS',
+                    label: 'BIOS'
+                },
+                {
+                    value: 'CPLD',
+                    label: 'CPLD'
+                },
+                {
+                    value: 'LCD',
+                    label: 'LCD'
+                },
+                {
+                    value: 'CHN',
+                    label: 'CNA&HBA&NIC&IB'
+                },
+                {
+                    value: 'RAID',
+                    label: 'RAID'
+                },
+                {
+                    value: 'HDD',
+                    label: 'HDD'
+                },
                 //{ value: 'NVME', label: 'NVME' }
-                { value: 'NVDIMM', label: 'NVDIMM' },
-                { value: 'SSD', label: 'SSD' },
+                {
+                    value: 'NVDIMM',
+                    label: 'NVDIMM'
+                },
+                {
+                    value: 'SSD',
+                    label: 'SSD'
+                },
                 //{ value: 'OTHERS', label: 'Others' }
 
             ];
         }
     }
-    return [
-        { value: 'CNA_DRIVE', label: 'CNA&HBA&NIC&IB 驱动' },
-        { value: 'RAID_DRIVE', label: 'RAID 驱动' },
-        { value: 'HMM', label: 'HMM' },
-        { value: 'iBMC', label: 'iBMC' },
-        { value: 'BIOS', label: 'BIOS' },
-        { value: 'CPLD', label: 'CPLD' },
-        { value: 'LCD', label: 'LCD' },
-        { value: 'CHN', label: 'CNA&HBA&NIC&IB' },
-        { value: 'RAID', label: 'RAID' },
-        { value: 'HDD', label: 'HDD' },
-       // { value: 'NVME', label: 'NVME' },
-        { value: 'NVDIMM', label: 'NVDIMM' },
-        { value: 'SSD', label: 'SSD' }
+    return [{
+            value: 'CNA_DRIVE',
+            label: 'CNA&HBA&NIC&IB 驱动'
+        },
+        {
+            value: 'RAID_DRIVE',
+            label: 'RAID 驱动'
+        },
+        {
+            value: 'HMM',
+            label: 'HMM'
+        },
+        {
+            value: 'iBMC',
+            label: 'iBMC'
+        },
+        {
+            value: 'BIOS',
+            label: 'BIOS'
+        },
+        {
+            value: 'CPLD',
+            label: 'CPLD'
+        },
+        {
+            value: 'LCD',
+            label: 'LCD'
+        },
+        {
+            value: 'CHN',
+            label: 'CNA&HBA&NIC&IB'
+        },
+        {
+            value: 'RAID',
+            label: 'RAID'
+        },
+        {
+            value: 'HDD',
+            label: 'HDD'
+        },
+        // { value: 'NVME', label: 'NVME' },
+        {
+            value: 'NVDIMM',
+            label: 'NVDIMM'
+        },
+        {
+            value: 'SSD',
+            label: 'SSD'
+        }
         //{ value: 'OTHERS', label: '其他' }
 
     ];
@@ -465,6 +605,7 @@ function alertCode(errCode, cb) {
         var context = h('div', null, nodes);
         app.$msgbox({
             title: app.i18ns.common.prompt,
+            closeOnClickModal:false,
             message: context,
             confirmButtonText: app.i18ns.common.confirm,
         }).then(function () {
@@ -575,17 +716,20 @@ function dealResult(ret, success, faild) {
     if (ret.code == '0') {
         success && success(ret);
     } else {
-        if (ret.code == '-100000') {
+        if (ret.code == '-100000'||ret.code == '-100001') {
             operationFailed(ret, faild);
         } else {
-            faild && faild(ret);
-            alertCode(ret.code);
-            console.warn(ret);
+            if (faild) {
+                faild(ret);
+            } else {
+                success && success(ret);
+            }
+
         }
     }
 }
 /**
- * 返回-100000时错误处理
+ * 返回-100000跟-100001时错误处理
  * @param {*} ret 
  */
 function operationFailed(ret, faild) {
@@ -600,6 +744,7 @@ function operationFailed(ret, faild) {
         var mgs = h('div', null, nodes);
         app.$msgbox({
             title: app.i18ns.common.prompt,
+            closeOnClickModal:false,
             message: mgs,
             confirmButtonText: app.i18ns.common.confirm,
         }).then(function () {
@@ -657,7 +802,7 @@ function goBack(url) {
         type: 'warning'
     }).then(function () {
         location.href = url + '?s=' + Math.random();
-    }).catch(function () { });
+    }).catch(function () {});
 }
 
 function preventNonNum(event) {
@@ -670,42 +815,42 @@ function getSystemBootOption() {
     if (lang) {
         if (lang == 'en') {
             return [{
-                value: '1',
-                label: 'Default'
-            }, {
-                value: '0',
-                label: 'PXE'
-            },
-            {
-                value: '2',
-                label: 'CD/DVD/ ROM'
-            }, {
-                value: '3',
-                label: 'Hard Disk'
-            }, {
-                value: '4',
-                label: 'FDD'
-            }
+                    value: '1',
+                    label: 'Default'
+                }, {
+                    value: '0',
+                    label: 'PXE'
+                },
+                {
+                    value: '2',
+                    label: 'CD/DVD/ ROM'
+                }, {
+                    value: '3',
+                    label: 'Hard Disk'
+                }, {
+                    value: '4',
+                    label: 'FDD'
+                }
             ];
         }
     }
     return [{
-        value: '1',
-        label: '默认'
-    }, {
-        value: '0',
-        label: 'PXE'
-    },
-    {
-        value: '2',
-        label: 'CD/DVD/ ROM'
-    }, {
-        value: '3',
-        label: '硬盘'
-    }, {
-        value: '4',
-        label: '软盘'
-    }
+            value: '1',
+            label: '默认'
+        }, {
+            value: '0',
+            label: 'PXE'
+        },
+        {
+            value: '2',
+            label: 'CD/DVD/ ROM'
+        }, {
+            value: '3',
+            label: '硬盘'
+        }, {
+            value: '4',
+            label: '软盘'
+        }
     ];
 }
 //获取服务器源选项
@@ -774,40 +919,75 @@ function getSoftSourceVersion(type) {
     var data = [];
     switch (type) {
         case '2':
-            data = [
-                { name: "SUSE Linux Enterprise 11 SP1 x64" },
-                { name: "SUSE Linux Enterprise 11 SP2 x64" },
-                { name: "SUSE Linux Enterprise 11 SP3 x64" },
-                { name: "SUSE Linux Enterprise 11 SP4 x64" },
-                { name: "SUSE Linux Enterprise 12 SP1 x64" }
+            data = [{
+                    name: "SUSE Linux Enterprise 11 SP1 x64"
+                },
+                {
+                    name: "SUSE Linux Enterprise 11 SP2 x64"
+                },
+                {
+                    name: "SUSE Linux Enterprise 11 SP3 x64"
+                },
+                {
+                    name: "SUSE Linux Enterprise 11 SP4 x64"
+                },
+                {
+                    name: "SUSE Linux Enterprise 12 SP1 x64"
+                }
             ];
             break;
         case '3':
-            data = [
-                { name: "Red Hat Linux Enterprise 6.1 x64" },
-                { name: "Red Hat Linux Enterprise 6.2 x64" },
-                { name: "Red Hat Linux Enterprise 6.3 x64" },
-                { name: "Red Hat Linux Enterprise 6.5 x64" },
-                { name: "Red Hat Linux Enterprise 6.6 x64" },
-                { name: "Red Hat Linux Enterprise 7.0 x64" },
-                { name: "Red Hat Linux Enterprise 7.1 x64" },
-                { name: "Red Hat Linux Enterprise 7.2 x64" }
+            data = [{
+                    name: "Red Hat Linux Enterprise 6.1 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 6.2 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 6.3 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 6.5 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 6.6 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 7.0 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 7.1 x64"
+                },
+                {
+                    name: "Red Hat Linux Enterprise 7.2 x64"
+                }
             ];
             break;
         case '4':
-            data = [
-                { name: "CentOS Linux Enterprise 6.3 x64" },
-                { name: "CentOS Linux Enterprise 6.5 x64" },
-                { name: "CentOS Linux Enterprise 6.6 x64" },
-                { name: "CentOS Linux Enterprise 6.7 x64" },
-                { name: "CentOS Linux Enterprise 7.0 x64" },
-                { name: "CentOS Linux Enterprise 7.1 x64" }
+            data = [{
+                    name: "CentOS Linux Enterprise 6.3 x64"
+                },
+                {
+                    name: "CentOS Linux Enterprise 6.5 x64"
+                },
+                {
+                    name: "CentOS Linux Enterprise 6.6 x64"
+                },
+                {
+                    name: "CentOS Linux Enterprise 6.7 x64"
+                },
+                {
+                    name: "CentOS Linux Enterprise 7.0 x64"
+                },
+                {
+                    name: "CentOS Linux Enterprise 7.1 x64"
+                }
             ];
             break;
         case '7':
-            data = [
-                { name: "Ubuntu Linux Enterprise 14.04 x64" }
-            ];
+            data = [{
+                name: "Ubuntu Linux Enterprise 14.04 x64"
+            }];
             break;
         default:
             break;
@@ -856,7 +1036,7 @@ function getHealthTxt(status) {
         case "2":
         case "3":
         case "5":
-        return lang == 'zhCN' ? "警告" : "Warning";
+            return lang == 'zhCN' ? "警告" : "Warning";
         case "4":
         case "6":
         case "7":

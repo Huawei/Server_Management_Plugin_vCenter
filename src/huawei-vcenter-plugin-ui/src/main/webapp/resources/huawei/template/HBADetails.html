@@ -107,7 +107,7 @@
         </el-form>
 
         <!--不包含WWNN选项的Port0 Advanced 弹出窗口-->
-        <el-dialog v-bind:title="i18ns.template.advanced" size="small" :visible.sync="wwpnDialogVisible" :before-close="wwpnCancel">
+        <el-dialog  :close-on-click-modal="false" v-bind:title="i18ns.template.advanced" size="small" :visible.sync="wwpnDialogVisible" :before-close="wwpnCancel">
             <el-row style="margin-top:3px;">
                 <el-col v-bind:span="24">
                     <div class="nem_component_content_title">
@@ -291,7 +291,7 @@
 
 
         <!--包含WWNN选项的Port0 Advanced弹窗-->
-        <el-dialog v-bind:title="i18ns.template.advanced" :visible.sync="wwnnDialogVisible" size="small" :before-close="wwnnCancel">
+        <el-dialog  :close-on-click-modal="false" v-bind:title="i18ns.template.advanced" :visible.sync="wwnnDialogVisible" size="small" :before-close="wwnnCancel">
             <el-row style="margin-top:3px;margin-bottom:8px;">
                 <el-col v-bind:span="24">
                     <div class="nem_component_content_title">

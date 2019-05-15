@@ -1,6 +1,8 @@
 package com.huawei.vcenterpluginui.dao;
 
 import com.huawei.vcenterpluginui.constant.SqlFileConstant;
+import com.huawei.vcenterpluginui.entity.AlarmRecord;
+import com.huawei.vcenterpluginui.entity.HAComponent;
 import com.huawei.vcenterpluginui.entity.Pair;
 import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
 import com.huawei.vcenterpluginui.exception.DataBaseException;
@@ -154,7 +156,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
       ps3.execute();
       conn.commit();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to get server device detail differences: " + e.getMessage());
       if (conn != null) {
         conn.rollback();
       }
@@ -196,7 +198,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
         try {
           ps.close();
         } catch (SQLException e) {
-          LOGGER.warn(e.getMessage(), e);
+          LOGGER.error("Failed to close resources " + e.getMessage());
         }
       }
     }
@@ -226,7 +228,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
 
       conn.commit();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to update device detail: " + e.getMessage());
       if (conn != null) {
         conn.rollback();
       }
@@ -299,7 +301,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
 
       conn.commit();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to update device detail: " + e.getMessage());
       if (conn != null) {
         conn.rollback();
       }
@@ -354,7 +356,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
       }
       return result;
     } catch (DataBaseException | SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to get eSight host id and dns: " + e.getMessage());
       throw new SQLException(e);
     } finally {
       closeConnection(conn, ps, rs);
@@ -375,11 +377,258 @@ public class NotificationAlarmDao extends H2DataBaseDao {
       ps = conn.prepareStatement(sql);
       return ps.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to delete not synced device details: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(conn, ps, null);
     }
   }
 
+  public AlarmRecord getAlarmRecord(int esightHostId, int sn, String dn) throws SQLException {
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql = "SELECT * FROM HW_ALARM_RECORD WHERE ESIGHT_HOST_ID=? AND SN=? AND DN=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, esightHostId);
+      ps.setInt(2, sn);
+      ps.setString(3, dn);
+      rs = ps.executeQuery();
+      if (rs.next()) {
+        return new AlarmRecord(rs.getInt("ID"), rs.getInt("ESIGHT_HOST_ID"),
+            rs.getString("EVENT_ID"), rs.getString("DN"), rs.getInt("SN"),
+            rs.getTimestamp("CREATE_TIME"));
+      }
+      return null;
+    } catch (SQLException e) {
+      LOGGER.error("Failed to get alarm records: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, rs);
+    }
+  }
+
+  public int addAlarmRecord(AlarmRecord alarmRecord) throws SQLException {
+    if (alarmRecord == null) {
+      return 0;
+    }
+    Connection conn = null;
+    PreparedStatement ps = null;
+    String sql = "INSERT INTO HW_ALARM_RECORD(ESIGHT_HOST_ID,EVENT_ID,DN,SN,CREATE_TIME) VALUES(?,?,?,?,CURRENT_TIMESTAMP)";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, alarmRecord.getEsightHostId());
+      ps.setString(2, alarmRecord.getEventId());
+      ps.setString(3, alarmRecord.getDn());
+      ps.setInt(4, alarmRecord.getSn());
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Failed to add alarm record: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, null);
+    }
+  }
+
+  public int deleteAlarmRecord(int esightHostId, String dn) throws SQLException {
+    Connection conn = null;
+    PreparedStatement ps = null;
+    String sql = "DELETE FROM HW_ALARM_RECORD WHERE ESIGHT_HOST_ID=? AND DN=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, esightHostId);
+      ps.setString(2, dn);
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Failed to delete alarm record: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, null);
+    }
+  }
+
+  public int deleteAlarmRecord(AlarmRecord alarmRecord) throws SQLException {
+    if (alarmRecord == null) {
+      return 0;
+    }
+    Connection conn = null;
+    PreparedStatement ps = null;
+    String sql = "DELETE FROM HW_ALARM_RECORD WHERE ESIGHT_HOST_ID=? AND DN=? AND SN=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, alarmRecord.getEsightHostId());
+      ps.setString(2, alarmRecord.getDn());
+      ps.setInt(3, alarmRecord.getSn());
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Failed to delete alarm record: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, null);
+    }
+  }
+
+  public int getAlarmRecordEventIdCount(AlarmRecord alarmRecord) throws SQLException {
+    if (alarmRecord == null) {
+      return 0;
+    }
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql = "SELECT COUNT(ID) FROM HW_ALARM_RECORD WHERE ESIGHT_HOST_ID=? AND EVENT_ID=? AND DN=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, alarmRecord.getEsightHostId());
+      ps.setString(2, alarmRecord.getEventId());
+      ps.setString(3, alarmRecord.getDn());
+      rs = ps.executeQuery();
+      rs.next();
+      return rs.getInt(1);
+    } catch (SQLException e) {
+      LOGGER.error("Failed to get alarm record event id count: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, rs);
+    }
+  }
+
+  public List<HAComponent> getHAComponents(HAComponent haComponent) throws SQLException {
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql = "SELECT * FROM HW_HA_COMPONENT WHERE ESIGHT_HOST_ID=? AND SN=? AND DN=?";
+    List<HAComponent> haComponents = new ArrayList<>();
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, haComponent.getEsightHostId());
+      ps.setInt(2, haComponent.getSn());
+      ps.setString(3, haComponent.getDn());
+      rs = ps.executeQuery();
+      while (rs.next()) {
+        haComponents.add(
+            new HAComponent(rs.getInt("ID"), rs.getInt("ESIGHT_HOST_ID"), rs.getString("COMPONENT"),
+                rs.getInt("SN"), rs.getString("COMPONENT"), rs.getTimestamp("CREATE_TIME")));
+      }
+      return haComponents;
+    } catch (SQLException e) {
+      LOGGER.error("Failed to get HA components: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, rs);
+    }
+  }
+
+  public int getComponentTypeCount(HAComponent haComponent) throws SQLException {
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql = "SELECT COUNT(ID) FROM HW_HA_COMPONENT WHERE ESIGHT_HOST_ID=? AND DN=? AND COMPONENT=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, haComponent.getEsightHostId());
+      ps.setString(2, haComponent.getDn());
+      ps.setString(3, haComponent.getComponent());
+      rs = ps.executeQuery();
+      rs.next();
+      return rs.getInt(1);
+    } catch (SQLException e) {
+      LOGGER.error("Failed to get component type count: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, rs);
+    }
+  }
+
+  public int addHAComponents(HAComponent haComponent) throws SQLException {
+    if (haComponent == null) {
+      return 0;
+    }
+    Connection conn = null;
+    PreparedStatement ps = null;
+    String sql =
+        "INSERT INTO HW_HA_COMPONENT(ESIGHT_HOST_ID,COMPONENT,SN,DN,CREATE_TIME) "
+            + "VALUES(?,?,?,?,CURRENT_TIMESTAMP)";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, haComponent.getEsightHostId());
+      ps.setString(2, haComponent.getComponent());
+      ps.setInt(3, haComponent.getSn());
+      ps.setString(4, haComponent.getDn());
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Failed to add HA component: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, null);
+    }
+  }
+
+  public int deleteHAComponent(int esightHostId, String dn) throws SQLException {
+    Connection conn = null;
+    PreparedStatement ps = null;
+    String sql = "DELETE FROM HW_HA_COMPONENT WHERE ESIGHT_HOST_ID=? AND DN=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, esightHostId);
+      ps.setString(2, dn);
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Failed to delete HA components: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, null);
+    }
+  }
+
+  public int deleteHAComponent(HAComponent haComponent) throws SQLException {
+    if (haComponent == null) {
+      return 0;
+    }
+    Connection conn = null;
+    PreparedStatement ps = null;
+    String sql = "DELETE FROM HW_HA_COMPONENT WHERE ESIGHT_HOST_ID=? AND SN=? AND DN=?";
+    try {
+      conn = getConnection();
+      ps = conn.prepareStatement(sql);
+      ps.setInt(1, haComponent.getEsightHostId());
+      ps.setInt(2, haComponent.getSn());
+      ps.setString(3, haComponent.getDn());
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Failed to delete HA component: " + e.getMessage());
+      throw e;
+    } finally {
+      closeConnection(conn, ps, null);
+    }
+  }
+
+  public void cleanAllData() {
+    Connection con = null;
+    PreparedStatement ps1 = null;
+    try {
+      con = getConnection();
+      for (String table : SqlFileConstant.ALL_TABLES) {
+        try {
+          ps1 = con.prepareStatement("DELETE FROM " + table);
+          ps1.execute();
+          ps1.close();
+          ps1 = null;
+        } catch (SQLException e) {
+          LOGGER.error("Cannot delete data from " + table);
+        }
+      }
+    } finally {
+      closeConnection(con, ps1, null);
+    }
+  }
 }

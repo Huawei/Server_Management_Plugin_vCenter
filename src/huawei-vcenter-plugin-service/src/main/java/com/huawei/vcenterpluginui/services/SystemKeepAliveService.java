@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface SystemKeepAliveService {
 
-    static final long POLLING_INTERVAL = 10 * 60 * 1000L;
+    long POLLING_INTERVAL = 10 * 60 * 1000L;
 
     /**
      * 更新最新存活时间

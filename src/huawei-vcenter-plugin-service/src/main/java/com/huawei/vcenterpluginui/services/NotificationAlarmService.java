@@ -2,13 +2,10 @@ package com.huawei.vcenterpluginui.services;
 
 import com.huawei.esight.api.provider.OpenIdProvider;
 import com.huawei.vcenterpluginui.entity.ESight;
-import com.huawei.vcenterpluginui.utils.CommonUtils;
-
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.Executor;
+import javax.servlet.http.HttpSession;
 
 public interface NotificationAlarmService {
 
@@ -77,27 +74,17 @@ public interface NotificationAlarmService {
      * @param fromIP
      *
      */
-    void handleAlarm(String alarmBody, String fromIP) throws SQLException;
+    void handleCallbackEvent(String alarmBody, String fromIP) throws SQLException;
+
+    /**
+     * 处理事件队列
+     */
+    void start();
 
     /**
      * 取消所有告警订阅
      */
     void unsubscribeAll();
-
-    /**
-     * 同步服务器设备详情
-     * @param eSight
-     * @param dnList 没有设备详情的父子DN列表
-     * @param openIdProvider
-     */
-    void syncServerDeviceDetails(ESight eSight, List<String> dnList, OpenIdProvider openIdProvider, Map<String, String> dnParentDNMap) throws SQLException;
-
-    /**
-     * 从服务器设备详情中获取eSight dn的唯一列表
-     * 列表中元素是eSightId与dn拼接而成的
-     * 参考{@link CommonUtils#concatESightHostIdAndDN(int, String)}
-     */
-    Set<String> getESightHostIdAndDNs() throws SQLException;
 
     /**
      * 删除所有provider
@@ -106,14 +93,36 @@ public interface NotificationAlarmService {
     Boolean uninstallProvider();
 
     /**
-     * 轮询状态未改变组件
+     * 同步eSight历史告警
+     * @param eSight
      */
-    void pollingComponent();
-
-    void putAlarmIfNotExist(String eSightIP, String dn, int retryCount);
+    void syncHistoricalEvents(ESight eSight, boolean syncHost, boolean subscribeAlarm);
 
     /**
-     * 删除未同步的部件详情数据
+     * 同步eSight历史告警
+     * @param eSight
+     * @param neDN
+     * @param syncHost
+     * @param subscribeAlarm
      */
-    int deleteNotSyncedDeviceDetails();
+    void syncHistoricalEvents(ESight eSight, String neDN, boolean syncHost, boolean subscribeAlarm);
+
+    /**
+     * 同步所有eSight历史告警
+     * @param syncHost
+     */
+    void syncHistoricalEvents(boolean syncHost, boolean subscribeAlarm);
+
+    /**
+     * 获取后台任务执行器
+     * @return
+     */
+    Executor getBgTaskExecutor();
+
+    /**
+     * delete data from all tables
+     */
+    void cleanData();
+
+    int deleteAlarmAndHADn(int esightHostId, String dn);
 }

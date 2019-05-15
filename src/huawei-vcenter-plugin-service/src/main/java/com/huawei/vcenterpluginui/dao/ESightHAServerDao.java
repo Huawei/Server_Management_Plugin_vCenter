@@ -47,7 +47,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
             }
             return row;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to ad eSight HA server: " + e.getMessage());
             throw e;
         } finally {
             closeConnection(con, ps, rs);
@@ -95,7 +95,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
             }
             return data;
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to delete and add eSight HA servers: " + e.getMessage());
             if (con != null) {
                 try {
                     con.rollback();
@@ -131,7 +131,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
                 return buildESightHAServer(rs);
             }
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to get eSight HA server: " + e.getMessage());
         } finally {
             closeConnection(con, ps, rs);
         }
@@ -155,7 +155,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
             }
             return result;
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to get eSight HA servers: " + e.getMessage());
             throw new SQLException(e);
         } finally {
             closeConnection(con, ps, rs);
@@ -177,7 +177,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
             }
             return ps.executeUpdate();
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to delete eSight HA servers: " + e.getMessage());
             throw new SQLException(e);
         } finally {
             closeConnection(con, ps, null);
@@ -198,7 +198,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
                 return buildESightHAServer(rs);
             }
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to get eSight HA server by host: " + e.getMessage());
         } finally {
             closeConnection(con, ps, rs);
         }
@@ -239,7 +239,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
             }
             return eSightHAServer;
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to get ESight HA Server: " + e.getMessage());
             throw new SQLException(e);
         } finally {
             closeConnection(con, ps, rs);
@@ -265,7 +265,7 @@ public class ESightHAServerDao extends H2DataBaseDao {
             }
             return result;
         } catch (DataBaseException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to get eSight HA server by DN: " + e.getMessage());
             throw new SQLException(e);
         } finally {
             closeConnection(con, ps, rs);

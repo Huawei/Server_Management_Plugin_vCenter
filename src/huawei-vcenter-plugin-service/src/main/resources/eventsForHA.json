@@ -1,0 +1,129 @@
+{
+    "events": [
+        {
+            "eventId": "0000000F",
+            "severity": "critical",
+            "eventComponent": "FAN"
+        },
+        {
+            "eventId": "00000011",
+            "severity": "critical",
+            "eventComponent": "CPU"
+        },
+        {
+            "eventId": "00000013",
+            "severity": "critical",
+            "eventComponent": "CPU"
+        },
+        {
+            "eventId": "0000001B",
+            "severity": "critical",
+            "eventComponent": "CPU"
+        },
+        {
+            "eventId": "2C00000D",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "01000015",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "01000017",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "0000001D",
+            "severity": "critical",
+            "eventComponent": "CPU"
+        },
+        {
+            "eventId": "0D000001",
+            "severity": "critical",
+            "eventComponent": "NETWORK"
+        },
+        {
+            "eventId": "27000003",
+            "severity": "critical",
+            "eventComponent": "CPU"
+        },
+        {
+            "eventId": "0B000005",
+            "severity": "critical",
+            "eventComponent": "NETWORK"
+        },
+        {
+            "eventId": "2C000037",
+            "severity": "critical",
+            "eventComponent": "CPU"
+        },
+        {
+            "eventId": "1200000F",
+            "severity": "critical",
+            "eventComponent": "FAN"
+        },
+        {
+            "eventId": "39000001",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "01000025",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "01000027",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "2C00004B",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "2C00004D",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "2C00004F",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "0E000005",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "2C000057",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "0100002F",
+            "severity": "critical",
+            "eventComponent": "MEMORY"
+        },
+        {
+            "eventId": "100000B1",
+            "severity": "critical",
+            "eventComponent": "NETWORK"
+        },
+        {
+            "eventId": "18000003",
+            "severity": "critical",
+            "eventComponent": "FAN"
+        },
+        {
+            "eventId": "19000001",
+            "severity": "critical",
+            "eventComponent": "FAN"
+        }
+    ]
+}

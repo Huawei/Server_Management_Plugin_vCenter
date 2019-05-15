@@ -348,7 +348,8 @@
                                 }
                             };
                             manager.create(postParam, function(ret) {
-                                alertMsg(app.i18ns.common.addSucceeded, function() {
+                                var msg = getErrorMsg(ret.code);
+                                alertMsg(msg, function () {
                                     location.href = 'list.html';
                                 });
                             });

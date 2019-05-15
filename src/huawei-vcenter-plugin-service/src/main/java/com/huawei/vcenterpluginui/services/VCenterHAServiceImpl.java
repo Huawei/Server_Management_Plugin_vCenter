@@ -1,14 +1,10 @@
 package com.huawei.vcenterpluginui.services;
 
-import com.huawei.vcenterpluginui.constant.DeviceComponent;
 import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
-import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
 import com.huawei.vcenterpluginui.exception.VcenterException;
 import com.huawei.vcenterpluginui.utils.ConnectedVim;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -30,6 +26,9 @@ public class VCenterHAServiceImpl implements VCenterHAService {
 
   @Autowired
   private ESightService eSightService;
+
+  @Autowired
+  private NotificationAlarmService notificationAlarmService;
 
   @Override
   public List<ESightHAServer> getServerList(VCenterInfo vCenterInfo) throws Exception {
@@ -60,46 +59,6 @@ public class VCenterHAServiceImpl implements VCenterHAService {
   }
 
   @Override
-  public boolean pushHealth(ESightHAServer eSightHAServer,
-      List<ServerDeviceDetail> serverDeviceDetails) {
-    return pushHealth(Collections.singletonList(eSightHAServer), serverDeviceDetails);
-  }
-
-  @Override
-  public boolean pushHealth(List<ESightHAServer> eSightHAServers,
-      List<ServerDeviceDetail> serverDeviceDetails) {
-    try {
-      // 20180523: don't push health when status is -1 or -2
-      List<ServerDeviceDetail> newServerDeviceDetails = new ArrayList<>();
-      for (ServerDeviceDetail serverDeviceDetail : serverDeviceDetails) {
-        if (DeviceComponent.getPushHealthState().contains(serverDeviceDetail.getHealthState())) {
-          newServerDeviceDetails.add(serverDeviceDetail);
-        }
-      }
-      if (newServerDeviceDetails.isEmpty()) {
-        LOGGER.info("All components healthState are invalid, Discard.");
-        return true;
-      }
-
-      VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
-      if (vCenterInfo == null) {
-        LOGGER.info("vCenter info not exist.");
-        return false;
-      } else if (!vCenterInfo.isState() && !vCenterInfo.isPushEvent()) {
-        LOGGER.info("vCenter info is disabled.");
-        return false;
-      }
-
-      ConnectedVim connectedVim = getConnectedVim();
-      connectedVim.pushHealth(vCenterInfo, eSightHAServers, newServerDeviceDetails);
-      return true;
-    } catch (Exception e) {
-      LOGGER.error("push health fail", e);
-    }
-    return false;
-  }
-
-  @Override
   public String createProvider(ConnectedVim connectedVim, boolean enable) {
     return connectedVim.createProvider(enable);
   }
@@ -114,33 +73,20 @@ public class VCenterHAServiceImpl implements VCenterHAService {
       final List<AlarmDefinition> alarmDefinitionList, final boolean result) {
     final ConnectedVim connectedVim = this.getConnectedVim();
     try {
-      Thread t1 = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          synchronized (VCenterHAServiceImpl.class) {
-            try {
-              connectedVim.connect(vCenterInfo);
-              List<AlarmDefinition> newAlarmDefinitionList = connectedVim
-                  .createAlarmDefinitions(alarmDefinitionList);
-              vCenterInfoService.addAlarmDefinitions(newAlarmDefinitionList);
-              if (result && newAlarmDefinitionList.size() == alarmDefinitionList.size()) {
-                eSightService.updateAlarmDefinition(1);
-              } else {
-                eSightService.updateAlarmDefinition(2);
-              }
-            } catch (Exception e) {
-              LOGGER.error("Failed to create alarm definition", e);
-            } finally {
-              connectedVim.disconnect();
-            }
-          }
-        }
-      });
-      t1.setPriority(1);
-      t1.start();
+      connectedVim.connect(vCenterInfo);
+      List<AlarmDefinition> newAlarmDefinitionList = connectedVim
+          .createAlarmDefinitions(alarmDefinitionList);
+      vCenterInfoService.addAlarmDefinitions(newAlarmDefinitionList);
+      if (result && newAlarmDefinitionList.size() == alarmDefinitionList.size()) {
+        eSightService.updateAlarmDefinition(1);
+      } else {
+        eSightService.updateAlarmDefinition(2);
+      }
     } catch (Exception e) {
-      LOGGER.warn("can not connect to vCenter, ", e);
+      LOGGER.warn("can not register alarm definitions", e);
       throw new VcenterException("-90007", e.getMessage());
+    } finally {
+      connectedVim.disconnect();
     }
   }
 

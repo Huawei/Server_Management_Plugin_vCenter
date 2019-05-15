@@ -73,7 +73,7 @@
                     </el-table-column>
                     <el-table-column v-bind:label="i18ns.firmware.detail_soft" :show-overflow-tooltip="true">
                         <template scope="scope">
-                            <el-popover trigger="hover" placement="top">
+                            <el-popover trigger="hover" placement="top"  @show="isDetailShow=true" @hide="isDetailShow=false">
                                 <div v-for="item in getErrorDetailTxt(scope.row.taskCode)">
                                     <span>{{item}}</span>
                                 </div>
@@ -205,7 +205,10 @@
                 failListData: [],
                 type: '',
                 loading3: false,
-                multipleSelection: []
+                multipleSelection: [],
+                isShowMessageBox: true,
+                isShowMessageBox1: true,
+                isDetailShow:false
             },
             created: function () {
                 this.i18ns = getIn18();
@@ -395,12 +398,14 @@
                         this.loading = true;
                         this.lowloading = true;
                     }
-                    this.isShowDetail = false;
-                    this.isShowDetail2 = false;
-                    this.firmwareDetails = [];
-                    this.firmwareDetails2 = [];
-                    this.getTaskListData(); //获取固件上传任务列表数据
-                    this.getFirmwareListData(); //获取已上传成功的固件列表数据
+                    /*   this.isShowDetail = false;
+                      this.isShowDetail2 = false;
+                      this.firmwareDetails = [];
+                      this.firmwareDetails2 = []; */
+                    if (!this.isDetailShow) {
+                        this.getTaskListData(); //获取固件上传任务列表数据
+                        this.getFirmwareListData(); //获取已上传成功的固件列表数据
+                    }
                 },
                 /**
                  * 定时刷新
@@ -469,8 +474,16 @@
                         this.failListData = [];
                         this.taskListData = [];
                         app.fullscreenLoading = false;
-                        msg = getErrorMsg(ret.code);
-                        this.alertMsg(msg);
+                        var msg = getErrorMsg(ret.code);
+                        if (this.isShowMessageBox1 && this.dialogFormVisible == false) {
+                            this.isShowMessageBox1 = false;
+                            this.$alert(msg, this.i18ns.common.prompt, {
+                                confirmButtonText: this.i18ns.common.confirm,
+                                callback: function action() {
+                                    app.isShowMessageBox1 = true;
+                                }
+                            });
+                        }
                     }
                 },
                 /**
@@ -550,10 +563,10 @@
                  * 
                  */
                 getFirmwareListData: function () {
-                    this.firmwareDetails = [];
-                    this.firmwareDetails2 = [];
-                    this.isShowDetail = false;
-                    this.isShowDetail2 = false;
+                    /*   this.firmwareDetails = [];
+                      this.firmwareDetails2 = [];
+                      this.isShowDetail = false;
+                      this.isShowDetail2 = false; */
                     firmwareManage.getFirmwareList({
                         "esight": this.currentESight,
                         "param": {
@@ -581,9 +594,21 @@
                     } else {
                         this.firmwareListData = [];
                         app.fullscreenLoading = false;
+                        if (this.currentESight != ret.ip) {
+                            return false;
+                        }
                         //要根据Code得到错误提示。
-                        msg = getErrorMsg(ret.code);
-                        this.alertMsg(msg);
+                        var msg = getErrorMsg(ret.code);
+                        if (this.isShowMessageBox) {
+                            this.isShowMessageBox = false;
+                            this.$alert(msg, this.i18ns.common.prompt, {
+                                confirmButtonText: this.i18ns.common.confirm,
+                                callback: function action() {
+                                    app.isShowMessageBox = true;
+                                }
+                            });
+                        }
+
                     }
                 },
                 /**
@@ -700,7 +725,6 @@
                  * @param {any} callback 
                  */
                 alertMsg: function (msg, callback) {
-                    console.log(1);
                     this.$alert(msg, this.i18ns.common.prompt, {
                         confirmButtonText: this.i18ns.common.confirm,
                         callback: function action() {

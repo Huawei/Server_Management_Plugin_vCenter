@@ -90,7 +90,7 @@
                 </el-table-column>
                 <el-table-column prop="taskProgress" sortable v-bind:label="i18ns.task.taskProgress">
                 </el-table-column>
-                <el-table-column sortable v-bind:label="i18ns.task.taskStatus">
+                <el-table-column sortable v-bind:label="i18ns.task.taskStatus"  prop="syncStatus">
                     <template scope="scope">
                         <el-button type="text" size="small" v-on:click="showDetail(scope.row.deviceDetails,scope.$index)">{{scope.row.syncStatusText}}</el-button>
                     </template>
@@ -116,7 +116,7 @@
                 </el-pagination>
             </el-col>
         </el-row>
-        <el-dialog v-bind:title="i18ns.task.dialogTitle" v-bind:visible.sync="dialogVisible" border size="large">
+        <el-dialog  :close-on-click-modal="false" v-bind:title="i18ns.task.dialogTitle" v-bind:visible.sync="dialogVisible" border size="large">
             <el-table ref="dialogTable" v-bind:data="deviceDetailsData" v-loading="Loading1" element-loading-text="Loading"
                 style="width: 100%">
                 <el-table-column prop="name" v-bind:label="i18ns.task.name" min-width="230" :show-overflow-tooltip="true">
@@ -181,7 +181,8 @@
                     return false;
                 }
                 return true;
-            }
+            },
+            isShowMessageBox:true
         },
         computed: {
             curEsightText: function () {
@@ -345,6 +346,19 @@
                         this.listData = _listData;
                     } else {
                         this.listData = [];
+                        if (this.curEsightHostIp != res.ip) {
+                            return false;
+                        }
+                        var msg = getErrorMsg(res.code);
+                        if (this.isShowMessageBox) {
+                            this.isShowMessageBox = false;
+                            this.$alert(msg, this.i18ns.common.prompt, {
+                                confirmButtonText: this.i18ns.common.confirm,
+                                callback: function action() {
+                                    app.isShowMessageBox = true;
+                                }
+                            });
+                        }
                     }
                     app.loading = false; //隐藏loading提示
                 },

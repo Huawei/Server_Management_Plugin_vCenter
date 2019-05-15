@@ -184,6 +184,7 @@
             text-align: center;
             height: 30px;
         }
+
         .pieChart .pieChart-title1 {
             line-height: 10px;
             padding-left: 13px;
@@ -195,6 +196,7 @@
             text-align: center;
             height: 30px;
         }
+
         .pieChart .pieChart-chart {
             height: 120px;
             width: 120px;
@@ -429,7 +431,8 @@
                         <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                             <template scope="scope ">
                                 <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                <span
+                                    v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                 <span v-else>{{i18ns.deviceInfo.installed}}</span>
                             </template>
                         </el-table-column>
@@ -443,7 +446,7 @@
                         <!-- 转速百分比 -->
                         <el-table-column prop="rotatePercent" v-bind:label="i18ns.deviceInfo.rotatePercent ">
                             <template scope="scope ">
-                                <span v-if="scope.row.controlModel=='0'">--</span>
+                                <span v-if="!scope.row.rotatePercent||scope.row.rotatePercent=='unknow'">--</span>
                                 <span v-else>{{scope.row.rotatePercent}}</span>
                             </template>
                         </el-table-column>
@@ -471,7 +474,8 @@
                         <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus ">
                             <template scope="scope ">
                                 <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                <span
+                                    v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                 <span v-else>{{i18ns.deviceInfo.installed}}</span>
                             </template>
                         </el-table-column>
@@ -589,14 +593,16 @@
                 /**
                  * 绘制饼状图的方法
                  * **/
-                 draw: function (id, data) {
+                draw: function (id, data) {
                     if ((data.normal + data.warning + data.critical + data.unknown) > 0) {
                         var ctx = document.getElementById(id);
                         var myPieChart = new Chart(ctx, {
                             type: 'doughnut',
                             data: {
                                 datasets: [{
-                                    data: [data.normal, data.warning, data.critical, data.unknown],
+                                    data: [data.normal, data.warning, data.critical, data
+                                        .unknown
+                                    ],
                                     backgroundColor: [
                                         '#32CD32',
                                         '#FFBB33',
@@ -651,7 +657,7 @@
                             var font_size = 12;
                             context.font = font_size + "px Helvetica";
                             var text_width = context.measureText(n).width;
-                            context.fillText(n, center_x - text_width / 2, center_y + font_size / 2+8);
+                            context.fillText(n, center_x - text_width / 2, center_y + font_size / 2 + 8);
                             context.restore();
                         }
                         backgroundCircle();
@@ -666,13 +672,14 @@
                     this.fanHealthState.warning = statistics.warning;
                     this.fanHealthState.critical = statistics.critical;
                     this.fanHealthState.unknown = statistics.unknown;
-                    if ((this.fanHealthState.normal + this.fanHealthState.warning + this.fanHealthState.unknown +
+                    if ((this.fanHealthState.normal + this.fanHealthState.warning + this.fanHealthState
+                            .unknown +
                             this.fanHealthState.critical) > 0) {
                         this.isShowFan = true;
                     } else {
                         this.isShowFan = false;
                     }
-                    
+
                     this.draw('fan', this.fanHealthState);
                 },
                 /* 获取电源状态 */
@@ -682,25 +689,27 @@
                     this.powerHealthState.warning = statistics.warning;
                     this.powerHealthState.critical = statistics.critical;
                     this.powerHealthState.unknown = statistics.unknown;
-                    if ((this.powerHealthState.normal + this.powerHealthState.warning + this.powerHealthState
+                    if ((this.powerHealthState.normal + this.powerHealthState.warning + this
+                            .powerHealthState
                             .unknown + this.powerHealthState.critical) > 0) {
                         this.isShowPower = true;
                     } else {
                         this.isShowPower = false;
                     }
-                        this.draw('power', this.powerHealthState);
+                    this.draw('power', this.powerHealthState);
                 },
                 /**
                  * 绘制刀片信息饼状图
                  * **/
                 drwaBlade: function () {
-                    if ((this.bladeHealthState.normal + this.bladeHealthState.unknown + this.bladeHealthState
+                    if ((this.bladeHealthState.normal + this.bladeHealthState.unknown + this
+                            .bladeHealthState
                             .warning + this.bladeHealthState.critical) > 0) {
                         this.isShowBlade = true;
                     } else {
                         this.isShowBlade = false;
                     }
-                        this.draw('blade', this.bladeHealthState);
+                    this.draw('blade', this.bladeHealthState);
                 },
                 /* 返回按钮方法 */
                 back: function () {
@@ -769,10 +778,12 @@
                                     k++;
                                     if (data.status == 0) {
                                         normalBlade++;
-                                    } else if (data.status == 2 || data.status == 3 || data.status ==
+                                    } else if (data.status == 2 || data.status == 3 || data
+                                        .status ==
                                         5) {
                                         warningBlade++;
-                                    } else if (data.status == 4 || data.status == 6 || data.status ==
+                                    } else if (data.status == 4 || data.status == 6 || data
+                                        .status ==
                                         7 || data.status == 8) {
                                         criticalBlade++;
                                     } else {
@@ -839,8 +850,10 @@
                             console.log(activeNames[i]);
                             if (activeNames[i] == '1') {
                                 if (app.highdensityListData.length == 0) {
-                                    var highdensityData = JSON.parse(localStorage.getItem('highdensityData'));
-                                    if (localStorage.getItem('highdensityData') && highdensityData.childBlades
+                                    var highdensityData = JSON.parse(localStorage.getItem(
+                                        'highdensityData'));
+                                    if (localStorage.getItem('highdensityData') && highdensityData
+                                        .childBlades
                                         .length > 0) {
                                         app.loading = true;
                                         var rqc = 0;

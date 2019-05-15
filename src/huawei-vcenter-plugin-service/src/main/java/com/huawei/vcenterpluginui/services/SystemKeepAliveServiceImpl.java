@@ -155,7 +155,8 @@ public class SystemKeepAliveServiceImpl extends ESightOpenApiService implements 
         } else if (!vCenterInfo.isState() && !vCenterInfo.isPushEvent()) {
             throw new VcenterException("vCenter info is disabled.");
         }
-        return "https://" + vCenterInfo.getHostIp() + "/vsphere-client/vcenterpluginui/rest/services/notification/systemKeepAlive";
+        return "https://" + vCenterInfo.getHostIp() + ":" + vCenterInfo.getHostPort()
+            + "/vsphere-client/vcenterpluginui/rest/services/notification/systemKeepAlive";
     }
 
 }

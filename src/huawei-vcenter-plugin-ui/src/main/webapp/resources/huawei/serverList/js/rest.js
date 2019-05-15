@@ -21,7 +21,7 @@ var serverListManager = {
             	data = response.data.data;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description,data: { data: data, totalCount:totalCount } };
+                var ret = {code: response.code, msg: response.description,data: { data: data, totalCount:totalCount } ,ip: response.ip};
                 dealResult(ret, callback);
             }
           },"json");

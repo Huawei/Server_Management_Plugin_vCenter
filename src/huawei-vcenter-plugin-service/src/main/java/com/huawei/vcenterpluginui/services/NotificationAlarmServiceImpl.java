@@ -2,42 +2,40 @@ package com.huawei.vcenterpluginui.services;
 
 import com.google.gson.Gson;
 import com.huawei.esight.api.provider.OpenIdProvider;
+import com.huawei.esight.api.rest.alarm.GetAlarmApi;
 import com.huawei.esight.api.rest.notification.DeleteNotificationCommonAlarm;
 import com.huawei.esight.api.rest.notification.PutNotificationCommonAlarm;
-import com.huawei.vcenterpluginui.constant.DeviceComponent;
 import com.huawei.vcenterpluginui.constant.ESightServerType;
 import com.huawei.vcenterpluginui.dao.ESightDao;
 import com.huawei.vcenterpluginui.dao.NotificationAlarmDao;
 import com.huawei.vcenterpluginui.entity.AlarmDefinition;
+import com.huawei.vcenterpluginui.entity.AlarmRecord;
 import com.huawei.vcenterpluginui.entity.ESight;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
-import com.huawei.vcenterpluginui.entity.Pair;
-import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
+import com.huawei.vcenterpluginui.entity.HAComponent;
+import com.huawei.vcenterpluginui.entity.HAEventDef;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
-import com.huawei.vcenterpluginui.exception.NoEsightException;
 import com.huawei.vcenterpluginui.exception.VcenterException;
 import com.huawei.vcenterpluginui.exception.VersionNotSupportException;
 import com.huawei.vcenterpluginui.provider.SessionOpenIdProvider;
 import com.huawei.vcenterpluginui.utils.AlarmDefinitionConverter;
 import com.huawei.vcenterpluginui.utils.ConnectedVim;
+import com.huawei.vcenterpluginui.utils.HAEventHelper;
 import com.huawei.vcenterpluginui.utils.OpenIdSessionManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
 public class NotificationAlarmServiceImpl extends ESightOpenApiService implements
@@ -58,66 +56,25 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
   private NotificationAlarmDao notificationAlarmDao;
 
   @Autowired
-  private VmActionService vmActionService;
-
-  @Autowired
   private SystemKeepAliveService systemKeepAliveService;
 
-  private static final int INIT_ALARM_COUNT = 1;
-  private static final int INIT_EVENT_COUNT = 1;
-  private static final int INIT_EVENT_RETRY_COUNT = 1;
+  @Autowired
+  private SyncServerHostService syncServerHostService;
+
+  private BlockingQueue<Map<String, Object>> eventQueue = new LinkedBlockingQueue<>(2000);
+
+  private ConnectedVim connectedVim = null;
+
+  private ExecutorService eventExecutor = Executors.newSingleThreadExecutor();
+
+  private ExecutorService backgroundTaskExecutor = Executors.newSingleThreadExecutor();
 
   @Autowired
   private ESightDao eSightDao;
 
   private static final Gson GSON = new Gson();
 
-  @Value("${component.polling.times}")
-  private int pollingTimes;
-
-  private volatile ConcurrentMap<String, Counter> pollingDNMap = new ConcurrentHashMap<>();
-
   private HttpSession globalSession = OpenIdSessionManager.getGlobalSession();
-
-  class Counter {
-
-    private AtomicInteger alarmCount;
-    private AtomicInteger retryCount;
-
-    public Counter(AtomicInteger alarmCount, AtomicInteger retryCount) {
-      this.alarmCount = alarmCount;
-      this.retryCount = retryCount;
-    }
-
-    public void increaseAlarmCount() {
-      this.alarmCount.incrementAndGet();
-    }
-
-    public void decreaseAlarmCount() {
-      this.alarmCount.decrementAndGet();
-    }
-
-    public void decreaseRetryCount() {
-      this.retryCount.decrementAndGet();
-    }
-
-    public void resetRetryCount() {
-      this.retryCount.set(pollingTimes);
-    }
-
-    public AtomicInteger getAlarmCount() {
-      return alarmCount;
-    }
-
-    public AtomicInteger getRetryCount() {
-      return retryCount;
-    }
-
-    @Override
-    public String toString() {
-      return "alarm count: " + alarmCount.intValue() + ", retry count: " + retryCount.intValue();
-    }
-  }
 
   @Override
   public Map subscribeAlarm(ESight eSight, OpenIdProvider openIdProvider, String desc) {
@@ -141,7 +98,7 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
       }
       return response;
     } catch (VcenterException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to subscribe alarm: " + e.getMessage());
       throw e;
     }
   }
@@ -156,7 +113,7 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
     try {
       return subscribeAlarm(getESightByIp(esightIp), session, desc);
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to subscribe alarm: " + e.getMessage());
       throw new VcenterException(e.getMessage());
     }
   }
@@ -188,49 +145,22 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
     try {
       return unsubscribeAlarm(getESightByIp(esightIp), session, desc);
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to unsubscribe alarm: " + e.getMessage());
       throw new VcenterException(e.getMessage());
     }
   }
 
-  private ComponentState getServerDeviceDetail(ESight eSight, String dn) throws SQLException {
-    Map<String, Object> serverDetailMap = null;
-    serverDetailMap = GSON
-        .fromJson(serverApiService.queryDeviceDetail(eSight.getHostIp(), dn, globalSession),
-            Map.class);
-
-    if (!isSuccessResponse(serverDetailMap.get("code"))) {
-      LOGGER.error("Alarm callback failed to call server detail: " + serverDetailMap);
-      throw new VcenterException("Cannot get server detail: " + serverDetailMap);
-    }
-    List<Map<String, Object>> dataList = (List) (serverDetailMap.get("data"));
-    if (dataList == null || dataList.isEmpty()) {
-      LOGGER.warn("Alarm doesn't have data. Discard.");
-      return null;
-    }
-
-    // convert to bean
-    ComponentState componentState = new ComponentState();
-    for (Map<String, Object> dataMap : dataList) {
-      ComponentState tmpComponentState = convertToComponents(eSight.getId(), dn, dataMap,
-          DeviceComponent
-              .getAlarmComponents());
-      componentState.getComponentList().addAll(tmpComponentState.getComponentList());
-      componentState.getComponentEmpty().addAll(tmpComponentState.getComponentEmpty());
-      componentState.getUuidNotReady().addAll(tmpComponentState.getUuidNotReady());
-    }
-    return componentState;
-  }
-
   @Override
-  public void handleAlarm(final String alarmBody, final String fromIP) throws SQLException {
+  public void handleCallbackEvent(final String alarmBody, final String fromIP) {
     try {
-      VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
-      if (vCenterInfo == null || (!vCenterInfo.isState() && !vCenterInfo.isPushEvent())) {
-        LOGGER.info("HA and Event is disabled. Discard.");
+      // LOGGER.info("Receiving alarm: " + alarmBody);
+      List<Map<String, Object>> alarmList = GSON.fromJson(alarmBody, List.class);
+      // eSight
+      ESight eSight = getESightByIp(fromIP);
+      if (eSight == null) {
+        LOGGER.warn("Invalid eSight: " + fromIP);
         return;
       }
-      List<Map<String, Object>> alarmList = GSON.fromJson(alarmBody, List.class);
       for (Map<String, Object> elementMap : alarmList) {
         // optType
         Object ooptType = elementMap.get("optType");
@@ -250,138 +180,310 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
           LOGGER.warn("Alarm doesn't have neDN. Discard.");
           continue;
         }
-        ESight eSight = getESightByIp(fromIP);
-        if (null == eSight) {
-          LOGGER.warn("Invalid eSight: " + fromIP);
+        // alarmSN
+        int alarmSN = ((Double) elementMap.get("alarmSN")).intValue();
+        // alarmId
+        long alarmId = ((Double) elementMap.get("alarmId")).longValue();
+        // severity
+        int severity = ((Double) elementMap.get("perceivedSeverity")).intValue();
+        if (severity < 1 || severity > 4) {
+          LOGGER.info("Discard perceivedSeverity value: " + severity);
           continue;
         }
-        if (vCenterInfo.isState()) {
-          putNewAlarm(fromIP, neDN);
-        }
-
-        if (vCenterInfo.isPushEvent()) {
-          // 2：清除告警
-          if (optType == 2.0) {
-            LOGGER.warn("OptType is 2. Don't push event queue.");
-            continue;
-          }
-          // 0：不确定 1：紧急 2：重要 3：次要 4：提示 5：已清除
-          int perceivedSeverity = ((Double) elementMap.get("perceivedSeverity"))
-              .intValue();
-          if (perceivedSeverity < 1 || perceivedSeverity > 4) {
-            LOGGER.info("Discard perceivedSeverity value: " + perceivedSeverity);
-            continue;
-          }
-          // 调整3为4方便比较
-          int myPushEventLevel =
-              vCenterInfo.getPushEventLevel() == 3 ? 4 : vCenterInfo.getPushEventLevel();
-          // myPushEventLevel - perceivedSeverity
-          // 1 - 1
-          // 2 - 1,2
-          // 4 - 1,2,3,4
-          // is the severity in scope
-          if (myPushEventLevel < perceivedSeverity) {
-            LOGGER.info("Discard perceivedSeverity not in my scope: " + perceivedSeverity);
-            continue;
-          }
-          // find alarm definition
-          AlarmDefinition alarmDefinition = new AlarmDefinitionConverter()
-              .findAlarmDefinition(((Double) elementMap.get("alarmId")).intValue());
-          if (alarmDefinition == null) {
-            LOGGER.info("Cannot find correct eventTypeID to push. Discard");
-            continue;
-          }
-          putNewEvent(eSight, neDN, alarmDefinition.getEventTypeID());
-        }
+        // put to queue
+        putEventToQueue(eSight.getId(), alarmSN, alarmId, severity, optType == 2.0, neDN,
+            elementMap.get("objectInstance").toString());
       }
     } catch (Exception e) {
-      LOGGER.error("Failed to handle alarm", e);
+      LOGGER.error("Failed to push event to queue: " + e.getMessage());
     }
   }
 
   @Override
-  public void syncServerDeviceDetails(ESight eSight, List<String> dnList,
-      OpenIdProvider openIdProvider,
-      Map<String, String> dnParentDNMap) {
-    if (dnList == null) {
-      return;
+  public void start() {
+    eventExecutor.execute(new Runnable() {
+      @Override
+      public void run() {
+        while (true) {
+          try {
+            getAndHandleEventFromQueue();
+          } catch (InterruptedException e) {
+            LOGGER.info("Event handler is interrupted: " + e.getMessage());
+            break;
+          } catch (Exception e) {
+            LOGGER.error("Cannot handle event: " + e.getMessage());
+          }
+        }
+      }
+    });
+  }
+
+  private void putEventToQueue(int esightId, int sn, long alarmId, int severity, boolean isResume,
+      String neDN, String objectInstance) {
+    Map<String, Object> eventDataMap = new HashMap<>();
+    eventDataMap.put("esightId", esightId);
+    eventDataMap.put("alarmId", alarmId);
+    eventDataMap.put("sn", sn);
+    eventDataMap.put("severity", severity);
+    eventDataMap.put("resume", isResume);
+    eventDataMap.put("neDN", neDN);
+    eventDataMap.put("objectInstance", objectInstance);
+    putEventToQueue(eventDataMap);
+  }
+
+  private void putEventToQueue(Map<String, Object> eventDataMap) {
+    LOGGER.info("[EventQ]Putting into queue: " + eventDataMap);
+    if (!eventQueue.offer(eventDataMap)) {
+      LOGGER.info("[EventQ]Event queue is full, discard " + eventDataMap);
     }
-    for (String dn : dnList) {
-      try {
-        LOGGER.info("Get server details, DN: " + dn);
-        ComponentState componentState = getServerDeviceDetail(eSight, dn);
-        LOGGER.info(dn + ", Component: " + componentState);
-        List<ServerDeviceDetail> deviceDetailList = componentState.getComponentList();
-        List<ServerDeviceDetail> parentDeviceDetailList;
-        List<ServerDeviceDetail> allDeviceDetailList = new ArrayList<>(deviceDetailList);
+  }
 
-        // parent DN
-        if (StringUtils.hasLength(dnParentDNMap.get(dn)) && !dnList
-            .contains(dnParentDNMap.get(dn))) {
-          String parentDN = dnParentDNMap.get(dn);
-          LOGGER.info(dn + " has parent dn: " + parentDN);
-          ComponentState parentComponentState = getServerDeviceDetail(eSight, parentDN);
-          parentDeviceDetailList = parentComponentState.getComponentList();
-          // don't use parent DN to avoid health update's spread
-          for (ServerDeviceDetail serverDeviceDetail : parentDeviceDetailList) {
-            serverDeviceDetail.setDn(dn);
-          }
-          allDeviceDetailList.addAll(parentDeviceDetailList);
-        }
-
-        // 推送健康状态为红色或黄色的，即非0状态
-        List<ServerDeviceDetail> reqPushList = new LinkedList<>();
-
-        // 部件全部不在位则推送一个红色告警
-        // componentHasPresentState: 部件-是否有在位的
-        Map<String, Boolean> componentHasPresentState = new HashMap<>();
-        for (ServerDeviceDetail serverDeviceDetail : allDeviceDetailList) {
-          String component = serverDeviceDetail.getComponent();
-          if (componentHasPresentState.containsKey(component)) {
-            if (!componentHasPresentState.get(component)
-                && !"-1".equals(serverDeviceDetail.getHealthState())) {
-              componentHasPresentState.put(component, Boolean.TRUE);
-            }
-          } else {
-            componentHasPresentState
-                .put(component, !"-1".equals(serverDeviceDetail.getHealthState()));
-          }
-
-          if (!"0".equals(serverDeviceDetail.getHealthState())) {
-            reqPushList.add(serverDeviceDetail);
-          }
-        }
-        LOGGER.info("Components have present state: " + componentHasPresentState);
-        // 手动构建红色告警推送部件全不在位情况
-        for (Map.Entry<String, Boolean> entry : componentHasPresentState.entrySet()) {
-          if (!entry.getValue()) {
-            ServerDeviceDetail aNotPresentState = new ServerDeviceDetail(eSight.getId(), dn,
-                entry.getKey());
-            // 改为红色告警
-            aNotPresentState.setHealthState("4");
-            reqPushList.add(aNotPresentState);
-          }
-        }
-
-        LOGGER.info("reqPushList size: " + reqPushList.size());
-        if (!reqPushList.isEmpty()) {
-          List<ESightHAServer> eSightHAServerList = eSightHAServerService
-              .getESightHAServersByDN(eSight.getId(), dn);
-          LOGGER.info("eSightHAServerList size: " + eSightHAServerList.size());
-          boolean pushSuccess = vCenterHAService.pushHealth(eSightHAServerList, reqPushList);
-          LOGGER.info("pushHealthSuccess: " + pushSuccess);
-        }
-
-        notificationAlarmDao.updateDeviceDetail(eSight.getId(), dn, deviceDetailList);
-      } catch (Exception e) {
-        LOGGER.error(e.getMessage(), e);
+  private void getAndHandleEventFromQueue() throws InterruptedException {
+    LOGGER.info("[EventQ]Event queue size: " + eventQueue.size());
+    if (eventQueue.isEmpty()) {
+      if (connectedVim != null) {
+        connectedVim.disconnect();
+        connectedVim = null;
       }
     }
+    Map<String, Object> eventDataMap = eventQueue.take();
+    VCenterInfo vCenterInfo;
+    try {
+      vCenterInfo = vCenterInfoService.getVCenterInfo();
+    } catch (SQLException e) {
+      LOGGER.info("Cannot get vCenter info", e);
+      throw new VcenterException("Cannot get vCenter info");
+    }
+    if (vCenterInfo == null) {
+      LOGGER.info("No vCenter setting");
+      return;
+    }
+    if (connectedVim == null) {
+      connectedVim = vCenterHAService.getConnectedVim();
+      connectedVim.connect(vCenterInfo);
+    }
+    doHandleEvent(eventDataMap, vCenterInfo);
   }
 
-  @Override
-  public Set<String> getESightHostIdAndDNs() throws SQLException {
-    return notificationAlarmDao.getESightHostIdAndDNs();
+  private void doHandleEvent(final Map<String, Object> eventDataMap, VCenterInfo vCenterInfo) {
+    int esightId = (int) eventDataMap.get("esightId");
+
+    int sn = (int) eventDataMap.get("sn");
+    int severity = (int) eventDataMap.get("severity");
+    boolean isResume = (boolean) eventDataMap.get("resume");
+    String neDN = eventDataMap.get("neDN").toString();
+    long alarmId = (long) eventDataMap.get("alarmId");
+    String objectInstance = eventDataMap.get("objectInstance").toString();
+
+    LOGGER.info("[eSightEvent]Start handling event: " + eventDataMap + ", sn: " + sn);
+    List<ESightHAServer> eSightHAServers;
+    try {
+      eSightHAServers = eSightHAServerService.getESightHAServersByDN(esightId, neDN);
+    } catch (SQLException e) {
+      LOGGER.error("[eSightEvent]Cannot get sync servers");
+      return;
+    }
+    if (eSightHAServers.isEmpty()) {
+      LOGGER.info("[eSightEvent]No sync neDN: " + neDN);
+      return;
+    }
+    Collection<String> hostSystems = new HashSet<>();
+    for (ESightHAServer eSightHAServer : eSightHAServers) {
+      // 高密服务器：父、子节点都往自身推送
+      // 高密有父节点和子节点dn一样的，说明是父节点dn的告警
+      if (ESightServerType.HIGH_DENSITY.value()
+          .equalsIgnoreCase(eSightHAServer.geteSightServerType()) && !neDN
+          .equalsIgnoreCase(eSightHAServer.geteSightServerDN())) {
+        continue;
+      }
+      hostSystems.add(eSightHAServer.getHaHostSystem());
+    }
+    if (hostSystems.isEmpty()) {
+      LOGGER.info("[eSightEvent]No host to push");
+      return;
+    }
+    ESight eSight;
+    try {
+      eSight = getESightById(esightId);
+    } catch (SQLException e) {
+      LOGGER.info("[eSightEvent]Cannot find by eSight ID: " + esightId);
+      return;
+    }
+    if (eSight == null) {
+      LOGGER.info("[eSightEvent]eSight doesn't exists: " + esightId);
+      return;
+    }
+
+    boolean isBladeParentAlarm = (ESightServerType.BLADE.value()
+        .equalsIgnoreCase(eSightHAServers.get(0).geteSightServerType()) &&
+        neDN.equalsIgnoreCase(eSightHAServers.get(0).geteSightServerParentDN()));
+    // true when matches all following scenarios
+    // 1. blade
+    // 2. alarm is on parent dn
+    // 3. not fan not ps
+    boolean isBladeParentAlarmNotOnFanOrPS = (isBladeParentAlarm && !(alarmId == 71434002L
+        || alarmId == 134348799 || alarmId == 138477320 || alarmId == 138477322
+        || alarmId == 671350783));
+
+    // Alarm
+    if (vCenterInfo.isPushEvent()) {
+      // 调整3为4方便比较
+      AlarmDefinition alarmDefinition;
+      int myPushEventLevel =
+          vCenterInfo.getPushEventLevel() == 3 ? 4 : vCenterInfo.getPushEventLevel();
+      // myPushEventLevel - perceivedSeverity
+      // 1 - 1
+      // 2 - 1,2
+      // 4 - 1,2,3,4
+      // is the severity in scope
+      if (myPushEventLevel < severity) {
+        LOGGER.info("[eSightEvent]Discard perceivedSeverity not in setting scope: " + severity);
+      } else if ((alarmDefinition = new AlarmDefinitionConverter().findAlarmDefinition(alarmId))
+          == null) {
+        LOGGER.info("[eSightEvent]Cannot find correct eventTypeID to push. Discard");
+      } else if (isBladeParentAlarmNotOnFanOrPS) {
+        LOGGER.info("[eSightEvent]Do not push parent not-Fan/PS alarm for alarmId: " + alarmId);
+      } else {
+        AlarmRecord toBeAddedAlarmRecord = null;
+        AlarmRecord toBeDeletedAlarmRecord = null;
+        AlarmRecord ar = new AlarmRecord();
+        ar.setEsightHostId(esightId);
+        ar.setSn(sn);
+        ar.setEventId(alarmDefinition.getEventTypeID());
+        ar.setDn(neDN);
+        ar.setCreateTime(new Date());
+        AlarmRecord alarmRecord;
+        try {
+          alarmRecord = notificationAlarmDao.getAlarmRecord(esightId, sn, neDN);
+        } catch (SQLException e) {
+          LOGGER.error("[eSightEvent]Cannot get alarm record: " + e.getMessage());
+          throw new VcenterException("Cannot get alarm record");
+        }
+        if (!isResume) { // 1. alarm
+          if (alarmRecord == null) {
+            toBeAddedAlarmRecord = ar;
+          } else {
+            LOGGER.info("[eSightEvent]Existing Alarm sn data: " + alarmRecord);
+          }
+        } else { // 2. resume alarm
+          if (alarmRecord == null) {
+            LOGGER.info("[eSightEvent]No sn data to resume Alarm, sn: " + sn);
+          } else {
+            toBeDeletedAlarmRecord = ar;
+          }
+        }
+
+        if (toBeAddedAlarmRecord != null) {
+          pushAlarmEvent(vCenterInfo.getUserName(), alarmDefinition.getVcEventId(), hostSystems);
+          try {
+            notificationAlarmDao.addAlarmRecord(toBeAddedAlarmRecord);
+          } catch (SQLException e) {
+            LOGGER.error("Cannot add alarm record: " + e.getMessage());
+            throw new VcenterException("Cannot add alarm record");
+          }
+        }
+        if (toBeDeletedAlarmRecord != null) {
+          // resume
+          // check if any eventId exists in the eSight DN
+          try {
+            int alarmRecordEventIdCount = notificationAlarmDao
+                .getAlarmRecordEventIdCount(toBeDeletedAlarmRecord);
+            LOGGER.info(
+                "[eSightEvent]Number of " + alarmDefinition.getEventTypeID() + " left to resume: "
+                    + (alarmRecordEventIdCount - 1));
+            if (alarmRecordEventIdCount < 2) {
+              pushAlarmEvent(vCenterInfo.getUserName(), alarmDefinition.getVcResumeEventId(),
+                  hostSystems);
+            }
+            notificationAlarmDao.deleteAlarmRecord(toBeDeletedAlarmRecord);
+          } catch (SQLException e) {
+            LOGGER.error("[eSightEvent]Cannot get/delete alarm record: " + e.getMessage());
+            throw new VcenterException("Cannot get/delete alarm record");
+          }
+        }
+      }
+    }
+    // Proactive HA
+    if (vCenterInfo.isState()) {
+      HAEventDef haEventDef = HAEventHelper.getInstance().getHaEventDef(alarmId);
+      if (haEventDef == null) {
+        LOGGER.info("[eSightEvent]eventsForHA doesn't include eventId: " + alarmId);
+      } else if (isBladeParentAlarm) {
+        LOGGER.info("[eSightEvent]Do not push blade parent DN for alarmId: " + alarmId);
+      } else {
+        HAComponent haComponent = new HAComponent();
+        haComponent.setEsightHostId(esightId);
+        haComponent.setComponent(haEventDef.getEventComponent());
+        haComponent.setDn(neDN);
+        haComponent.setSn(sn);
+        List<HAComponent> haComponentList;
+        HAComponent toBeAddedHAComponent = null;
+        HAComponent toBeDeletedHAComponent = null;
+        boolean isComponentAllResumed = false;
+        boolean doPush = false;
+        try {
+          haComponentList = notificationAlarmDao.getHAComponents(haComponent);
+        } catch (SQLException e) {
+          LOGGER.error("[eSightEvent]Cannot get HA components: " + e.getMessage());
+          throw new VcenterException("Cannot get HA components");
+        }
+        if (!isResume) { // alarm
+          if (haComponentList.isEmpty()) {
+            haComponent.setCreateTime(new Date());
+            toBeAddedHAComponent = haComponent;
+            doPush = true;
+          } else {
+            LOGGER.info("[eSightEvent]Existing HA sn data: " + haComponentList.get(0));
+          }
+        } else { // resume alarm
+          if (haComponentList.isEmpty()) {
+            LOGGER.info("[eSightEvent]No sn data to resume HA, sn: " + sn);
+          } else {
+            toBeDeletedHAComponent = haComponent;
+            int componentTypeCount;
+            try {
+              componentTypeCount = notificationAlarmDao.getComponentTypeCount(haComponent);
+            } catch (SQLException e) {
+              LOGGER.error("[eSightEvent]Cannot get component count: " + e.getMessage());
+              throw new VcenterException("Cannot get component count");
+            }
+            if (componentTypeCount < 2) {
+              isComponentAllResumed = true;
+              doPush = true;
+            }
+            LOGGER.info(
+                "[eSightEvent]Number of the component left to resume: " + (componentTypeCount == 0
+                    ? 0 : componentTypeCount - 1));
+          }
+        }
+
+        if (doPush) {
+          pushHA(haEventDef.getEventComponent(), hostSystems, isComponentAllResumed);
+          LOGGER.info("[eSightEvent]Push HA completed");
+        }
+        if (toBeAddedHAComponent != null) {
+          LOGGER.info("[eSightEvent]New HA alarm component: " + toBeAddedHAComponent + ", alarmId: "
+              + alarmId);
+          try {
+            notificationAlarmDao.addHAComponents(toBeAddedHAComponent);
+          } catch (SQLException e) {
+            LOGGER.error("[eSightEvent]Cannot add HA component: " + e.getMessage());
+            throw new VcenterException("Cannot add HA component");
+          }
+        }
+        if (toBeDeletedHAComponent != null) {
+          LOGGER.info(
+              "[eSightEvent]Resumed HA component: " + toBeDeletedHAComponent + ", alarmId: "
+                  + alarmId);
+          try {
+            notificationAlarmDao.deleteHAComponent(haComponent);
+          } catch (SQLException e) {
+            LOGGER.error("[eSightEvent]Cannot delete HA component: " + e.getMessage());
+            throw new VcenterException("Cannot delete HA component");
+          }
+        }
+      }
+    }
   }
 
   @Override
@@ -392,9 +494,7 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
 //      } catch (Exception e) {
 //        LOGGER.error("Cannot turn off ssl checking", e);
 //      }
-      String version = vmActionService.getVersion();
-      LOGGER.info("Current vCenter version: " + version);
-      ConnectedVim.checkVersionCompatible(version);
+      ConnectedVim.checkVersionCompatible();
       Boolean removeProviderResult = vCenterHAService
           .removeProvider(vCenterInfoService.getVCenterInfo());
       if (removeProviderResult == null || removeProviderResult) {
@@ -407,330 +507,141 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
       LOGGER.info("Cannot remove provider from vCenter version, " + e.getMessage());
       return null;
     } catch (Exception e) {
-      LOGGER.info("Failed to uninstall provider", e);
+      LOGGER.error("Failed to uninstall provider: " + e.getMessage());
       return false;
     }
   }
 
-  private static List<ESightHAServer> noDuplicated(List<ESightHAServer> eSightHAServers) {
-    Set<Integer> ids = new HashSet<>();
-    List<ESightHAServer> newESightHAServers = new ArrayList<>();
-    for (ESightHAServer eSightHAServer : eSightHAServers) {
-      if (!ids.contains(eSightHAServer.getId())) {
-        ids.add(eSightHAServer.getId());
-        newESightHAServers.add(eSightHAServer);
-      }
+  private void pushAlarmEvent(String username, String eventId, Collection<String> hostSystems) {
+    LOGGER.info("[eSightEvent]Pushing event " + eventId + " to host: " + hostSystems);
+    for (String hostSystem : hostSystems) {
+      connectedVim.pushEvent(username, eventId, hostSystem);
     }
-    return newESightHAServers;
   }
 
-  private void pushAlarm(Map.Entry<String, Counter> entry) {
-    boolean pushSuccess = false;
-    String[] keys = entry.getKey().split(",,,");
-    ESight eSight = null;
-    String dn;
-    boolean hasInvalidStateComponent = false;
+  private void pushHA(String haComponent, Collection<String> hostSystems,
+      boolean isComponentAllResumed) {
+    connectedVim.pushHealth(haComponent, hostSystems, isComponentAllResumed ? "5" : "4", false);
+  }
+
+  @Override
+  public void cleanData() {
+    LOGGER.info("Clean data from all tables...");
+    notificationAlarmDao.cleanAllData();
+  }
+
+  @Override
+  public int deleteAlarmAndHADn(int esightHostId, String dn) {
     try {
-      eSight = getESightByIp(keys[0]);
-      dn = keys[1];
-      if (eSight == null) {
-        throw new NoEsightException();
-      }
-      List<ESightHAServer> eSightHAServers = eSightHAServerService
-          .getESightHAServersByDN(eSight.getId(), dn);
-      // 高密类型如果当前DN未同步，还需要判断管理板部件变化，有变化的需要推送到已同步的子板
-      if (eSightHAServers.isEmpty()) {
-        ESightHAServer eSightHAServer = eSightHAServerService
-            .getESightHAServerByDN(eSight.getId(), dn);
-        LOGGER.info(
-            "[Polling]Not a synchronized server: " + (eSightHAServer == null ? entry.getKey()
-                : eSightHAServer));
-        if (eSightHAServer != null
-            && ESightServerType.HIGH_DENSITY.value()
-            .equalsIgnoreCase(eSightHAServer.geteSightServerType())
-            && StringUtils.hasLength(eSightHAServer.geteSightServerParentDN())) {
-          // 高密：添加所有已同步的子板
-          eSightHAServers.addAll(eSightHAServerService.getESightHAServersByDN(eSight.getId(),
-              eSightHAServer.geteSightServerParentDN()));
-          // 去重
-          eSightHAServers = noDuplicated(eSightHAServers);
+      return notificationAlarmDao.deleteAlarmRecord(esightHostId, dn) + notificationAlarmDao
+          .deleteHAComponent(esightHostId, dn);
+    } catch (SQLException e) {
+      LOGGER.error("Cannot delete alarm and HA record: " + esightHostId + dn);
+    }
+    return 0;
+  }
+
+  @Override
+  public void syncHistoricalEvents(final ESight eSight, final boolean syncHost,
+      final boolean subscribeAlarm) {
+    syncHistoricalEvents(eSight, null, syncHost, subscribeAlarm);
+  }
+
+  @Override
+  public void syncHistoricalEvents(final ESight eSight, final String neDN, final boolean syncHost,
+      final boolean subscribeAlarm) {
+    backgroundTaskExecutor.execute(new Runnable() {
+      @Override
+      public void run() {
+        if (syncHost) {
+          syncServerHostService.syncServerHost(subscribeAlarm);
         }
-      } else if (ESightServerType.HIGH_DENSITY.value()
-          .equalsIgnoreCase(eSightHAServers.get(0).geteSightServerType())
-          && StringUtils.hasLength(eSightHAServers.get(0).geteSightServerParentDN())) {
-        // 高密：添加所有已同步的子板
-        eSightHAServers.addAll(eSightHAServerService.getESightHAServersByDN(eSight.getId(),
-            eSightHAServers.get(0).geteSightServerParentDN()));
-        // 去重
-        eSightHAServers = noDuplicated(eSightHAServers);
-      }
-
-      if (eSightHAServers.isEmpty()) {
-        LOGGER.info("[Polling]Discard server hasn't sync, ESight: " + eSight
-            + ", dn: " + dn);
-        return;
-      }
-      LOGGER.info("[Polling]eSightHAServers: " + eSightHAServers);
-
-      // DNs need to query server details
-      Set<String> affectedDNs = new HashSet<>();
-      ESightHAServer haServerInstance = eSightHAServers.get(0);
-      String serverType = haServerInstance.geteSightServerType();
-      String parentDN = haServerInstance.geteSightServerParentDN();
-      boolean isHighDensity = false;
-      boolean isBlade = false;
-      if (ESightServerType.RACK.value().equalsIgnoreCase(serverType)) {
-        affectedDNs.add(haServerInstance.geteSightServerDN());
-        if (StringUtils.hasLength(parentDN)) {
-          affectedDNs.add(parentDN);
+        LOGGER
+            .info("[eSightHistoricalAlarm]Sync historic events is starting: " + eSight.getHostIp());
+        VCenterInfo vCenterInfo;
+        try {
+          vCenterInfo = vCenterInfoService.getVCenterInfo();
+        } catch (SQLException e) {
+          LOGGER.error("[eSightHistoricalAlarm]Cannot get vCenter setting: " + e.getMessage());
+          throw new VcenterException("Cannot get vCenter setting");
         }
-      } else if (ESightServerType.HIGH_DENSITY.value().equalsIgnoreCase(serverType)) {
-        isHighDensity = true;
-        affectedDNs.add(haServerInstance.geteSightServerDN());
-        if (StringUtils.hasLength(parentDN)) {
-          affectedDNs.add(parentDN);
+        if (vCenterInfo == null || (!vCenterInfo.isState() && !vCenterInfo.isPushEvent())) {
+          LOGGER.info("[eSightHistoricalAlarm]Alarm and HA is not enabled");
+          return;
         }
-      } else if (ESightServerType.BLADE.value().equalsIgnoreCase(serverType)) {
-        isBlade = true;
-        affectedDNs.add(dn);
-      } else {
-        affectedDNs.add(dn);
-      }
-      LOGGER.info("[Polling]DNs: " + affectedDNs);
-
-      List<ServerDeviceDetail> pushList = new ArrayList<>();
-      List<ServerDeviceDetail> fullDeviceDetailList = new ArrayList<>();
-      boolean hasFirstData = false;
-      Set<String> noStateComponents = new HashSet<>();
-      Set<String> notReadyUUIDs = new HashSet<>();
-      for (String affectedDN : affectedDNs) {
-        ComponentState componentState = getServerDeviceDetail(eSight, affectedDN);
-        LOGGER.info(affectedDN + ", Component: " + componentState);
-        List<ServerDeviceDetail> deviceDetailList = componentState.getComponentList();
-        noStateComponents.addAll(componentState.getComponentEmpty());
-        notReadyUUIDs.addAll(componentState.getUuidNotReady());
-
-        fullDeviceDetailList.addAll(deviceDetailList);
-        boolean isFirstData = notificationAlarmDao
-            .getServerDeviceDetailCount(eSight.getId(), Collections.singletonList(affectedDN)) == 0;
-
-        // 判断是否为首次
-        if (isFirstData) {
-          hasFirstData = true;
-          for (ServerDeviceDetail serverDeviceDetail : deviceDetailList) {
-            // 首次推送非正常状态部件
-            if (!"0".equals(serverDeviceDetail.getHealthState())) {
-              pushList.add(serverDeviceDetail);
-            }
-          }
-          LOGGER.info("[Polling]Server device detail initial size: " + pushList.size() + ", data: "
-              + pushList);
-        } else {
-          // 取状态变化的
-          Collection<String> turnGreenComponents;
-          List<ServerDeviceDetail> diffDeviceDetailList;
+        int pageSize = 100;
+        int pageNo = 1;
+        while (true) {
           try {
-            Pair<Collection<String>, List<ServerDeviceDetail>> resultPair = notificationAlarmDao
-                .getServerDeviceDetailDiff(deviceDetailList);
-            turnGreenComponents = resultPair.getKey(); // 绿色告警
-            diffDeviceDetailList = resultPair.getValue(); // 非绿告警
-            LOGGER.info("Green: " + turnGreenComponents + ", Non-Green: " + diffDeviceDetailList);
-          } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            continue;
+            while (eventQueue.size() > 200) { // wait if more than 200 events left in queue
+              Thread.sleep(5000L);
+            }
+          } catch (InterruptedException e) {
+            LOGGER.info("[eSightHistoricalAlarm]Waiting queue is interrupted");
+            break;
           }
-          // 添加恢复告警
-          for (String resumeAlarmComponent : turnGreenComponents) {
-            pushList.add(new ServerDeviceDetail(eSight.getId(), affectedDN,
-                resumeAlarmComponent, null, "0", "1"));
-          }
-          // 添加故障告警
-          pushList.addAll(diffDeviceDetailList);
 
+          Map<String, Object> resultMap = new GetAlarmApi<Map>(eSight)
+              .doCall(null, null, null, null, null, null, null, null, neDN, pageNo, pageSize,
+                  Map.class);
+          String code = String.valueOf(resultMap.get("code"));
+          if (!"0".equals(code)) {
+            LOGGER.warn(
+                "[eSightHistoricalAlarm]Cannot get historical events: " + code + ", " + resultMap);
+            return;
+          }
+          Collection<Map<String, Object>> dataList = (Collection<Map<String, Object>>) resultMap
+              .get("data");
           LOGGER.info(
-              "[Polling]Server device detail different size: " + pushList.size() + ", data: "
-                  + pushList);
-        }
-      }
-
-      // 部件全部不在位则推送一个红色告警
-      // componentHasPresentState: 部件-是否有在位的
-      Map<String, Boolean> componentHasPresentState = new HashMap<>();
-      for (ServerDeviceDetail serverDeviceDetail : fullDeviceDetailList) {
-        String component = serverDeviceDetail.getComponent();
-        if (componentHasPresentState.containsKey(component)) {
-          if (!componentHasPresentState.get(component)
-              && !"-1".equals(serverDeviceDetail.getHealthState())) {
-            componentHasPresentState.put(component, Boolean.TRUE);
+              "[eSightHistoricalAlarm]Page " + pageNo + " data size: " + (dataList == null ? 0
+                  : dataList.size()));
+          if (dataList == null || dataList.isEmpty()) {
+            break;
           }
-        } else {
-          componentHasPresentState
-              .put(component, !"-1".equals(serverDeviceDetail.getHealthState()));
-        }
-      }
-      LOGGER.info("Components have present state: " + componentHasPresentState);
-      // 手动构建红色告警推送部件全不在位情况
-      // 将要推送的部件
-      Collection<String> notPresentStateComponents = notificationAlarmDao
-          .getNotPresentStateComponents();
-      LOGGER.info("All not present state components: " + notPresentStateComponents);
-      for (Map.Entry<String, Boolean> sdd : componentHasPresentState.entrySet()) {
-        // 前次没推送过(数据库部件非全-1)才推送全不在位告警
-        if (!sdd.getValue() && !notPresentStateComponents.contains(sdd.getKey())) {
-          ServerDeviceDetail aNotPresentState = null;
-          if ((isHighDensity || isBlade) && ("Fan".equalsIgnoreCase(sdd.getKey()) || "PSU"
-              .equalsIgnoreCase(sdd.getKey())) && StringUtils.hasLength(parentDN)) {
-            aNotPresentState = new ServerDeviceDetail(eSight.getId(), parentDN, sdd.getKey(), null,
-                "4", "0");
-          } else {
-            aNotPresentState = new ServerDeviceDetail(eSight.getId(), dn, sdd.getKey(), null, "4",
-                "0");
+          for (Map<String, Object> dataMap : dataList) {
+            long alarmId = Long.parseLong(String.valueOf(dataMap.get("alarmId")));
+            String neDN = dataMap.get("neDN").toString();
+            int sn = Integer.parseInt(String.valueOf(dataMap.get("alarmSN")));
+            int severity = Integer.parseInt(String.valueOf(dataMap.get("perceivedSeverity")));
+            String objectInstance = dataMap.get("objectInstance").toString();
+            putEventToQueue(eSight.getId(), sn, alarmId, severity, (boolean) dataMap.get("cleared"),
+                neDN, objectInstance);
           }
-          pushList.add(aNotPresentState);
+
+          if (pageNo == 999 || dataList.size() < pageSize) { // max page or end
+            break;
+          }
+
+          pageNo++;
         }
       }
-
-      // 非首次数据：部件无变化，不推送，不更新数据库部件信息
-      if (!hasFirstData && pushList.isEmpty()) {
-        return;
-      }
-
-      hasInvalidStateComponent = (!noStateComponents.isEmpty() || !notReadyUUIDs.isEmpty());
-
-      // push
-      pushSuccess = vCenterHAService.pushHealth(eSightHAServers, pushList);
-      if (pushSuccess) {
-        if (hasInvalidStateComponent) {
-          // 忽略-2和空部件，更新其他部件
-          List<String> validComponents = new ArrayList<>(
-              Arrays.asList(DeviceComponent.getAlarmComponents()));
-          validComponents.removeAll(noStateComponents);
-          notificationAlarmDao.updateDeviceDetail(eSight.getId(), affectedDNs, fullDeviceDetailList,
-              validComponents, notReadyUUIDs);
-        } else {
-          notificationAlarmDao
-              .updateDeviceDetail(eSight.getId(), affectedDNs, fullDeviceDetailList);
-        }
-      }
-    } catch (Exception e) {
-      pushSuccess = false;
-      LOGGER.error("[Polling]Failed to polling component", e);
-    } finally {
-      if (eSight == null) {
-        this.pollingDNMap.remove(entry.getKey());
-      } else if (pushSuccess && !hasInvalidStateComponent) {
-        entry.getValue().decreaseAlarmCount();
-        deleteNoCount(entry.getKey());
-      } else {
-        entry.getValue().decreaseRetryCount();
-        deleteNoCount(entry.getKey());
-      }
-    }
-  }
-
-  private void pushEvent(Map.Entry<String, Counter> entry, VCenterInfo vCenterInfo) {
-    String[] keys = entry.getKey().split(",,,");
-    String haHostSystem = keys[0];
-    String eventTypeId = keys[1];
-    while (entry.getValue().getAlarmCount().intValue() > 0) {
-      try {
-        ConnectedVim connectedVim = vCenterHAService.getConnectedVim();
-        connectedVim.postEvent(vCenterInfo, eventTypeId, haHostSystem);
-      } catch (Exception e) {
-        LOGGER.error("Failed to push event " + eventTypeId, e);
-      } finally {
-        entry.getValue().decreaseAlarmCount();
-      }
-    }
-    deleteNoCount(entry.getKey());
+    });
   }
 
   @Override
-  public void pollingComponent() {
-    synchronized (globalSession) {
-      LOGGER.info("[Polling]" + this.pollingDNMap);
-      if (pollingDNMap.isEmpty()) {
-        return;
-      }
-      VCenterInfo vCenterInfo = null;
-      try {
-        vCenterInfo = vCenterInfoService.getVCenterInfo();
-      } catch (SQLException e) {
-        LOGGER.info("Failed to get vcenter info", e);
-      }
-      if (vCenterInfo == null) {
-        LOGGER.info("No vCenterInfo found. Discard.");
-        for (Map.Entry<String, Counter> entry : pollingDNMap.entrySet()) {
-          this.pollingDNMap.remove(entry.getKey());
+  public void syncHistoricalEvents(final boolean syncHost, final boolean subscribeAlarm) {
+    backgroundTaskExecutor.execute(new Runnable() {
+      @Override
+      public void run() {
+        if (syncHost) {
+          syncServerHostService.syncServerHost(subscribeAlarm);
         }
-        return;
-      }
-      for (Map.Entry<String, Counter> entry : pollingDNMap.entrySet()) {
-        LOGGER.info("[Polling]start " + entry);
-        String[] keys = entry.getKey().split(",,,");
-        if (keys[0].matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
-          pushAlarm(entry);
-        } else {
-          pushEvent(entry, vCenterInfo);
+        try {
+          List<ESight> eSightList = eSightService.getESightListWithPassword(null, -1, -1);
+          for (ESight eSight : eSightList) {
+            syncHistoricalEvents(eSight, false, false);
+          }
+        } catch (SQLException e) {
+          LOGGER.error("Cannot get esight list");
         }
       }
-    }
+    });
+
   }
 
   @Override
-  public void putAlarmIfNotExist(String eSightIP, String dn, int retryCount) {
-    String key = eSightIP + ",,," + dn;
-    if (!pollingDNMap.containsKey(key)) {
-      pollingDNMap.put(key, new Counter(new AtomicInteger(INIT_ALARM_COUNT), new AtomicInteger(1)));
-    }
-  }
-
-  @Override
-  public int deleteNotSyncedDeviceDetails() {
-    try {
-      return notificationAlarmDao.deleteNotSyncedDeviceDetails();
-    } catch (SQLException e) {
-      throw new VcenterException("Can't not delete device details");
-    }
-  }
-
-  private void deleteNoCount(String key) {
-    Counter counter = pollingDNMap.get(key);
-    if (counter.getAlarmCount().intValue() < 1 || counter.getRetryCount().intValue() < 1) {
-      pollingDNMap.remove(key);
-    }
-  }
-
-  private void putNewEvent(ESight eSight, String dn, String eventTypeId) {
-    try {
-      ESightHAServer eSightHAServer = eSightHAServerService
-          .getESightHAServerByDN(eSight.getId(), dn);
-      if (eSightHAServer == null || eSightHAServer.getStatus() != 1) {
-        LOGGER.warn("DN is not sync: " + dn);
-        return;
-      }
-      String haHostSystem = eSightHAServer.getHaHostSystem();
-      String key = haHostSystem + ",,," + eventTypeId;
-      if (pollingDNMap.containsKey(key)) {
-        pollingDNMap.get(key).increaseAlarmCount();
-      } else {
-        pollingDNMap.put(key, new Counter(new AtomicInteger(INIT_EVENT_COUNT),
-            new AtomicInteger(INIT_EVENT_RETRY_COUNT)));
-      }
-    } catch (SQLException e) {
-      LOGGER.info("Failed to put event, cannot getESightHAServersByDN: " + dn);
-    }
-  }
-
-  private synchronized void putNewAlarm(String eSightIP, String dn) {
-    String key = eSightIP + ",,," + dn;
-    if (pollingDNMap.containsKey(key)) {
-      pollingDNMap.get(key).increaseAlarmCount();
-      pollingDNMap.get(key).resetRetryCount();
-    } else {
-      pollingDNMap.put(key,
-          new Counter(new AtomicInteger(INIT_ALARM_COUNT), new AtomicInteger(pollingTimes)));
-    }
+  public Executor getBgTaskExecutor() {
+    return backgroundTaskExecutor;
   }
 
   @Override
@@ -748,83 +659,13 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
           unsubscribeAlarm(eSight, new SessionOpenIdProvider(eSight, globalSession),
               "unsubscribe_by_deployer");
         } catch (Exception e) {
-          LOGGER.error("Failed to unsubscribe alarm: " + eSight, e);
+          LOGGER.error("Failed to unsubscribe alarm: " + eSight + ": " + e.getMessage());
         }
       }
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to unsubscribe all: " + e.getMessage());
     }
   }
-
-  private ComponentState convertToComponents(int esightId,
-      String dn,
-      Map<String, Object> dataMap,
-      String... componentNames) {
-    ComponentState componentState = new ComponentState();
-    for (String componentName : componentNames) {
-      if (dataMap.containsKey(componentName)) {
-        Object componentObj = dataMap.get(componentName);
-        if (componentObj instanceof List) {
-          if (((List<Map<String, Object>>) componentObj).isEmpty()) {
-            LOGGER.info(componentName + " is empty");
-            componentState.addEmptyComponent(componentName);
-            continue;
-          }
-          for (Map<String, Object> componentMap : (List<Map<String, Object>>) componentObj) {
-            if ("-2".equals(String.valueOf(componentMap.get("healthState")).split("\\.")[0])) {
-              String uuid = String.valueOf(componentMap.get("uuid"));
-              LOGGER.info(uuid + " has -2 health state");
-              componentState.addUUIDNotReady(uuid);
-            }
-            componentState
-                .addComponent(new ServerDeviceDetail(esightId, dn, componentName, componentMap));
-          }
-        }
-      }
-    }
-    return componentState;
-  }
-
-  class ComponentState {
-
-    private Set<String> uuidNotReady = new HashSet<>();
-    private Set<String> componentEmpty = new HashSet<>();
-    private List<ServerDeviceDetail> componentList = new ArrayList<>();
-
-    public void addComponent(ServerDeviceDetail serverDeviceDetail) {
-      componentList.add(serverDeviceDetail);
-    }
-
-    public void addEmptyComponent(String component) {
-      componentEmpty.add(component);
-    }
-
-    public void addUUIDNotReady(String uuid) {
-      uuidNotReady.add(uuid);
-    }
-
-    public Set<String> getUuidNotReady() {
-      return uuidNotReady;
-    }
-
-    public Set<String> getComponentEmpty() {
-      return componentEmpty;
-    }
-
-    public List<ServerDeviceDetail> getComponentList() {
-      return componentList;
-    }
-
-    @Override
-    public String toString() {
-      return "ComponentState{" +
-          "uuidNotReady=" + uuidNotReady +
-          ", componentEmpty=" + componentEmpty +
-          ", componentList=" + componentList.size() +
-          '}';
-    }
-  }
-
 
   public String getSubscribeUrl() throws VcenterException {
     if (StringUtils.hasLength(subscribeUrl)) {
@@ -841,9 +682,21 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
       } else if (!vCenterInfo.isState() && !vCenterInfo.isPushEvent()) {
         throw new VcenterException("vCenter info is disabled.");
       }
-      return "https://" + vCenterInfo.getHostIp()
+      return "https://" + vCenterInfo.getHostIp() + ":" + vCenterInfo.getHostPort()
           + "/vsphere-client/vcenterpluginui/rest/services/notification";
     }
+  }
+
+  private void destroy() {
+    backgroundTaskExecutor.shutdownNow();
+    backgroundTaskExecutor = null;
+
+    eventExecutor.shutdownNow();
+    eventExecutor = null;
+
+    connectedVim = null;
+    eventQueue.clear();
+    eventQueue = null;
   }
 
   public void setSubscribeUrl(String subscribeUrl) {
@@ -872,14 +725,6 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
 
   public void setNotificationAlarmDao(NotificationAlarmDao notificationAlarmDao) {
     this.notificationAlarmDao = notificationAlarmDao;
-  }
-
-  public int getPollingTimes() {
-    return pollingTimes;
-  }
-
-  public void setPollingTimes(int pollingTimes) {
-    this.pollingTimes = pollingTimes;
   }
 
 }

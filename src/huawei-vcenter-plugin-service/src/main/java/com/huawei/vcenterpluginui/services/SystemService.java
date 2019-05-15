@@ -5,7 +5,23 @@ package com.huawei.vcenterpluginui.services;
  */
 public interface SystemService {
     /**
-     * 初始化数据库(表，数据等)
+     * init table structures and data
      */
     void initDB();
+
+    /**
+     * check if table exists in DB
+     * @param tableName
+     * @return
+     */
+    boolean isTableExists(String tableName);
+
+    /**
+     * check if column exists in the DB table
+     * @param tableName
+     * @param columnName
+     * @return
+     */
+    boolean isColumnExists(String tableName, String columnName);
+
 }

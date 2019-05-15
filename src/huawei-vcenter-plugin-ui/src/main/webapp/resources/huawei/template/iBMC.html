@@ -24,7 +24,7 @@
         [v-cloak] {
             display: none;
         }
-        
+
         form input {
             max-width: 217px;
         }
@@ -33,10 +33,12 @@
 
 <body>
     <div id="app" v-cloak>
-        <el-form v-bind:model="mainForm" v-bind:rules="mainRules" ref="mainForm" v-bind:label-width="labelWidth" label-position="left" label-suffix=":">
+        <el-form v-bind:model="mainForm" v-bind:rules="mainRules" ref="mainForm" v-bind:label-width="labelWidth"
+            label-position="left" label-suffix=":">
             <el-form-item v-bind:label="i18ns.template.templateType">
                 <el-select v-model="mainForm.templateType" @change="templateChange">
-                    <el-option v-for="item in templateOptions" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                    <el-option v-for="item in templateOptions" v-bind:key="item.value" v-bind:label="item.label"
+                        v-bind:value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -48,13 +50,15 @@
             </el-form-item>
             <el-form-item v-bind:label="i18ns.template.systemBootOption">
                 <el-select v-model="mainForm.systemBootOption">
-                    <el-option v-for="item in systemBootOptions" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                    <el-option v-for="item in systemBootOptions" v-bind:key="item.value" v-bind:label="item.label"
+                        v-bind:value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item v-bind:label="i18ns.template.serviceSettings">
                 <el-checkbox-group v-model="serviceChecked" @change="serviceSettingChange">
-                    <el-checkbox v-for="item in serviceOptions" v-bind:label="item.label" v-bind:key="item.value" v-bind:value="item.value">{{item.label}}</el-checkbox>
+                    <el-checkbox v-for="item in serviceOptions" v-bind:label="item.label" v-bind:key="item.value"
+                        v-bind:value="item.value">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <!--NTP、DNS、LDAP折叠框-->
@@ -67,7 +71,8 @@
                     </div>
                 </el-col>
             </el-row>
-            <div v-show="classData.isNTPOpen &&_.find(this.serviceChecked,function(x){return x=='NTP'})" style="margin-top: 10px; margin-bottom:10px;">
+            <div v-show="classData.isNTPOpen &&_.find(this.serviceChecked,function(x){return x=='NTP'})"
+                style="margin-top: 10px; margin-bottom:10px;">
                 <el-form-item v-bind:label="i18ns.template.ntpStatus">
                     <el-radio-group v-model="NTPStatusEnabled" @change="NTPStatusChange">
                         <el-radio :label="true">{{i18ns.template.enabled}}</el-radio>
@@ -75,16 +80,34 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.template.NTPServerSource">
-                    <el-select v-model="mainForm.ntpServerSource" @change="NTPServerSourceChange" :disabled="NTPServerSourceDisabled">
-                        <el-option v-for="item in NTPServerSources" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value">
+                    <el-select v-model="mainForm.ntpServerSource" @change="NTPServerSourceChange"
+                        :disabled="NTPServerSourceDisabled">
+                        <el-option v-for="item in NTPServerSources" v-bind:key="item.value" v-bind:label="item.label"
+                            v-bind:value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.template.primaryNtpServer" prop="primaryNtpServer">
-                    <el-input v-model="mainForm.primaryNtpServer" style="width:30%;" :disabled="manualNTPIsDisabled"></el-input>
+                    <el-input v-model="mainForm.primaryNtpServer" style="width:30%;" :disabled="manualNTPIsDisabled">
+                    </el-input>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.template.secondaryNtpServer">
-                    <el-input v-model="mainForm.secondaryNtpServer" :disabled="manualNTPIsDisabled" style="width:30%;"></el-input>
+                    <el-input v-model="mainForm.secondaryNtpServer" :disabled="manualNTPIsDisabled" style="width:30%;">
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-bind:label="i18ns.template.NTPMixPollingInterval">
+                    <el-select v-model="mainForm.mixPollingInterval">
+                        <el-option v-for="item in pollingIntervalOptions" v-bind:key="item.value"
+                            v-bind:label="item.label" v-bind:value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-bind:label="i18ns.template.NTPMaxPollingInterval">
+                    <el-select v-model="mainForm.maxPollingInterval">
+                        <el-option v-for="item in pollingIntervalOptions" v-bind:key="item.value"
+                            v-bind:label="item.label" v-bind:value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </div>
 
@@ -96,7 +119,8 @@
                     </div>
                 </el-col>
             </el-row>
-            <div v-show="classData.isDNSOpen&&_.find(this.serviceChecked,function(x){return x=='DNS'})" style="margin-top: 10px; margin-bottom:10px;">
+            <div v-show="classData.isDNSOpen&&_.find(this.serviceChecked,function(x){return x=='DNS'})"
+                style="margin-top: 10px; margin-bottom:10px;">
                 <el-form-item :label="i18ns.template.dnsSource">
                     <el-radio-group v-model="dnsSource" @change="DNSStatusChange">
                         <el-radio :label="0">{{i18ns.template.AutomaticallyObtain}}</el-radio>
@@ -126,7 +150,8 @@
                     </div>
                 </el-col>
             </el-row>
-            <div v-show="classData.isLDAPOpen&&_.find(this.serviceChecked,function(x){return x=='LDAP'})" style="margin-top: 10px; margin-bottom:10px;">
+            <div v-show="classData.isLDAPOpen&&_.find(this.serviceChecked,function(x){return x=='LDAP'})"
+                style="margin-top: 10px; margin-bottom:10px;">
                 <el-form-item :label="i18ns.template.ldapStatus">
                     <el-radio-group v-model="ldapStatus" @change="ldapStatusChange">
                         <el-radio :label="true">{{i18ns.template.enabled}}</el-radio>
@@ -159,14 +184,17 @@
                         <el-table-column :label="i18ns.template.groupPrivilege">
                             <template scope="scope">
                                 <el-select v-model="scope.row.groupPrivilege" style="min-width:60%">
-                                    <el-option v-for="item in groupPrivileges" v-bind:key="item.value" v-bind:label="item.label" v-bind:value="item.value"></el-option>
+                                    <el-option v-for="item in groupPrivileges" v-bind:key="item.value"
+                                        v-bind:label="item.label" v-bind:value="item.value"></el-option>
                                 </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column prop="operation" :label="i18ns.template.operation">
                             <template scope="scope">
                                 <el-button @click="addRow" type="text" icon="plus" size="small"></el-button>
-                                <el-button icon="minus" type="text" size="small" v-show="scope.$index!=0&&scope.$index==roleGroup.length-1" @click="deleteRow(scope.$index)"></el-button>
+                                <el-button icon="minus" type="text" size="small"
+                                    v-show="scope.$index!=0&&scope.$index==roleGroup.length-1"
+                                    @click="deleteRow(scope.$index)"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -174,10 +202,13 @@
             </div>
             <el-form-item label="eSight" prop="checkEsightList">
                 <el-checkbox-group v-model="mainForm.checkEsightList">
-                    <el-checkbox v-for="item in esightOptions" :label="item.value" :key="item.value" :value="item.value">{{item.label}}</el-checkbox>
+                    <el-checkbox v-for="item in esightOptions" :label="item.value" :key="item.value"
+                        :value="item.value">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-button v-loading.fullscreen.lock="fullscreenLoading" v-bind:element-loading-text="i18ns.template.savingTips" @click="submitForm('mainForm')">{{i18ns.common.confirm}}</el-button>
+            <el-button v-loading.fullscreen.lock="fullscreenLoading"
+                v-bind:element-loading-text="i18ns.template.savingTips" @click="submitForm('mainForm')">
+                {{i18ns.common.confirm}}</el-button>
             <el-button @click="resetForm('mainForm')">{{i18ns.common.back}}</el-button>
 
         </el-form>
@@ -187,7 +218,7 @@
             el: '#app',
             data: {
                 i18ns: [],
-                labelWidth: '120px',
+                labelWidth: '150px',
                 dialogVisible: false,
                 ntpIsShow: true,
                 dnsIsShow: true,
@@ -239,14 +270,82 @@
                     primaryNtpServer: "",
                     secondaryNtpServer: "",
                     systemBootOption: "1",
+                    mixPollingInterval: '',
+                    maxPollingInterval: '',
 
                 },
+                pollingIntervalOptions: [{
+                        'label': '请选择',
+                        'value': '0'
+                    },
+                    {
+                        'label': '8s',
+                        'value': '3'
+                    },
+                    {
+                        'label': '16s',
+                        'value': '4'
+                    },
+                    {
+                        'label': '32s',
+                        'value': '5'
+                    },
+                    {
+                        'label': '64s',
+                        'value': '6'
+                    },
+                    {
+                        'label': '128s',
+                        'value': '7'
+                    },
+                    {
+                        'label': '256s',
+                        'value': '8'
+                    },
+                    {
+                        'label': '512s',
+                        'value': '9'
+                    },
+                    {
+                        'label': '1024s',
+                        'value': '10'
+                    },
+                    {
+                        'label': '34m',
+                        'value': '11'
+                    },
+                    {
+                        'label': '68m',
+                        'value': '12'
+                    },
+                    {
+                        'label': '2h',
+                        'value': '13'
+                    },
+                    {
+                        'label': '4h',
+                        'value': '14'
+                    },
+                    {
+                        'label': '9h',
+                        'value': '15'
+                    },
+                    {
+                        'label': '18h',
+                        'value': '16'
+                    },
+                    {
+                        'label': '36h',
+                        'value': '17'
+                    }
+                ],
+
                 /**
                  * IBMC主页面验证规则
                  * **/
                 mainRules: {
                     templateDesc: {
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (/[\u4E00-\u9FA5\uF900-\uFA2D]/.test(value)) {
                                     callback(new Error(app.i18ns.template.templateDescErrorMsg));
@@ -302,7 +401,7 @@
                     },
                     templateName: {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (!/^[a-zA-Z0-9_\-\u4e00-\u9fa5]{6,32}$/.test(value)) {
                                     return callback(new Error(app.i18ns.template.templateNameErrorMsg));
@@ -323,8 +422,9 @@
                     closeClass: 'nem_component_content_title_icon_close'
                 }
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
+                this.pollingIntervalOptions[0].label = this.i18ns.common.pleaseSelect;
                 var lang = localStorage.getItem('lang');
                 if (lang) {
                     if (lang == 'en') {
@@ -340,7 +440,7 @@
                 this.groupPrivileges = getGroupPrivileges();
                 this.mainForm.checkEsightList.push(getCurrentEsight());
             },
-            mounted: function() {
+            mounted: function () {
                 this.mainRules.primaryNtpServer = {};
                 this.mainRules.primaryDnsServer = {};
                 this.mainRules.dnsDomainName = {};
@@ -353,8 +453,8 @@
                 /**
                  * 服务类型选择
                  * **/
-                serviceSettingChange: function(value) {
-                    if (_.find(value, function(x) {
+                serviceSettingChange: function (value) {
+                    if (_.find(value, function (x) {
                             return x == 'NTP'
                         }) == "NTP") {
                         if (this.NTPStatusEnabled == true && this.mainForm.ntpServerSource == 2) {
@@ -363,7 +463,7 @@
                     } else {
                         this.cancelNtpValidate();
                     }
-                    if (_.find(value, function(x) {
+                    if (_.find(value, function (x) {
                             return x == 'DNS'
                         }) == "DNS") {
                         if (this.dnsSource == 1) {
@@ -372,7 +472,7 @@
                     } else {
                         this.cancelDnsValidate();
                     }
-                    if (_.find(value, function(x) {
+                    if (_.find(value, function (x) {
                             return x == 'LDAP'
                         }) == "LDAP") {
                         if (this.ldapStatus == true) {
@@ -386,7 +486,7 @@
                 /**
                  * NTP服务验证
                  **/
-                setNtpValidate: function() {
+                setNtpValidate: function () {
                     this.mainRules.primaryNtpServer = {
                         required: true,
                         message: this.i18ns.common.requiredErrorMsg,
@@ -396,18 +496,20 @@
                 /**
                  * 取消NTP验证
                  **/
-                cancelNtpValidate: function() {
+                cancelNtpValidate: function () {
                     this.mainRules.primaryNtpServer = {};
                 },
                 /**
                  * DNS验证
                  **/
-                setDnsValidate: function() {
+                setDnsValidate: function () {
                     this.mainRules.primaryDnsServer = {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
-                                if (!/^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/.test(value)) {
+                                if (!
+                                    /^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/
+                                    .test(value)) {
                                     return callback(new Error(app.i18ns.template.ipErrorMsg));
                                 } else
                                     return callback();
@@ -426,14 +528,14 @@
                 /**
                  * DNS验证取消
                  **/
-                cancelDnsValidate: function() {
+                cancelDnsValidate: function () {
                     this.mainRules.primaryDnsServer = {}
                     this.mainRules.dnsDomainName = {};
                 },
                 /**
                  * LDAP验证
                  **/
-                setLdapValidate: function() {
+                setLdapValidate: function () {
                     console.log('setLdapValidate')
                     this.mainRules.domainControllerAddress = {
                         required: true,
@@ -442,10 +544,12 @@
                     }
                     this.mainRules.userDomain = {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
-                                if (!/^([C][N][=]([^&"#',\s]+)([,][D][C][=]([^&"#',\s]+))+)$/.test(value)) {
-                                    return callback(new Error(app.i18ns.template.userDomainErrorMsg))
+                                if (!/^([C][N][=]([^&"#',\s]+)([,][D][C][=]([^&"#',\s]+))+)$/.test(
+                                        value)) {
+                                    return callback(new Error(app.i18ns.template
+                                        .userDomainErrorMsg))
                                 } else {
                                     return callback();
                                 }
@@ -459,25 +563,25 @@
                 /**
                  * LDAP验证取消
                  **/
-                cancelLdapValidate: function() {
+                cancelLdapValidate: function () {
                     this.mainRules.domainControllerAddress = {}
                     this.mainRules.userDomain = {};
                 },
                 /**
                  *获取eSight列表
                  * */
-                getEsightListData: function() {
+                getEsightListData: function () {
                     getEsightList(this.bindEsightList)
                 },
                 /**
                  *绑定eSight列表
                  * */
-                bindEsightList: function(ret) {
-                    setTimeout(function() {
+                bindEsightList: function (ret) {
+                    setTimeout(function () {
                         app.esightOptions = [];
                         var data = ret.data;
                         if (ret.code === "0") {
-                            _.forEach(ret.data, function(x) {
+                            _.forEach(ret.data, function (x) {
                                 app.esightOptions.push({
                                     label: x.aliasName || x.hostIp,
                                     value: x.hostIp
@@ -493,7 +597,7 @@
                 /**
                  *LDAP状态改变方法
                  * */
-                ldapStatusChange: function() {
+                ldapStatusChange: function () {
                     var val = this.ldapStatus;
                     if (val == false) {
                         this.ldapIsDisabled = false;
@@ -506,7 +610,7 @@
                 /**
                  *添加行方法
                  * */
-                addRow: function() {
+                addRow: function () {
                     if (app.roleGroup.length == 5) {
                         app.$alert(app.i18ns.template.moreTableErrorMsg, app.i18ns.template.prompt, {
                             confirmButtonText: app.i18ns.common.confirm,
@@ -524,13 +628,13 @@
                 /**
                  *删除行方法
                  * */
-                deleteRow: function(index) {
+                deleteRow: function (index) {
                     app.roleGroup.splice(index, 1)
                 },
                 /**
                  *DNS状态改变方法
                  * */
-                DNSStatusChange: function() {
+                DNSStatusChange: function () {
                     console.log(this.dnsSource)
                     if (this.dnsSource == 1) {
                         this.setDnsValidate();
@@ -543,7 +647,7 @@
                 /**
                  *NTP状态改变
                  * */
-                NTPStatusChange: function() {
+                NTPStatusChange: function () {
                     if (this.NTPStatusEnabled == false) { //禁用status
                         this.NTPServerSourceDisabled = true;
                         this.manualNTPIsDisabled = true;
@@ -562,7 +666,7 @@
                 /**
                  *NTP服务器源选择的方法
                  * */
-                NTPServerSourceChange: function() {
+                NTPServerSourceChange: function () {
                     var val = app.mainForm.ntpServerSource;
                     if (val != 0) {
                         this.cancelNtpValidate();
@@ -572,13 +676,13 @@
                         this.setNtpValidate();
                     }
                 },
-                templateChange: function(val) {
+                templateChange: function (val) {
                     select_templateChange(val);
                 },
                 /**
                  *重构提交数据
                  * */
-                createParams: function() {
+                createParams: function () {
                     var ntpServerSource;
                     var bindNtpIpProtocol;
                     if (app.mainForm.ntpServerSource == 0) {
@@ -599,7 +703,7 @@
                             systemBootOption: app.mainForm.systemBootOption,
                         }
                     }
-                    if ((_.find(app.serviceChecked, function(x) {
+                    if ((_.find(app.serviceChecked, function (x) {
                             return x == 'DNS'
                         }) == 'DNS')) {
                         data.templateProp = _.assign(data.templateProp, {
@@ -611,7 +715,7 @@
                             }
                         })
                     }
-                    if ((_.find(app.serviceChecked, function(x) {
+                    if ((_.find(app.serviceChecked, function (x) {
                             return x == 'LDAP'
                         }) == 'LDAP')) {
                         data.templateProp = _.assign(data.templateProp, {
@@ -623,7 +727,7 @@
                             }
                         })
                     }
-                    if ((_.find(app.serviceChecked, function(x) {
+                    if ((_.find(app.serviceChecked, function (x) {
                             return x == 'NTP'
                         }) == 'NTP')) {
                         if (app.NTPStatusEnabled == true) {
@@ -633,7 +737,9 @@
                                     ntpServerSource: ntpServerSource,
                                     bindNtpIpProtocol: bindNtpIpProtocol,
                                     primaryNtpServer: app.mainForm.primaryNtpServer,
-                                    secondaryNtpServer: app.mainForm.secondaryNtpServer
+                                    secondaryNtpServer: app.mainForm.secondaryNtpServer,
+                                    mixPollingInterval:app.mainForm.mixPollingInterval,
+                                    maxPollingInterval:app.mainForm.maxPollingInterval
                                 }
                             })
                         } else if (app.NTPStatusEnabled == false) {
@@ -643,7 +749,9 @@
                                     ntpServerSource: "",
                                     bindNtpIpProtocol: "",
                                     primaryNtpServer: "",
-                                    secondaryNtpServer: ""
+                                    secondaryNtpServer: "",
+                                    mixPollingInterval:app.mainForm.mixPollingInterval,
+                                    maxPollingInterval:app.mainForm.maxPollingInterval
                                 }
                             })
                         }
@@ -662,28 +770,39 @@
                 /**
                  *提交表单
                  * */
-                submitForm: function(formName) {
-                    this.$refs[formName].validate(function(valid) {
+                submitForm: function (formName) {
+                    this.$refs[formName].validate(function (valid) {
                         if (valid) {
-                            if ((_.find(app.serviceChecked, function(x) {
+                            if (_.find(app.serviceChecked, function (x) {
+                                    return x == 'NTP'
+                                }) == 'NTP') {
+                                if (parseInt(app.mainForm.mixPollingInterval)> parseInt(app.mainForm
+                                    .maxPollingInterval)) {
+                                    return alertMsg(app.i18ns.template.NTPPollingIntervalTip);
+                                }
+                            }
+                            if ((_.find(app.serviceChecked, function (x) {
                                     return x == 'LDAP'
                                 }) == 'LDAP') && app.ldapStatus == true) {
                                 if (!app.roleGroup[0]["groupName"]) {
                                     var groupNameMsg = app.i18ns.template.roleGroupErrorMsg;
                                     return alertMsg(groupNameMsg);
                                 }
-                                if (!app.roleGroup[0]["groupDomain"] || !/^([C][N][=]([^&"#',\s]+)([,][O][U][=]([^&"#',\s]+))([,][D][C][=]([^&"#',\s]+))+)$/.test(app.roleGroup[0]["groupDomain"])) {
+                                if (!app.roleGroup[0]["groupDomain"] || !
+                                    /^([C][N][=]([^&"#',\s]+)([,][O][U][=]([^&"#',\s]+))([,][D][C][=]([^&"#',\s]+))+)$/
+                                    .test(app.roleGroup[0]["groupDomain"])) {
                                     var groupDomainMsg = app.i18ns.template.groupDomainErrorMsg
                                     return alertMsg(groupDomainMsg);
                                 }
                             }
                             app.fullscreenLoading = true;
                             var param = app.createParams();
-                            templateManage.addiBMC(param, function(ret) {
+                            templateManage.addiBMC(param, function (ret) {
                                 app.fullscreenLoading = false;
                                 if (ret.code === '0') {
-                                    alertMsg(app.i18ns.template.addSuccessMsg, function() {
-                                        location.href = 'List.html?s=' + Math.random();
+                                    alertMsg(app.i18ns.template.addSuccessMsg, function () {
+                                        location.href = 'List.html?s=' + Math
+                                            .random();
                                     })
                                 } else {
                                     msg = getErrorMsg(ret.code);
@@ -699,7 +818,7 @@
                 /**
                  *返回上级页面
                  * */
-                resetForm: function(formName) {
+                resetForm: function (formName) {
                     goBack('List.html');
                 },
             }

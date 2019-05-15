@@ -311,7 +311,7 @@ var softManager = {
         	console.log(response);
             if (typeof callback === "function") {
                 listData = response.data;
-                var ret = {code: response.code, msg: response.description, data:{ data: response.data } }
+                var ret = {code: response.code, msg: response.description, data:{ data: response.data } ,ip: response.ip}
                 dealResult(ret, callback);
             }
           },"json");
@@ -329,7 +329,7 @@ var softManager = {
             	totalNum = response.data.totalNum;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description,data: data, totalNum:totalNum };
+                var ret = {code: response.code, msg: response.description,data: data, totalNum:totalNum ,ip: response.ip};
                 dealResult(ret, callback);
             }
           },"json");
@@ -392,6 +392,22 @@ var softManager = {
             type: 'DELETE',
             contentType : 'application/json;charset=utf-8',
             url: deleteFailTaskUrl,  
+            dataType: "json",
+            success: function(response){  
+            	console.log(response);
+            	if (typeof callback === "function") {
+                    var ret = {code: response.code, msg: response.description,data: response.data};
+                    dealResult(ret, callback);
+                }
+            }
+        });
+    },
+    getOS: function (param, callback) {
+        var osUrl = com_huawei_vcenterpluginui.webContextPath + "/rest/services/software/support/list?ip="+param.ip+"&s=" + Math.random();
+    	$.ajax({  
+            type: 'GET',
+            contentType : 'application/json;charset=utf-8',
+            url: osUrl,  
             dataType: "json",
             success: function(response){  
             	console.log(response);

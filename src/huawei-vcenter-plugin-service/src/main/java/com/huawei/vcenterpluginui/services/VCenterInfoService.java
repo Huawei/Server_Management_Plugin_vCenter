@@ -15,6 +15,9 @@ public interface VCenterInfoService {
 
     int saveVCenterInfo(VCenterInfo vCenterInfo, HttpSession session) throws SQLException;
 
+    /**
+     * sync alarm definitions in background executor
+     */
     void syncAlarmDefinitions();
 
     Map<String, Object> findVCenterInfo() throws SQLException;

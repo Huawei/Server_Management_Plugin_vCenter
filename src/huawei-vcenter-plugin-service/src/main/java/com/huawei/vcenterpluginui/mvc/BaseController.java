@@ -14,14 +14,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.net.ssl.SSLHandshakeException;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 
 /**
@@ -34,6 +33,7 @@ public class BaseController {
 
   protected static final String CODE_SUCCESS = "0";
 
+  protected static final String CODE_ALL_FAILURE = "-100001";
   protected static final String CODE_NOTALL_FAILURE = "-100000";
 
   private static final String CODE_FAILURE = "-99999";
@@ -61,7 +61,7 @@ public class BaseController {
   @ExceptionHandler(NoEsightException.class)
   @ResponseStatus(HttpStatus.OK)
   protected Map<String, Object> handleException(NoEsightException exception) {
-    LOGGER.debug("No eSight configuration!", exception);
+    LOGGER.debug("No eSight configuration!" + exception.getMessage());
     return generateError(generateCode(exception.getCode()), exception.getMessage(),
         Collections.emptyList());
   }
@@ -69,48 +69,53 @@ public class BaseController {
 
   @ExceptionHandler(RestClientException.class)
   @ResponseStatus(HttpStatus.OK)
-  protected Map<String, Object> handleException(RestClientException exception) {
-    LOGGER.error("Rest client Exception!", exception);
+  protected Map<String, Object> handleException(RestClientException exception,
+      HttpServletRequest request) {
+    LOGGER.error("Rest client Exception!" + exception.getMessage());
     Throwable rootCause = exception.getRootCause();
     if (rootCause instanceof CertificateException) {
-      return generateError(CODE_CERT_EXCEPTION, exception.getMessage(), null);
+      return generateError(request, CODE_CERT_EXCEPTION, exception.getMessage(), null);
     }
-    return generateError(CODE_ESIGHT_CONNECT_EXCEPTION, exception.getMessage(), null);
+    return generateError(request, CODE_ESIGHT_CONNECT_EXCEPTION, exception.getMessage(), null);
   }
 
   @ExceptionHandler(VcenterException.class)
   @ResponseStatus(HttpStatus.OK)
-  protected Map<String, Object> handleException(VcenterException exception) {
-    LOGGER.error("vCenter plugin exception!", exception);
-    return generateError(generateCode(exception.getCode()), exception.getMessage(), null);
+  protected Map<String, Object> handleException(VcenterException exception,
+      HttpServletRequest request) {
+    LOGGER.error("vCenter plugin exception!" + exception.getMessage());
+    return generateError(request, generateCode(exception.getCode()), exception.getMessage(), null);
   }
 
   @ExceptionHandler(NoOpenIdException.class)
   @ResponseStatus(HttpStatus.OK)
-  protected Map<String, Object> handleException(NoOpenIdException exception) {
-    LOGGER.error("Cannot get OpenId!", exception);
+  protected Map<String, Object> handleException(NoOpenIdException exception,
+      HttpServletRequest request) {
+    LOGGER.error("Cannot get OpenId!" + exception.getMessage());
     if (exception.getCode() == null || exception.getCode().isEmpty()) {
       exception.setCode(CODE_ESIGHT_CONNECT_EXCEPTION);
     } else if (CODE_ESIGHT_RETURN_PWD_EXCEPTION.equals(exception.getCode())) {
       exception.setCode("-33" + exception.getCode());
     }
-    return generateError(generateCode(exception.getCode()), exception.getMessage(), null);
+    return generateError(request, generateCode(exception.getCode()), exception.getMessage(), null);
   }
 
   @ExceptionHandler(EsightException.class)
   @ResponseStatus(HttpStatus.OK)
-  protected Map<String, Object> handleException(EsightException exception) {
-    LOGGER.error("eSight Exception!", exception);
+  protected Map<String, Object> handleException(EsightException exception,
+      HttpServletRequest request) {
+    LOGGER.error("eSight Exception!" + exception.getMessage());
     if (CODE_NO_ESIGHT_EXCEPTION.equals(exception.getCode())) {
-      return generateError(exception.getCode(), exception.getMessage(), null);
+      return generateError(request, exception.getCode(), exception.getMessage(), null);
     }
-    return generateError(PREFIX + exception.getCode(), exception.getMessage(), null);
+    return generateError(request, PREFIX + exception.getCode(), exception.getMessage(), null);
   }
 
   @ExceptionHandler(SQLException.class)
   @ResponseStatus(HttpStatus.OK)
-  protected Map<String, Object> handleException(SQLException exception) {
-    LOGGER.error("DB Exception!", exception);
+  protected Map<String, Object> handleException(SQLException exception,
+      HttpServletRequest request) {
+    LOGGER.error("DB Exception!" + exception.getMessage());
     Map<String, Object> errorMap = new HashMap<>();
     errorMap.put(FIELD_CODE, CODE_DB_EXCEPTION);
     errorMap.put(FIELD_DESCRIPTION, exception.getMessage());
@@ -120,17 +125,30 @@ public class BaseController {
 
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.OK)
-  protected Map<String, Object> handleException(Exception exception) {
-    LOGGER.error("System Exception!", exception);
-    return generateError(CODE_FAILURE, exception.getMessage(), null);
+  protected Map<String, Object> handleException(Exception exception,
+      HttpServletRequest request) {
+    LOGGER.error("System Exception!" + exception.getMessage());
+    return generateError(request, CODE_FAILURE, exception.getMessage(), null);
   }
 
-  private Map<String, Object> generateError(String code, String message, Object data) {
+  private Map<String, Object> generateError(HttpServletRequest request, String code, String message,
+      Object data) {
     Map<String, Object> errorMap = new HashMap<>();
     errorMap.put(FIELD_CODE, code);
     errorMap.put(FIELD_DESCRIPTION, message);
     errorMap.put(FIELD_DATA, data);
+    if (request != null && "GET".equalsIgnoreCase(request.getMethod())) {
+      String ip = request.getParameter("esightIp");
+      if (ip == null || "".equals(ip.trim())) {
+        ip = request.getParameter("ip");
+      }
+      errorMap.put("ip", ip == null ? "" : ip);
+    }
     return errorMap;
+  }
+
+  private Map<String, Object> generateError(String code, String message, Object data) {
+    return generateError(null, code, message, data);
   }
 
   public String generateCode() {
@@ -237,9 +255,13 @@ public class BaseController {
 
     if (success && failure) {
       return failure(CODE_NOTALL_FAILURE, errorDescription, dataMapList);
-    } else if (failure) {
-      return failure(prefix + String.valueOf(errorCode), errorDescription, dataMapList);
     }
+    if (failure) {
+      return failure(CODE_ALL_FAILURE, errorDescription, dataMapList);
+    }
+//    else if (failure) {
+//      return failure(prefix + String.valueOf(errorCode), errorDescription, dataMapList);
+//    }
 
     return success(dataMapList);
   }

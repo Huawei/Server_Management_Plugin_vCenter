@@ -19,6 +19,10 @@ public class AlarmDefinition {
     this.id = id;
   }
 
+  public String getVcEventId() {
+    return eventName;
+  }
+
   public String getMorValue() {
     return morValue;
   }
@@ -45,6 +49,10 @@ public class AlarmDefinition {
 
   public String getEventTypeID() {
     return eventTypeID;
+  }
+
+  public String getVcResumeEventId() {
+    return getVcEventId() + "-resume";
   }
 
   public void setEventTypeID(String eventTypeID) {
@@ -76,6 +84,7 @@ public class AlarmDefinition {
         ", eventType='" + eventType + '\'' +
         ", description='" + description + '\'' +
         ", morValue='" + morValue + '\'' +
+        ", resumeEventTypeId='" + getVcResumeEventId() + '\'' +
         ", id=" + id +
         '}';
   }

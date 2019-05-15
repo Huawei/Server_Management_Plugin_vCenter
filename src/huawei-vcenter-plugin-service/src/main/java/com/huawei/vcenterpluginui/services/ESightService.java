@@ -1,39 +1,41 @@
 package com.huawei.vcenterpluginui.services;
 
+import com.huawei.vcenterpluginui.entity.ESight;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import com.huawei.vcenterpluginui.entity.ESight;
-
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 /**
- * It must be declared as osgi:service with the same name in
- * main/resources/META-INF/spring/bundle-context-osgi.xml
+ * It must be declared as osgi:service with the same name in main/resources/META-INF/spring/bundle-context-osgi.xml
  */
 public interface ESightService {
-	/**
-	 * @return save eSight message
-	 */
-	int saveESight(ESight eSight, HttpSession session) throws SQLException;
 
-	List<ESight> getESightList(String ip, int pageNo, int pageSize) throws SQLException;
-	
-	int getESightListCount(String ip) throws SQLException;
-	
-	int deleteESights(String ids, HttpSession session) throws SQLException,IOException;
+  /**
+   * @return save eSight message
+   */
+  int saveESight(ESight eSight, HttpSession session) throws SQLException;
 
-	Map connect(ESight eSight);
+  /**
+   * get eSight list without password
+   */
+  List<ESight> getESightList(String ip, int pageNo, int pageSize) throws SQLException;
 
-	boolean updateHAStatus(String ip, String status);
+  List<ESight> getESightListWithPassword(String ip, int pageNo, int pageSize) throws SQLException;
 
-	boolean updateSystemKeepAliveStatus(String ip, String status);
+  int getESightListCount(String ip) throws SQLException;
 
-	boolean updateHAProvider(int status);
+  int deleteESights(String ids, HttpSession session) throws SQLException, IOException;
 
-	boolean updateAlarmDefinition(int status);
+  Map connect(ESight eSight);
+
+  boolean updateHAStatus(String ip, String status);
+
+  boolean updateSystemKeepAliveStatus(String ip, String status);
+
+  boolean updateHAProvider(int status);
+
+  boolean updateAlarmDefinition(int status);
+
 }

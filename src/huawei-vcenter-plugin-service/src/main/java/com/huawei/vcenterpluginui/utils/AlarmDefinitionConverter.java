@@ -16,8 +16,6 @@ public class AlarmDefinitionConverter {
 
   public final static Log LOGGER = LogFactory.getLog(AlarmDefinitionConverter.class);
 
-  private static final Integer EVENT_TYPE_ID_LEN = 8;
-
   private Document document = null;
 
   public AlarmDefinitionConverter() {
@@ -42,6 +40,7 @@ public class AlarmDefinitionConverter {
 
       alarmDefinition.setSeverity(eventIdMap.getNamedItem("severity").getNodeValue());
       alarmDefinition.setEventName(eventIdMap.getNamedItem("name").getNodeValue());
+      alarmDefinition.setEventType("vim.event.EventEx");
 
       NodeList eventIdChildNodeList = eventIdNode.getChildNodes();
       for (int k = 0; k < eventIdChildNodeList.getLength(); k++) {
@@ -52,9 +51,6 @@ public class AlarmDefinitionConverter {
             switch (childNode.getNodeName()) {
               case "eventTypeID":
                 alarmDefinition.setEventTypeID(childNode.getTextContent());
-                continue;
-              case "eventType":
-                alarmDefinition.setEventType(childNode.getTextContent());
                 continue;
               case "description":
                 alarmDefinition.setDescription(childNode.getTextContent());
@@ -67,7 +63,7 @@ public class AlarmDefinitionConverter {
     return result;
   }
 
-  public AlarmDefinition findAlarmDefinition(int alarmId) {
+  public AlarmDefinition findAlarmDefinition(long alarmId) {
     NodeList eventIdNodeList = document.getElementsByTagName("EventID");
     for (int i = 0; i < eventIdNodeList.getLength(); i++) {
       Node eventIdNode = eventIdNodeList.item(i);
@@ -76,7 +72,7 @@ public class AlarmDefinitionConverter {
       String severity = eventIdMap.getNamedItem("severity").getNodeValue();
       String name = eventIdMap.getNamedItem("name").getNodeValue();
       String eventTypeID = null;
-      String eventType = null;
+      String eventType = "vim.event.EventEx";
       String description = null;
 
       NodeList eventIdChildNodeList = eventIdNode.getChildNodes();
@@ -89,16 +85,13 @@ public class AlarmDefinitionConverter {
             switch (childNode.getNodeName()) {
               case "eventTypeID":
                 eventTypeID = childNode.getTextContent();
-                String hexString = Integer.toHexString(alarmId);
-                while (hexString.length() < EVENT_TYPE_ID_LEN) {
-                  hexString = "0" + hexString;
+                if (!eventTypeID.matches("[a-zA-Z0-9]+-[1-9]\\d*")) {
+                  LOGGER.info("Invalid eventTypeId: " + eventTypeID);
+                  continue;
                 }
-                if (eventTypeID.toUpperCase().contains(hexString.toUpperCase())) {
+                if (eventTypeID.split("-")[1].equalsIgnoreCase(String.valueOf(alarmId))) {
                   alarmDefinition = new AlarmDefinition();
                 }
-                continue;
-              case "eventType":
-                eventType = childNode.getTextContent();
                 continue;
               case "description":
                 description = childNode.getTextContent();

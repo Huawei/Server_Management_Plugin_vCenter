@@ -72,7 +72,7 @@ public class TaskDao extends H2DataBaseDao {
 				sql.append(" limit ? offset ?");
 			}
 			
-			LOGGER.info(sql.toString());
+			// LOGGER.info(sql.toString());
 			ps = con.prepareStatement(sql.toString());
 
 			int i = 1;
@@ -129,7 +129,7 @@ public class TaskDao extends H2DataBaseDao {
 			}
 			return taskList;
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error("Failed to get incompleted task list: " + e.getMessage());
 			throw e;
 		} finally {
 			closeConnection(con, ps, rs);
@@ -189,7 +189,7 @@ public class TaskDao extends H2DataBaseDao {
 			}
 			return count;
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error("Failed to get task list count: " + e.getMessage());
 			throw e;
 		} finally {
 			closeConnection(con, ps, rs);
@@ -225,7 +225,7 @@ public class TaskDao extends H2DataBaseDao {
 			}
 			return re;
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error("Failed to save task: " + e.getMessage());
 			throw e;
 		} finally {
 			closeConnection(con, ps, rs);
@@ -249,7 +249,7 @@ public class TaskDao extends H2DataBaseDao {
 			ps.setInt(6, task.getId());
 			return ps.executeUpdate();
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error("Failed to save task status: " + e.getMessage());
 			throw e;
 		} finally {
 			closeConnection(con, ps, null);
@@ -268,7 +268,7 @@ public class TaskDao extends H2DataBaseDao {
 			ps.setString(1, taskType);
 			return ps.executeUpdate();
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error("Failed to delete failed task: " + e.getMessage());
 			throw e;
 		} finally {
 			closeConnection(con, ps, null);
@@ -285,7 +285,7 @@ public class TaskDao extends H2DataBaseDao {
 
 			return ps.executeUpdate();
 		} catch (SQLException e) {
-			LOGGER.error(e);
+			LOGGER.error("Failed to delete task by id: " + e.getMessage());
 			throw e;
 		} finally {
 			closeConnection(con, ps, null);

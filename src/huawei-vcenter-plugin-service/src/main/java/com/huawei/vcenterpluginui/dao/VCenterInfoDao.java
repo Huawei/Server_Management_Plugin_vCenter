@@ -30,13 +30,14 @@ public class VCenterInfoDao extends H2DataBaseDao {
       con = getConnection();
       ps = con.prepareStatement(
           "INSERT INTO " + SqlFileConstant.HW_VCENTER_INFO + " (HOST_IP,USER_NAME," +
-              "PASSWORD,STATE,CREATE_TIME,PUSH_EVENT,PUSH_EVENT_LEVEL) VALUES (?,?,?,?,CURRENT_TIMESTAMP,?,?)");
+              "PASSWORD,STATE,CREATE_TIME,PUSH_EVENT,PUSH_EVENT_LEVEL,HOST_PORT) VALUES (?,?,?,?,CURRENT_TIMESTAMP,?,?,?)");
       ps.setString(1, vCenterInfo.getHostIp());
       ps.setString(2, vCenterInfo.getUserName());
       ps.setString(3, vCenterInfo.getPassword());
       ps.setBoolean(4, vCenterInfo.isState());
       ps.setBoolean(5, vCenterInfo.isPushEvent());
       ps.setInt(6, vCenterInfo.getPushEventLevel());
+      ps.setInt(7, vCenterInfo.getHostPort());
       int row = ps.executeUpdate();
       rs = ps.getGeneratedKeys();
       if (rs.next()) {
@@ -44,7 +45,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       }
       return row;
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to add vCenter info: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -60,17 +61,18 @@ public class VCenterInfoDao extends H2DataBaseDao {
     try {
       con = getConnection();
       ps = con.prepareStatement("UPDATE " + SqlFileConstant.HW_VCENTER_INFO
-          + " SET HOST_IP=?,USER_NAME=?,PASSWORD=?,STATE=?,PUSH_EVENT=?,PUSH_EVENT_LEVEL=? WHERE ID=?");
+          + " SET HOST_IP=?,USER_NAME=?,PASSWORD=?,STATE=?,PUSH_EVENT=?,PUSH_EVENT_LEVEL=?,HOST_PORT=? WHERE ID=?");
       ps.setString(1, vCenterInfo.getHostIp());
       ps.setString(2, vCenterInfo.getUserName());
       ps.setString(3, vCenterInfo.getPassword());
       ps.setBoolean(4, vCenterInfo.isState());
       ps.setBoolean(5, vCenterInfo.isPushEvent());
       ps.setInt(6, vCenterInfo.getPushEventLevel());
-      ps.setInt(7, vCenterInfo.getId());
+      ps.setInt(7, vCenterInfo.getHostPort());
+      ps.setInt(8, vCenterInfo.getId());
       return ps.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to update vCenter info: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -90,6 +92,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
         VCenterInfo vCenterInfo = new VCenterInfo();
         vCenterInfo.setId(rs.getInt("ID"));
         vCenterInfo.setHostIp(rs.getString("HOST_IP"));
+        vCenterInfo.setHostPort(rs.getInt("HOST_PORT"));
         vCenterInfo.setUserName(rs.getString("USER_NAME"));
         vCenterInfo.setPassword(rs.getString("PASSWORD"));
         vCenterInfo.setCreateTime(rs.getTimestamp("CREATE_TIME"));
@@ -99,7 +102,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
         return vCenterInfo;
       }
     } catch (DataBaseException | SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to get vCenter info: " + e.getMessage());
       throw new SQLException(e);
     } finally {
       closeConnection(con, ps, rs);
@@ -115,7 +118,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       ps = con.prepareStatement("UPDATE " + SqlFileConstant.HW_VCENTER_INFO + " SET state=FALSE ");
       return ps.executeUpdate() > 0;
     } catch (DataBaseException | SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to disable vCenter info: " + e.getMessage());
       throw new SQLException(e);
     } finally {
       closeConnection(con, ps, null);
@@ -131,7 +134,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
           .prepareStatement("UPDATE " + SqlFileConstant.HW_VCENTER_INFO + " SET PUSH_EVENT=FALSE ");
       return ps.executeUpdate() > 0;
     } catch (DataBaseException | SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to disable push event: " + e.getMessage());
       throw new SQLException(e);
     } finally {
       closeConnection(con, ps, null);
@@ -147,7 +150,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       ps = con.createStatement();
       ps.execute(sql);
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to delete alarm definitions: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -168,7 +171,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       ps = con.createStatement();
       ps.execute(sql);
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to delete alarm definitions: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -189,7 +192,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       }
       return alarmDefinitionList;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get alarm definitions: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -302,7 +305,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       ps5 = conn.prepareStatement(sql5);
       ps5.execute();
     } catch (Exception e) {
-      LOGGER.error("Failed to getAlarmDefinitionDiff", e);
+      LOGGER.error("Failed to getAlarmDefinitionDiff: " + e.getMessage());
       return null;
     } finally {
       closeConnection(conn, rs, ps1, ps2, ps3, ps4, ps5);
@@ -329,15 +332,19 @@ public class VCenterInfoDao extends H2DataBaseDao {
     String sql1 = "DELETE FROM " + SqlFileConstant.HW_ESIGHT_HA_SERVER;
     String sql2 = "DELETE FROM " + SqlFileConstant.HW_SERVER_DEVICE_DETAIL;
     String sql3 = "DELETE FROM " + SqlFileConstant.HW_VCENTER_INFO;
+    String sql4 = "DELETE FROM " + SqlFileConstant.HW_HA_COMPONENT;
+    String sql5 = "DELETE FROM " + SqlFileConstant.HW_ALARM_RECORD;
     try {
       con = getConnection();
       ps = con.createStatement();
       ps.addBatch(sql1);
       ps.addBatch(sql2);
       ps.addBatch(sql3);
+      ps.addBatch(sql4);
+      ps.addBatch(sql5);
       ps.executeBatch();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to delete HA data: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -349,14 +356,18 @@ public class VCenterInfoDao extends H2DataBaseDao {
     Statement ps = null;
     String sql1 = "DELETE FROM " + SqlFileConstant.HW_ESIGHT_HA_SERVER;
     String sql2 = "DELETE FROM " + SqlFileConstant.HW_SERVER_DEVICE_DETAIL;
+    String sql3 = "DELETE FROM " + SqlFileConstant.HW_HA_COMPONENT;
+    String sql4 = "DELETE FROM " + SqlFileConstant.HW_ALARM_RECORD;
     try {
       con = getConnection();
       ps = con.createStatement();
       ps.addBatch(sql1);
       ps.addBatch(sql2);
+      ps.addBatch(sql3);
+      ps.addBatch(sql4);
       ps.executeBatch();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to delete HA sync and device data: " + e.getMessage());
     } finally {
       closeConnection(con, ps, null);
     }
@@ -395,7 +406,8 @@ public class VCenterInfoDao extends H2DataBaseDao {
         if(con != null) {
           con.rollback();
         }
-        LOGGER.error(e.getMessage(), e);
+        // LOGGER.error(e.getMessage(), e);
+        LOGGER.error("Failed to mergeSaveAndLoadAllThumbprints" + e.getMessage());
         throw e;
       } finally {
         closeConnection(con, ps, rs);
@@ -422,7 +434,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
       if(con != null) {
         con.rollback();
       }
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to load thumbprints: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);

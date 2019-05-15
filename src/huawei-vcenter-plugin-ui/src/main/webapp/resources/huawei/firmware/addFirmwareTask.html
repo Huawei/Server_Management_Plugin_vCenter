@@ -210,7 +210,7 @@
                 <el-button @click="goBack">{{i18ns.common.back}}</el-button>
             </el-row>
         </div>
-        <el-dialog :title="i18ns.firmware.highRisk" :visible.sync="highRiskdialogVisible" class="highRisk-tip" @close="isAgree=false">
+        <el-dialog  :close-on-click-modal="false"  :title="i18ns.firmware.highRisk" :visible.sync="highRiskdialogVisible" class="highRisk-tip" @close="isAgree=false">
             <div>
                 {{i18ns.firmware.highRiskTips1}}
             </div>

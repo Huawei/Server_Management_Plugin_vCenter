@@ -201,7 +201,8 @@
                     }
                     return true;
                 },
-                isAutoRefresh: false
+                isAutoRefresh: false,
+                isShowMessageBox:true
             },
             created: function () {
                 this.i18ns = getIn18();
@@ -401,11 +402,11 @@
                  * 
                  */
                 getTaskListData: function () {
-                    this.deviceListData = [];
+                    //this.deviceListData = [];
                     if (!this.isAutoRefresh) {
                         this.loading = true;
                     }
-                    this.isAutoRefresh=false;
+                    this.isAutoRefresh = false;
                     var queryParam = {
                         "esight": this.currentESight,
                         "param": {
@@ -450,7 +451,18 @@
                         this.taskListData = _taskListData;
                     } else {
                         this.taskListData = [];
-                        alertMsg(getErrorMsg(ret.code));
+                        if (this.currentESight != ret.ip) {
+                            return false;
+                        }
+                        if (this.isShowMessageBox) {
+                            this.isShowMessageBox = false;
+                            this.$alert(msg, this.i18ns.common.prompt, {
+                                confirmButtonText: this.i18ns.common.confirm,
+                                callback: function action() {
+                                    app.isShowMessageBox = true;
+                                }
+                            });
+                        }
                     }
                 },
                 /**
@@ -459,7 +471,7 @@
                  */
                 refresh: function () {
                     this.getTaskListData();
-                    this.deviceListData = [];
+                    //this.deviceListData = [];
                 },
                 /**
                  * 定时刷新

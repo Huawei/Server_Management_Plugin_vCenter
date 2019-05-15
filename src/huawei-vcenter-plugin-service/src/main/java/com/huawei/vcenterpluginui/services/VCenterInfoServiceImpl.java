@@ -1,7 +1,6 @@
 package com.huawei.vcenterpluginui.services;
 
 import com.huawei.vcenterpluginui.dao.ESightDao;
-import com.huawei.vcenterpluginui.dao.ESightHAServerDao;
 import com.huawei.vcenterpluginui.dao.VCenterInfoDao;
 import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.ESight;
@@ -13,13 +12,8 @@ import com.huawei.vcenterpluginui.utils.AlarmDefinitionConverter;
 import com.huawei.vcenterpluginui.utils.CipherUtils;
 import com.huawei.vcenterpluginui.utils.ConnectedVim;
 import com.huawei.vcenterpluginui.utils.ThumbprintsUtils;
-import com.vmware.connection.BasicConnection;
-import com.vmware.connection.ConnectionException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,9 +29,6 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
   private VCenterInfoDao vCenterInfoDao;
 
   @Autowired
-  private SyncServerHostService syncServerHostService;
-
-  @Autowired
   private NotificationAlarmService notificationAlarmService;
 
   @Autowired
@@ -47,13 +38,10 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
   private ESightService eSightService;
 
   @Autowired
-  private ESightHAServerDao eSightHAServerDao;
-
-  @Autowired
   private VCenterHAService vCenterHAService;
 
   @Autowired
-  private VmActionService vmActionService;
+  private SyncServerHostService syncServerHostService;
 
   @Override
   public int addVCenterInfo(VCenterInfo vCenterInfo) throws SQLException {
@@ -71,14 +59,20 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
     int returnValue = 0;
     boolean supportHA = true;
     ConnectedVim connectedVim = vCenterHAService.getConnectedVim();
+    boolean isAlarmNewEnabled = false;
+    boolean isHANewEnabled = false;
+
     try {
       if (vCenterInfo1 != null) {
+        isHANewEnabled = (vCenterInfo.isState() && !vCenterInfo1.isState());
+        isAlarmNewEnabled = (vCenterInfo.isPushEvent() && !vCenterInfo1.isPushEvent());
         // update
         vCenterInfo1.setUserName(vCenterInfo.getUserName());
         vCenterInfo1.setState(vCenterInfo.isState());
         vCenterInfo1.setPushEvent(vCenterInfo.isPushEvent());
         vCenterInfo1.setPushEventLevel(vCenterInfo.getPushEventLevel());
         vCenterInfo1.setHostIp(vCenterInfo.getHostIp());
+        vCenterInfo1.setHostPort(vCenterInfo.getHostPort());
         if (vCenterInfo.getPassword() != null && !"".equals(vCenterInfo.getPassword())) {
           vCenterInfo1.setPassword(vCenterInfo.getPassword());
           encode(vCenterInfo1);
@@ -95,7 +89,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
             vCenterInfo.setState(false);
             supportHA = false;
           } catch (Exception e) {
-            LOGGER.error("Cannot create provider", e);
+            LOGGER.error("Cannot create provider: " + e.getMessage());
             vCenterInfo1.setState(false);
             vCenterInfo.setState(false);
             eSightService.updateHAProvider(2);
@@ -107,6 +101,9 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
         encode(vCenterInfo);
         connectedVim.connect(vCenterInfo);
 
+        isHANewEnabled = vCenterInfo.isState();
+        isAlarmNewEnabled = vCenterInfo.isPushEvent();
+
         if (vCenterInfo.isState()) {
           try {
             vCenterHAService.createProvider(connectedVim, false);
@@ -116,7 +113,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
             vCenterInfo.setState(false);
             supportHA = false;
           } catch (Exception e) {
-            LOGGER.error("Cannot create provider", e);
+            LOGGER.error("Cannot create provider: " + e.getMessage());
             vCenterInfo.setState(false);
             eSightService.updateHAProvider(2);
           }
@@ -127,79 +124,89 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
       connectedVim.disconnect();
     }
 
-    if (vCenterInfo.isState() || vCenterInfo.isPushEvent()) {
-      syncServerHostService.syncServerHost(true);
-    } else {
-      syncServerHostService.syncServerHost();
-      try {
-        List<ESight> eSightList = eSightDao.getAllESights();
-        for (ESight eSight : eSightList) {
-          try {
-            LOGGER.info("unsubscribe by client: " + eSight);
-            if ("1".equals(eSight.getReservedInt1())) {
-              notificationAlarmService.unsubscribeAlarm(eSight, session, "unsubscribe_by_client");
-            }
-            //eSightHAServerDao.deleteAll(eSight.getId());
-          } catch (Exception e) {
-            LOGGER.error("Failed to unsubscribe alarm: " + eSight, e);
-          }
-        }
-      } catch (SQLException e) {
-        LOGGER.error(e.getMessage(), e);
-      }
+    syncServerHostService.syncServerHost(false); // subscribe alarm below
+    syncAlarmDefinitions();
+
+    if (isAlarmNewEnabled || isHANewEnabled) {
+      notificationAlarmService
+          .syncHistoricalEvents(false, false);
     }
 
-    syncAlarmDefinitions();
+    try {
+      List<ESight> eSightList = eSightDao.getAllESights();
+      boolean subscribeAlarm = (vCenterInfo.isPushEvent() || vCenterInfo.isState());
+      for (ESight eSight : eSightList) {
+        try {
+          if (!subscribeAlarm && "1".equals(eSight.getReservedInt1())) {
+            LOGGER.info("Unsubscribe by client: " + eSight);
+            notificationAlarmService.unsubscribeAlarm(eSight, session, "unsubscribe_by_client");
+          } else if (subscribeAlarm && !"1".equals(eSight.getReservedInt1())) {
+            LOGGER.info("Subscribe by client: " + eSight);
+            notificationAlarmService.subscribeAlarm(eSight, session, "subscribe_by_client");
+          }
+          //eSightHAServerDao.deleteAll(eSight.getId());
+        } catch (Exception e) {
+          LOGGER.error("Failed to unsubscribe alarm: " + eSight + ": " + e.getMessage());
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.error("Failed to save vCenter info: " + e.getMessage());
+    }
 
     return !supportHA ? Integer.valueOf(VersionNotSupportException.getReturnCode()) : returnValue;
   }
 
   @Override
-  public synchronized void syncAlarmDefinitions() {
-    try {
-      VCenterInfo vCenterInfo = getVCenterInfo();
-      if (vCenterInfo == null || !vCenterInfo.isPushEvent()) {
-        LOGGER.info("Alarm is disabled. Do not sync alarm definitions");
-        return;
-      }
-      Pair<List<AlarmDefinition>, List<AlarmDefinition>> pair = vCenterInfoDao
-          .getAlarmDefinitionDiff(new AlarmDefinitionConverter().parseAlarmDefinitionList());
-      List<AlarmDefinition> staleAlarmDefinitions = pair.getKey();
-      List<AlarmDefinition> newAlarmDefinitions = pair.getValue();
-      LOGGER.info("AlarmDefinitions to be removed size: " + staleAlarmDefinitions.size());
-      LOGGER.info("AlarmDefinitions to be created size: " + newAlarmDefinitions.size());
-
-      boolean success = true;
-
-      // remove stale alarm definitions from vCenter and DB
-      if (staleAlarmDefinitions != null && !staleAlarmDefinitions.isEmpty()) {
-        List<String> morValues = new ArrayList<>();
-        List<Integer> ids = new ArrayList<>();
-        for (AlarmDefinition staleAlarmDefinition : staleAlarmDefinitions) {
-          if (staleAlarmDefinition.getMorValue() != null && !""
-              .equalsIgnoreCase(staleAlarmDefinition.getMorValue().trim())) {
-            morValues.add(staleAlarmDefinition.getMorValue());
+  public void syncAlarmDefinitions() {
+    notificationAlarmService.getBgTaskExecutor().execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          VCenterInfo vCenterInfo = getVCenterInfo();
+          if (vCenterInfo == null || !vCenterInfo.isPushEvent()) {
+            LOGGER.info("Alarm is disabled. Do not sync alarm definitions");
+            return;
           }
-          ids.add(staleAlarmDefinition.getId());
-        }
-        if (!morValues.isEmpty()) {
-          int removed = vCenterHAService.unregisterAlarmDef(vCenterInfo, morValues);
-          success = (removed == morValues.size());
-        }
-        LOGGER.info("Removed alarmDefinitions from vCenter: " + morValues);
-        vCenterInfoDao.deleteAlarmDefinitions(ids);
-        LOGGER.info("Removed alarmDefinitions from DB: " + ids);
-      }
+          Pair<List<AlarmDefinition>, List<AlarmDefinition>> pair = vCenterInfoDao
+              .getAlarmDefinitionDiff(new AlarmDefinitionConverter().parseAlarmDefinitionList());
+          List<AlarmDefinition> staleAlarmDefinitions = pair.getKey();
+          List<AlarmDefinition> newAlarmDefinitions = pair.getValue();
+          LOGGER.info("AlarmDefinitions to be removed size: " + staleAlarmDefinitions.size());
+          LOGGER.info("AlarmDefinitions to be created size: " + newAlarmDefinitions.size());
 
-      // add new alarm definitions into vCenter and DB
-      if (newAlarmDefinitions != null && !newAlarmDefinitions.isEmpty()) {
-        vCenterHAService.registerAlarmDefInVcenterAndDB(vCenterInfo, newAlarmDefinitions, success);
+          boolean success = true;
+
+          // remove stale alarm definitions from vCenter and DB
+          if (staleAlarmDefinitions != null && !staleAlarmDefinitions.isEmpty()) {
+            List<String> morValues = new ArrayList<>();
+            List<Integer> ids = new ArrayList<>();
+            for (AlarmDefinition staleAlarmDefinition : staleAlarmDefinitions) {
+              if (staleAlarmDefinition.getMorValue() != null && !""
+                  .equalsIgnoreCase(staleAlarmDefinition.getMorValue().trim())) {
+                morValues.add(staleAlarmDefinition.getMorValue());
+              }
+              ids.add(staleAlarmDefinition.getId());
+            }
+            if (!morValues.isEmpty()) {
+              int removed = vCenterHAService.unregisterAlarmDef(vCenterInfo, morValues);
+              success = (removed == morValues.size());
+            }
+            LOGGER.info("Removed alarmDefinitions from vCenter: " + morValues);
+            vCenterInfoDao.deleteAlarmDefinitions(ids);
+            LOGGER.info("Removed alarmDefinitions from DB: " + ids);
+          }
+
+          // add new alarm definitions into vCenter and DB
+          if (newAlarmDefinitions != null && !newAlarmDefinitions.isEmpty()) {
+            vCenterHAService.registerAlarmDefInVcenterAndDB(vCenterInfo, newAlarmDefinitions, success);
+          }
+          eSightService.updateAlarmDefinition(success ? 1 : 2);
+        } catch (Exception e) {
+          LOGGER.error("Failed to sync alarm definitions: " + e.getMessage());
+          eSightService.updateAlarmDefinition(2);
+        }
       }
-      eSightService.updateAlarmDefinition(success ? 1 : 2);
-    } catch (Exception e) {
-      LOGGER.error("Failed to sync alarm definitions", e);
-      eSightService.updateAlarmDefinition(2);
-    }
+    });
   }
 
   @Override
@@ -210,6 +217,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
       returnMap.put("USER_NAME", vCenterInfo.getUserName());
       returnMap.put("STATE", vCenterInfo.isState());
       returnMap.put("HOST_IP", vCenterInfo.getHostIp());
+      returnMap.put("HOST_PORT", vCenterInfo.getHostPort());
       returnMap.put("PUSH_EVENT", vCenterInfo.isPushEvent());
       returnMap.put("PUSH_EVENT_LEVEL", vCenterInfo.getPushEventLevel());
     }
@@ -218,14 +226,12 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
     returnMap.put("SUPPORT_ALARM", supportSetting ? true : false);
     if (supportSetting) {
       try {
-        String version = vmActionService.getVersion();
-        LOGGER.info("Current vCenter version is: " + version);
-        ConnectedVim.checkVersionCompatible(version);
+        ConnectedVim.checkVersionCompatible();
         returnMap.put("SUPPORT_HA", true);
       } catch (VersionNotSupportException e) {
         returnMap.put("SUPPORT_HA", false);
       } catch (Exception e) {
-        LOGGER.warn("Cannot get version", e);
+        LOGGER.warn("Cannot get version: " + e.getMessage());
         returnMap.put("SUPPORT_HA", true);
       }
     } else {
@@ -244,7 +250,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
     try {
       return vCenterInfoDao.disableVCenterInfo();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error("Failed to disable vCenter info");
       return false;
     }
   }
@@ -268,7 +274,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
     try {
       return vCenterInfoDao.getAlarmDefinitions();
     } catch (SQLException e) {
-      LOGGER.error("Failed to get alarm definitions", e);
+      LOGGER.error("Failed to get alarm definitions");
       throw new VcenterException(e.getMessage());
     }
   }
@@ -278,7 +284,7 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
     try {
       vCenterInfoDao.addAlarmDefinitionss(alarmDefinitions);
     } catch (SQLException e) {
-      LOGGER.error("Failed to add alarm definitions", e);
+      LOGGER.error("Failed to add alarm definitions");
     }
   }
 
@@ -292,14 +298,14 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
     try {
       String[] thumbprints = ThumbprintsUtils.getThumbprintsFromJKS(inputStream, password);
       String[] tp = vCenterInfoDao.mergeSaveAndLoadAllThumbprints(thumbprints);
-      LOGGER.info("Thumbprints have been saved, new list is: " + Arrays.asList(tp));
+      LOGGER.info("Thumbprints have been saved, new list size: " + tp.length);
       ThumbprintsUtils.updateContextTrustThumbprints(tp);
       return RESULT_SUCCESS_CODE;
     } catch (IOException e) {
-      LOGGER.warn("Cannot get thumbprints from JKS", e);
+      LOGGER.warn("Cannot get thumbprints from JKS " + e.getMessage());
       return RESULT_READ_CERT_ERROR;
     } catch (Exception e) {
-      LOGGER.error("Cannot get/save thumbprints from JKS", e);
+      LOGGER.error("Cannot get/save thumbprints from JKS " + e.getMessage());
       return FAIL_CODE;
     }
   }
@@ -308,17 +314,17 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
   public synchronized void saveThumbprints(String[] thumbprints) {
     try {
       String[] tp = vCenterInfoDao.mergeSaveAndLoadAllThumbprints(thumbprints);
-      LOGGER.info("Thumbprints have been saved, new list is: " + Arrays.asList(tp));
+      LOGGER.info("Thumbprints have been saved, new list size: " + tp.length);
       ThumbprintsUtils.updateContextTrustThumbprints(tp);
     } catch (Exception e) {
-      LOGGER.warn("Cannot save thumbprints", e);
+      LOGGER.warn("Cannot save thumbprints: " + e.getMessage());
     }
   }
 
   @Override
   public String[] getThumbprints() throws SQLException {
     String[] thumbprints = vCenterInfoDao.loadThumbprints();
-    LOGGER.info("Thumbprints have been loaded: " + Arrays.asList(thumbprints));
+    LOGGER.info("Thumbprints have been loaded, size: " + thumbprints.length);
     return thumbprints;
   }
 

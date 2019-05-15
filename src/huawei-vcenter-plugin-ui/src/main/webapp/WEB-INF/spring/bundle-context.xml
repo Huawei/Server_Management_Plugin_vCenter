@@ -119,12 +119,8 @@
   <osgi:reference id="instantiationBeanService"
     interface="com.huawei.vcenterpluginui.services.InstantiationBeanService"/>
 
-
   <osgi:reference id="objectReferenceService"
     interface="com.vmware.vise.data.query.ObjectReferenceService"/>
-
-  <osgi:reference id="vmActionService"
-    interface="com.huawei.vcenterpluginui.services.VmActionService"/>
 
   <aop:config proxy-target-class="false">
     <aop:aspect ref="aspectBean">

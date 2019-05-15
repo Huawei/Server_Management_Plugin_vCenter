@@ -183,6 +183,7 @@
             text-align: center;
             height: 30px;
         }
+
         .pieChart .pieChart-title1 {
             line-height: 10px;
             padding-left: 13px;
@@ -194,6 +195,7 @@
             text-align: center;
             height: 30px;
         }
+
         .pieChart .pieChart-chart {
             height: 120px;
             width: 120px;
@@ -255,7 +257,8 @@
                     <td>&nbsp;{{serverInfos.serverName}}</td>
                     <td class="td1">&nbsp;{{i18ns.common.status}}</td>
                     <td>&nbsp;
-                        <div id="serverStatusImage" v-show="serverInfos.serverInfosStatus"></div>&nbsp;{{serverInfos.serverInfosStatus}}</td>
+                        <div id="serverStatusImage" v-show="serverInfos.serverInfosStatus"></div>
+                        &nbsp;{{serverInfos.serverInfosStatus}}</td>
                 </tr>
                 <tr>
                     <td class="td1">&nbsp;{{i18ns.serverList.serverIPAddress}}</td>
@@ -502,7 +505,8 @@
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
                                     <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span
+                                        v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                     <span v-else>{{i18ns.deviceInfo.installed}}</span>
                                 </template>
                             </el-table-column>
@@ -535,7 +539,8 @@
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
                                     <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span
+                                        v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                     <span v-else>{{i18ns.deviceInfo.installed}}</span>
                                 </template>
                             </el-table-column>
@@ -568,7 +573,8 @@
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
                                     <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span
+                                        v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                     <span v-else>{{i18ns.deviceInfo.installed}}</span>
                                 </template>
                             </el-table-column>
@@ -595,7 +601,8 @@
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
                                     <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span
+                                        v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                     <span v-else>{{i18ns.deviceInfo.installed}}</span>
                                 </template>
                             </el-table-column>
@@ -650,7 +657,8 @@
                             <el-table-column prop="presentState" v-bind:label="i18ns.deviceInfo.installationStatus">
                                 <template scope="scope">
                                     <span v-if="scope.row.presentState==='0'">{{i18ns.deviceInfo.notInstalled}}</span>
-                                    <span v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
+                                    <span
+                                        v-else-if="scope.row.presentState==='-2'||scope.row.presentState==='2'">{{i18ns.deviceInfo.unknown}}</span>
                                     <span v-else>{{i18ns.deviceInfo.installed}}</span>
                                 </template>
                             </el-table-column>
@@ -664,7 +672,7 @@
                             <!-- 转速百分比 -->
                             <el-table-column v-bind:label="i18ns.deviceInfo.rotatePercent">
                                 <template scope="scope">
-                                    <span v-if="scope.row.controlModel=='0'">--</span>
+                                    <span v-if="!scope.row.rotatePercent||scope.row.rotatePercent=='unknow'">--</span>
                                     <span v-else>{{scope.row.rotatePercent}}</span>
                                 </template>
                             </el-table-column>
@@ -741,7 +749,8 @@
                                 </template>
                             </el-table-column>
                             <!-- 设备寿命 -->
-                            <el-table-column prop="pcieSsdCardLifeLeft" v-bind:label="i18ns.deviceInfo.pcieSsdCardLifeLeft">
+                            <el-table-column prop="pcieSsdCardLifeLeft"
+                                v-bind:label="i18ns.deviceInfo.pcieSsdCardLifeLeft">
                             </el-table-column>
                             <!-- 厂商 -->
                             <el-table-column prop="pciecardManufacturer" v-bind:label="i18ns.deviceInfo.manufacture">
@@ -866,7 +875,9 @@
                             type: 'doughnut',
                             data: {
                                 datasets: [{
-                                    data: [data.normal, data.warning, data.critical, data.unknown],
+                                    data: [data.normal, data.warning, data.critical, data
+                                        .unknown
+                                    ],
                                     backgroundColor: [
                                         '#32CD32',
                                         '#FFBB33',
@@ -921,7 +932,7 @@
                             var font_size = 12;
                             context.font = font_size + "px Helvetica";
                             var text_width = context.measureText(n).width;
-                            context.fillText(n, center_x - text_width / 2, center_y + font_size / 2+8);
+                            context.fillText(n, center_x - text_width / 2, center_y + font_size / 2 + 8);
                             context.restore();
                         }
                         backgroundCircle();
@@ -978,7 +989,8 @@
                     this.cpuHealthState.warning = statistics.warning;
                     this.cpuHealthState.critical = statistics.critical;
                     this.cpuHealthState.unknown = statistics.unknown;
-                    if ((this.cpuHealthState.normal + this.cpuHealthState.warning + this.cpuHealthState.unknown +
+                    if ((this.cpuHealthState.normal + this.cpuHealthState.warning + this.cpuHealthState
+                            .unknown +
                             this.cpuHealthState.critical) >
                         0) {
                         this.isShowCPU = true;
@@ -994,7 +1006,8 @@
                     this.memoryHealthState.warning = statistics.warning;
                     this.memoryHealthState.critical = statistics.critical;
                     this.memoryHealthState.unknown = statistics.unknown;
-                    if ((this.memoryHealthState.normal + this.memoryHealthState.warning + this.memoryHealthState
+                    if ((this.memoryHealthState.normal + this.memoryHealthState.warning + this
+                            .memoryHealthState
                             .unknown + this.memoryHealthState
                             .critical) > 0) {
                         this.isShowMemory = true;
@@ -1010,7 +1023,8 @@
                     this.driveHealthState.warning = statistics.warning;
                     this.driveHealthState.critical = statistics.critical;
                     this.driveHealthState.unknown = statistics.unknown;
-                    if ((this.driveHealthState.normal + this.driveHealthState.warning + this.driveHealthState
+                    if ((this.driveHealthState.normal + this.driveHealthState.warning + this
+                            .driveHealthState
                             .unknown + this.driveHealthState
                             .critical) > 0) {
                         this.isShowDisk = true;
@@ -1026,7 +1040,8 @@
                     this.fanHealthState.warning = statistics.warning;
                     this.fanHealthState.critical = statistics.critical;
                     this.fanHealthState.unknown = statistics.unknown;
-                    if ((this.fanHealthState.normal + this.fanHealthState.warning + this.fanHealthState.unknown +
+                    if ((this.fanHealthState.normal + this.fanHealthState.warning + this.fanHealthState
+                            .unknown +
                             this.fanHealthState.critical) >
                         0) {
                         this.isShowFan = true;
@@ -1042,7 +1057,8 @@
                     this.powerHealthState.warning = statistics.warning;
                     this.powerHealthState.critical = statistics.critical;
                     this.powerHealthState.unknown = statistics.unknown;
-                    if ((this.powerHealthState.normal + this.powerHealthState.warning + this.powerHealthState
+                    if ((this.powerHealthState.normal + this.powerHealthState.warning + this
+                            .powerHealthState
                             .unknown + this.powerHealthState
                             .critical) > 0) {
                         this.isShowPower = true;

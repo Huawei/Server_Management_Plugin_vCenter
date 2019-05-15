@@ -47,17 +47,8 @@ public class ThumbprintsUtils {
         }
       }
       return thumbprints.toArray(new String[thumbprints.size()]);
-    } catch (KeyStoreException e) {
-      LOGGER.error("keystore error", e);
-      throw e;
-    } catch (CertificateException e) {
-      LOGGER.error("certificate error", e);
-      throw e;
-    } catch (NoSuchAlgorithmException e) {
-      LOGGER.error("no such algorithm error", e);
-      throw e;
-    } catch (IOException e) {
-      LOGGER.error("io error", e);
+    } catch (Exception e) {
+      LOGGER.error("Failed to get thumbprints from JKS", e);
       throw e;
     }
   }

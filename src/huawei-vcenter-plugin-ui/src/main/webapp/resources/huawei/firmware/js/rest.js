@@ -6,7 +6,7 @@
         $.get(firmwareTaskUrl, function(response){
         	console.log(response);
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description, data: response.data}
+                var ret = {code: response.code, msg: response.description, data: response.data,ip: response.ip}
                 callback(ret);
             }
           },"json");
@@ -27,7 +27,7 @@
             	}
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description, data: data,totalNum: totalNum}
+                var ret = {code: response.code, msg: response.description, data: data,totalNum: totalNum,ip: response.ip}
                 callback(ret);
             }
           },"json");
@@ -44,7 +44,7 @@
             	data = response.data.data;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description, data: data}
+                var ret = {code: response.code, msg: response.description, data: data,ip: response.ip}
                 callback(ret);
             }
           },"json");
@@ -131,7 +131,7 @@ var firmwareTaskManage = {
             	data = response.data.data;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description,data: { totalNum: totalCount, data: data } };
+                var ret = {code: response.code, msg: response.description,data: { totalNum: totalCount, data: data } ,ip: response.ip};
                 dealResult(ret, callback);
             }
           },"json");
@@ -171,7 +171,7 @@ var firmwareTaskManage = {
             	data = response.data.data;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description,data: { data: data, totalNum:totalCount } };
+                var ret = {code: response.code, msg: response.description,data: { data: data, totalNum:totalCount } ,ip: response.ip};
                 dealResult(ret, callback);
             }
           },"json");
@@ -214,7 +214,7 @@ var firmwareTaskManage = {
             	}
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description, data: { data: data }};
+                var ret = {code: response.code, msg: response.description, data: { data: data },ip: response.ip};
                 callback(ret);
             }
           },"json");

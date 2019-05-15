@@ -16,12 +16,6 @@ public interface VCenterHAService {
 
   void removeMonitored(VCenterInfo vCenterInfo, List<ESightHAServer> list);
 
-  @Deprecated
-  boolean pushHealth(ESightHAServer eSightHAServer, List<ServerDeviceDetail> serverDeviceDetails);
-
-  boolean pushHealth(List<ESightHAServer> eSightHAServers,
-      List<ServerDeviceDetail> serverDeviceDetails);
-
   /**
    * create provider if it doesn't exist
    *

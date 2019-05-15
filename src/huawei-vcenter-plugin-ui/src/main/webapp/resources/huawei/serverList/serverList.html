@@ -67,7 +67,7 @@
 
 <body>
     <div id="app" v-cloak>
-        <el-row class="search-row">
+        <el-row class="search-row" v-loading.fullscreen.lock="fullscreenLoading">
             <el-dropdown @command="changeClick">
                 <el-button>
                     {{selectName}}
@@ -87,8 +87,8 @@
                 <div>
 
                     <!--刀片服务器显示的table-->
-                    <el-table v-show="searchKey=='blade'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading"
-                        @expand="expandShow">
+                    <el-table v-show="searchKey=='blade'" v-bind:data="listData" border style="width: 100%" v-loading="loading"
+                        element-loading-text="Loading" @expand="expandShow">
                         <el-table-column type="expand">
                             <template scope="props">
                                 <el-table :data="props.row.childBlades" style="width: 100%">
@@ -148,7 +148,8 @@
 
 
                     <!--机架服务器服务器显示的table-->
-                    <el-table v-show="searchKey=='rack'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading">
+                    <el-table v-show="searchKey=='rack'" v-bind:data="listData" border style="width: 100%" v-loading="loading"
+                        element-loading-text="Loading">
                         <el-table-column prop="ipAddress" v-bind:label="i18ns.serverList.serverIPAddress">
                         </el-table-column>
                         <el-table-column prop="serverName" v-bind:label="i18ns.serverList.serverName">
@@ -176,8 +177,8 @@
 
 
                     <!--高密服务器服务器显示的table-->
-                    <el-table v-show="searchKey=='highdensity'" v-bind:data="listData" border style="width: 100%" v-loading="loading" element-loading-text="Loading"
-                        @expand="expandShow1">
+                    <el-table v-show="searchKey=='highdensity'" v-bind:data="listData" border style="width: 100%"
+                        v-loading="loading" element-loading-text="Loading" @expand="expandShow1">
                         <el-table-column type="expand">
                             <template scope="props">
                                 <el-table v-bind:data="props.row.childBlades" style="width: 100%">
@@ -234,8 +235,8 @@
         </div>
         <el-row class="pagination-row">
             <el-col v-bind:span="24">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="start" :page-sizes="pages"
-                    :page-size="size" layout="total, sizes, prev, pager, next, jumper,slot" :total="totalCount">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="start"
+                    :page-sizes="pages" :page-size="size" layout="total, sizes, prev, pager, next, jumper,slot" :total="totalCount">
                     <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
                 </el-pagination>
             </el-col>
@@ -253,6 +254,7 @@
         data: {
             i18ns: {}, //国际化
             loading: false,
+            fullscreenLoading: false,
             allListData: [],
             listData: [], //请求的IP数据列表
             esights: [], //选择器IP数据列表
@@ -350,6 +352,7 @@
              */
             getListData: function () {
                 this.listData = [];
+                this.fullscreenLoading = true;
                 serverListManager.getList({
                     esight: this.selectKey,
                     param: {
@@ -366,6 +369,7 @@
              */
             bindEsight: function (ret) {
                 this.esights = [];
+                this.fullscreenLoading = false;
                 if (ret.code === '0') {
                     var lg = ret.data.length;
                     if (lg > 0) {
@@ -404,6 +408,9 @@
                         this.getListData(); //获取服务器列表数据
                     }
                 } else {
+                    if (this.selectKey != ret.ip) {
+                        return false;
+                    }
                     var msg = getErrorMsg(ret.code);
                     this.alertMsg(msg);
                 }
@@ -434,6 +441,9 @@
                         this.listData.push(list[i]);
                     }
                 } else {
+                    if (this.selectKey != ret.ip) {
+                        return false;
+                    }
                     var msg = getErrorMsg(ret.code);
                     this.alertMsg(msg);
                 }

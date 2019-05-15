@@ -8,6 +8,7 @@ import com.huawei.vcenterpluginui.services.ESightService;
 import com.huawei.vcenterpluginui.services.VCenterInfoService;
 import com.vmware.connection.ConnectionException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -123,8 +124,10 @@ public class VCenterController extends BaseController {
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
         Iterator<String> it = multiRequest.getFileNames();
         while (it.hasNext()) {
+          InputStream inputStream = multiRequest.getFile(it.next()).getInputStream();
           result = vCenterInfoService
-              .saveJksThumbprints(multiRequest.getFile(it.next()).getInputStream(), password);
+              .saveJksThumbprints(inputStream, password);
+          inputStream.close();
         }
         return new ResponseBodyBean(String.valueOf(result), null, null);
       }
@@ -134,7 +137,7 @@ public class VCenterController extends BaseController {
     return failure();
   }
 
-  public static final List<String> getLocalIp() throws SocketException {
+  public static List<String> getLocalIp() throws SocketException {
     Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
     InetAddress ip = null;
     List<String> ipList = new ArrayList();

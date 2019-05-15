@@ -1,5 +1,6 @@
 package com.huawei.vcenterpluginui.services;
 
+import com.huawei.esight.api.rest.softwaresource.GetSoftwareSupportListApi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -95,6 +96,12 @@ public class SoftwareApiServiceImpl extends ESightOpenApiService implements Soft
 		return response;
 	}
 
+	@Override
+	public Map<String, Object> supportList(String esightIp, HttpSession session) throws SQLException {
+		ESight esight = getESightByIp(esightIp);
+		return new GetSoftwareSupportListApi<Map>(esight, new SessionOpenIdProvider(esight, session)).doCall(Map.class);
+	}
+
 	private void setUploadTask(Map data, List<Map<String, Object>> dataMapList) throws SQLException {
 		for (Map<String, Object> dataMap : dataMapList) {
 			if (RESULT_SUCCESS_CODE == (int) dataMap.get("code")) {
@@ -131,7 +138,7 @@ public class SoftwareApiServiceImpl extends ESightOpenApiService implements Soft
 				task.setErrorDetail((String) dataMap.get("errorDetail"));
 				taskDao.saveTaskStatus(task);
 			} catch (Exception e) {
-				LOGGER.error(e.getMessage());
+				LOGGER.error("Failed to sync task progress: " + e.getMessage());
 			}
 		}
 	}

@@ -128,7 +128,7 @@
         </el-form>
 
         <!--不包含WWNN选项的Advanced弹出窗口-->
-        <el-dialog v-bind:title="i18ns.template.advanced" size="small" :visible.sync="wwpnDialogVisible">
+        <el-dialog  :close-on-click-modal="false" v-bind:title="i18ns.template.advanced" size="small" :visible.sync="wwpnDialogVisible">
             <el-row style="margin-top:3px;">
                 <el-col v-bind:span="24">
                     <div class="nem_component_content_title">
@@ -313,7 +313,7 @@
         </el-dialog>
 
         <!--包含WWNN选项的Advanced弹窗-->
-        <el-dialog v-bind:title="i18ns.template.advanced" :visible.sync="wwnnDialogVisible" size="small">
+        <el-dialog  :close-on-click-modal="false" v-bind:title="i18ns.template.advanced" :visible.sync="wwnnDialogVisible" size="small">
 
             <el-row style="margin-top:3px;margin-bottom:8px;">
                 <el-col v-bind:span="24">

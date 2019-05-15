@@ -27,61 +27,64 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class ApplicationController {
 
-    @RequestMapping(value = "rest", method = RequestMethod.GET)
-    public Map onload(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException{
-        String rqHd = request.getHeader("Accept-Language");
-        if(rqHd != null){
-            String rqHeader = URLEncoder.encode(rqHd, StandardCharsets.UTF_8.displayName());
-            response.addHeader("Accept-Language", rqHeader);
-        }
-        return Validations.onloadChecker(request);
+  @RequestMapping(value = "rest", method = RequestMethod.GET)
+  public Map onload(HttpServletRequest request, HttpServletResponse response)
+      throws UnsupportedEncodingException {
+    String rqHd = request.getHeader("Accept-Language");
+    if (rqHd != null) {
+      String rqHeader = URLEncoder.encode(rqHd, StandardCharsets.UTF_8.displayName());
+      response.addHeader("Accept-Language", rqHeader);
     }
+    return Validations.onloadChecker(request);
+  }
 
-    @RequestMapping(value = "rest", method = RequestMethod.POST)
-    public Map onsubmit(@RequestBody Map<String, String> formData) {
-        return Validations.onSubmit(formData.get("packageUrl"),
-                formData.get("vcenterUsername"),
-                formData.get("vcenterPassword"),
-                formData.get("vcenterIP"),
-                formData.get("vcenterPort"));
-    }
+  @RequestMapping(value = "rest", method = RequestMethod.POST)
+  public Map onsubmit(@RequestBody Map<String, String> formData) {
+    return Validations.onSubmit(formData.get("packageUrl"),
+        formData.get("vcenterUsername"),
+        formData.get("vcenterPassword"),
+        formData.get("vcenterIP"),
+        formData.get("vcenterPort"));
+  }
 
-    @RequestMapping(value = "rest/register", method = RequestMethod.POST)
-    public Map register(@RequestBody Map<String, String> formData) {
-        return Validations.onSubmit(formData.get("packageUrl"),
-                formData.get("vcenterUsername"),
-                formData.get("vcenterPassword"),
-                formData.get("vcenterIP"),
-                formData.get("vcenterPort"),
-                formData.get("version"));
-    }
+  @RequestMapping(value = "rest/register", method = RequestMethod.POST)
+  public Map register(@RequestBody Map<String, String> formData) {
+    return Validations.onSubmit(formData.get("packageUrl"),
+        formData.get("vcenterUsername"),
+        formData.get("vcenterPassword"),
+        formData.get("vcenterIP"),
+        formData.get("vcenterPort"),
+        formData.get("version"));
+  }
 
-    @RequestMapping(value = "rest/unregister", method = RequestMethod.POST)
-    public Map unRegister(@RequestBody Map<String, String> formData) {
-        return Validations.unRegister(formData.get("packageUrl"),
-                formData.get("vcenterUsername"),
-                formData.get("vcenterPassword"),
-                formData.get("vcenterIP"),
-                formData.get("vcenterPort"));
-    }
+  @RequestMapping(value = "rest/unregister", method = RequestMethod.POST)
+  public Map unRegister(@RequestBody Map<String, String> formData) {
+    return Validations.unRegister(formData.get("packageUrl"),
+        formData.get("vcenterUsername"),
+        formData.get("vcenterPassword"),
+        formData.get("vcenterIP"),
+        formData.get("vcenterPort"),
+        formData.get("keepData"));
+  }
 
-    @RequestMapping(value = Constants.UPDATE_FILE, method = RequestMethod.GET)
-    public void getPackage(HttpServletResponse response) throws IOException {
-        getPackage(response,"huawei-vcenter-plugin");
-    }
+  @RequestMapping(value = Constants.UPDATE_FILE, method = RequestMethod.GET)
+  public void getPackage(HttpServletResponse response) throws IOException {
+    getPackage(response, "huawei-vcenter-plugin");
+  }
 
-    @RequestMapping(value = "package/{zipName}", method = RequestMethod.GET)
-    public void getPackage(HttpServletResponse response, @PathVariable String zipName) throws IOException {
-        File file = new File(zipName + ".zip");
-        response.setContentType("application/zip");
-        response.setContentLengthLong(file.length());
-        try (OutputStream out = response.getOutputStream();
-             InputStream in = new FileInputStream(file)) {
-            byte[] b = new byte[2048];
-            int length;
-            while ((length = in.read(b)) > 0) {
-                out.write(b, 0, length);
-            }
-        }
+  @RequestMapping(value = "package/{zipName}", method = RequestMethod.GET)
+  public void getPackage(HttpServletResponse response, @PathVariable String zipName)
+      throws IOException {
+    File file = new File(zipName + ".zip");
+    response.setContentType("application/zip");
+    response.setContentLengthLong(file.length());
+    try (OutputStream out = response.getOutputStream();
+        InputStream in = new FileInputStream(file)) {
+      byte[] b = new byte[2048];
+      int length;
+      while ((length = in.read(b)) > 0) {
+        out.write(b, 0, length);
+      }
     }
+  }
 }

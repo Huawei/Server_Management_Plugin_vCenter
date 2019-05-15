@@ -1,6 +1,7 @@
 package com.huawei.vcenterpluginui.dao;
 
 import com.huawei.vcenterpluginui.exception.DataBaseException;
+import com.huawei.vcenterpluginui.utils.FileUtils;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +14,7 @@ import java.util.Locale;
 import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 
 public class H2DataBaseDao {
 
@@ -22,17 +24,15 @@ public class H2DataBaseDao {
 
   private static final String VMWARE_RUNTIME_DATA_DIR = "VMWARE_RUNTIME_DATA_DIR";
 
-  private static final String VMWARE_LINUX_DIR = "/home/vsphere-client";
-
   private static final String OS = System.getProperty("os.name").toLowerCase(Locale.US);
 
   private static final String URL_PREFIX = "jdbc:h2:";
 
   private static final String DB_FILE = "huawei-vcenter-plugin-data";
 
-  private static final String USER = "sa";
+  private static final String DB_FILE_SUFFIX = ".mv.db";
 
-  private static final String KEY = "";
+  private static final String USER = "sa";
 
   private static String getVmwareRuntimeDataDir() {
     return System.getenv(VMWARE_RUNTIME_DATA_DIR);
@@ -76,7 +76,7 @@ public class H2DataBaseDao {
 
     try {
       Class.forName("org.h2.Driver");
-      con = DriverManager.getConnection(url, USER, KEY);
+      con = DriverManager.getConnection(url, USER, "");
     } catch (Exception e) {
       throw new DataBaseException(e.getMessage());
     }
@@ -128,21 +128,52 @@ public class H2DataBaseDao {
     }
   }
 
+  public static String getDBFileName() {
+    return DB_FILE + DB_FILE_SUFFIX;
+  }
+
+  public static String getDBFileNamePrefix() {
+    return DB_FILE;
+  }
+
   public void setUrl(String url) {
+    if (!StringUtils.hasText(this.url)) {
+      if ("mac os x".equalsIgnoreCase(OS)) {
+        this.url = "jdbc:h2:/Users/hyuan/Downloads/huawei-vcenter-plugin-data";
+        return;
+      }
+      String vmwareDataPath = getVmwareRuntimeDataDir();
+      if (vmwareDataPath != null && !"".equals(vmwareDataPath)) {
+        if (isWindows()) {
+          this.url = URL_PREFIX + "//" + vmwareDataPath + File.separator + DB_FILE;
+        } else {
+          this.url = URL_PREFIX + FileUtils.getPath(true) + File.separator + DB_FILE;
+        }
+      } else {
+        if (isWindows()) {
+          this.url = url + File.separator + DB_FILE;
+        } else {
+          this.url = URL_PREFIX + FileUtils.getPath(true) + File.separator + DB_FILE;
+        }
+      }
+      //this.url = url + File.separator + DB_FILE;
+    }
+  }
+
+  public static String getDBFileDir() {
     String vmwareDataPath = getVmwareRuntimeDataDir();
     if (vmwareDataPath != null && !"".equals(vmwareDataPath)) {
       if (isWindows()) {
-        this.url = URL_PREFIX + "//" + vmwareDataPath + File.separator + DB_FILE;
+        return vmwareDataPath;
       } else {
-        this.url = URL_PREFIX + VMWARE_LINUX_DIR + File.separator + DB_FILE;
+        return FileUtils.getPath(true);
       }
     } else {
       if (isWindows()) {
-        this.url = url + File.separator + DB_FILE;
+        return "C:/ProgramData/VMware/vCenterServer/runtime/";
       } else {
-        this.url = URL_PREFIX + VMWARE_LINUX_DIR + File.separator + DB_FILE;
+        return FileUtils.getPath(true);
       }
     }
-    //this.url = url + File.separator + DB_FILE;
   }
 }

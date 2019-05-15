@@ -223,7 +223,7 @@
                 </el-row>
             </div>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceDialogFormVisible" @close="oceCloseDialog" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceDialogFormVisible" @close="oceCloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -256,7 +256,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible0" @close="iSCSICancel0" size="large" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible0" @close="iSCSICancel0" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -467,7 +467,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible1" @close="iSCSICancel1" size="large" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible1" @close="iSCSICancel1" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -678,7 +678,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible0" @close="oceFCoECancel0" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible0" @close="oceFCoECancel0" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -726,7 +726,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible1" @close="oceFCoECancel1" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible1" @close="oceFCoECancel1" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1052,7 +1052,7 @@
                 </el-row>
             </div>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512DialogFormVisible" @close="mz512CloseDialog" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512DialogFormVisible" @close="mz512CloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1104,7 +1104,7 @@
             </el-dialog>
 
             <!--以下新增内容-->
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible0" @close="iSCSICancel2" size="large" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible0" @close="iSCSICancel2" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1315,7 +1315,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible1" @close="iSCSICancel3" size="large" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible1" @close="iSCSICancel3" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1526,7 +1526,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible2" @close="iSCSICancel4" size="large" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible2" @close="iSCSICancel4" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1737,7 +1737,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible3" @close="iSCSICancel5" size="large" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible3" @close="iSCSICancel5" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1948,7 +1948,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible0" @close="mz512FCoECancel0" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible0" @close="mz512FCoECancel0" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1996,7 +1996,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible1" @close="mz512FCoECancel1" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible1" @close="mz512FCoECancel1" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2044,7 +2044,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible2" @close="mz512FCoECancel2" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible2" @close="mz512FCoECancel2" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2092,7 +2092,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible3" @close="mz512FCoECancel3" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible3" @close="mz512FCoECancel3" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2213,7 +2213,7 @@
                     </el-row>
                 </div>
             </div>
-            <el-dialog v-bind:title="dialogTitle" v-bind:visible.sync="dialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="dialogTitle" v-bind:visible.sync="dialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;">
                     {{i18ns.CNA_template.pxeProp}}
                 </div>
@@ -2234,7 +2234,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="hardDialogTitle" v-bind:visible.sync="hardDialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
+            <el-dialog  :close-on-click-modal="false" v-bind:title="hardDialogTitle" v-bind:visible.sync="hardDialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;">
                     {{i18ns.CNA_template.sanProp}}
                 </div>

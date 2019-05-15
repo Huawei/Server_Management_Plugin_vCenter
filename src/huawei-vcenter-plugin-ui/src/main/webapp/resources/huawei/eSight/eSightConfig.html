@@ -141,7 +141,7 @@
             </el-row>
         </div>
         <!-- 编辑 和 添加弹出对话框 -->
-        <el-dialog v-bind:title="dialogTitle" v-bind:visible.sync="dialogFormVisible" @close="closeDialog" size="small"
+        <el-dialog  :close-on-click-modal="false" v-bind:title="dialogTitle" v-bind:visible.sync="dialogFormVisible" @close="closeDialog" size="small"
             top="10%">
             <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" label-width="80px" label-position="left">
                 <el-form-item v-bind:label="i18ns.eSight.eSightHost" prop="hostIp">
@@ -208,7 +208,7 @@
                 </el-button>
             </div>
         </el-dialog>
-        <el-dialog :title="i18ns.eSight.uploadCert" :visible.sync="dialogCertVisible" size="small" @close="certClose">
+        <el-dialog  :close-on-click-modal="false" :title="i18ns.eSight.uploadCert" :visible.sync="dialogCertVisible" size="small" @close="certClose">
             <div>
                 <form id="uploadForm" enctype="multipart/form-data"></form>
                 <el-form v-bind:model="certForm" ref="certForm" :rules="certRules" label-width="150px" label-position="left"

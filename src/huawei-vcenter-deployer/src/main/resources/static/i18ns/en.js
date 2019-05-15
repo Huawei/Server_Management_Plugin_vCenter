@@ -7,6 +7,7 @@ var i18n_en = {
         operationType: 'Operation Type',
         install: 'Install',
         uninstall: 'Uninstall',
+        uninstallTips: 'Uninstall (Attention: After the plugin is uninstalled, please restart the vSphere Web Client service manually)',
         address: 'vCenter IP Address',
         port: 'vCenter Port',
         username: 'vCenter Username',
@@ -17,6 +18,9 @@ var i18n_en = {
         seeResult: 'Please see the terminal for the results',
         ok: 'OK',
         loading: 'Plugin updating...',
-        loading1: 'Huawei plugin is uninstalling...'
+        loading1: 'Huawei plugin is uninstalling...',
+        keepData: 'Keep Plugin Data',
+        yes: 'Yes',
+        no: 'No'
     }
 }

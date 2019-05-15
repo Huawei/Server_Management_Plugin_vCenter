@@ -89,9 +89,10 @@
 
 <body>
     <div id="app" v-cloak>
-        <el-row class="search-row">
+        <el-row class="search-row" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="Loading">
             <el-button style="margin-left: 10px;" @click="addSoft()">{{i18ns.software.add}}</el-button>
-            <el-button style="margin-left: 10px;" @click="clearFailSoft()" :disabled="false">{{i18ns.firmware.clearFailedTask}}</el-button>
+            <el-button style="margin-left: 10px;" @click="clearFailSoft()" :disabled="false">
+                {{i18ns.firmware.clearFailedTask}}</el-button>
             <el-button @click="refresh();">{{i18ns.common.refresh}}</el-button>
         </el-row>
         <div>
@@ -111,7 +112,8 @@
                         <el-table-column prop="errorDetail" v-bind:label="i18ns.software.detail_soft"
                             :show-overflow-tooltip="true">
                             <template scope="scope">
-                                <el-popover trigger="hover" placement="top">
+                                <el-popover trigger="hover" placement="top" @show="isDetailShow=true"
+                                    @hide="isDetailShow=false">
                                     <div v-for="item in getErrorDetailTxt(scope.row.taskCode)">
                                         <span>{{item}}</span>
                                     </div>
@@ -137,11 +139,13 @@
                             <i class="el-icon-caret-bottom el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="item in esights" v-bind:command="item.name" v-bind:key="item.name">{{item.label}}</el-dropdown-item>
+                            <el-dropdown-item v-for="item in esights" v-bind:command="item.name" v-bind:key="item.name">
+                                {{item.label}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     <span style="margin-left:10px; font-size:12px;">{{i18ns.software.inputName}}</span>
-                    <el-input v-model.lazy="keyword" v-on:change="search(keyword)" placeholder="" style="margin-left:10px; width:240px;"></el-input>
+                    <el-input v-model.lazy="keyword" v-on:change="search(keyword)" placeholder=""
+                        style="margin-left:10px; width:240px;"></el-input>
                     <el-button @click="batchDelete()" :disabled="doneListData.length===0||multipleSelection.length===0"
                         style="margin-left:10px; font-size:12px;">{{i18ns.eSight.batchDelete}}</el-button>
                 </el-col>
@@ -162,7 +166,9 @@
                         </el-table-column>
                         <el-table-column v-bind:label="i18ns.software.handle">
                             <template scope="scope">
-                                <el-button type="text" size="small" v-on:click="deleteDoneSoftware(scope.$index, scope.row)">{{i18ns.common.delete}}</el-button>
+                                <el-button type="text" size="small"
+                                    v-on:click="deleteDoneSoftware(scope.$index, scope.row)">{{i18ns.common.delete}}
+                                </el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -172,15 +178,17 @@
                         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                             v-bind:current-page="currentPage" v-bind:page-sizes="pageSizes" v-bind:page-size="pageSize"
                             layout="total, sizes, prev, pager, next, jumper,slot" v-bind:total="total">
-                            <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}</el-button>
+                            <el-button style="border: 1px solid #c4c4c4;margin-left: 10px;">{{i18ns.common.confirm}}
+                            </el-button>
                         </el-pagination>
                     </el-col>
                 </el-row>
             </template>
         </div>
-        <el-dialog v-bind:title="i18ns.software.addSoftware" v-bind:visible.sync="dialogFormVisible" @close="closeDialog"
-            top="10%">
-            <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" label-width="130px" label-position="left">
+        <el-dialog :close-on-click-modal="false" v-bind:title="i18ns.software.addSoftware" v-bind:visible.sync="dialogFormVisible"
+            @close="closeDialog" top="10%">
+            <el-form v-bind:model="ruleForm" v-bind:rules="rules" ref="ruleForm" label-width="130px"
+                label-position="left">
                 <el-form-item v-bind:label="i18ns.software.softName" prop="softwareName">
                     <div>
                         <el-input v-model="ruleForm.softwareName" :disabled="false" auto-complete="off"></el-input>
@@ -188,15 +196,16 @@
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.softDesc" prop="softwareDescription">
                     <div>
-                        <el-input v-model="ruleForm.softwareDescription" type="textarea" auto-complete="off" @change="onVlaueChange()"
-                            style="width:520px;"></el-input>
+                        <el-input v-model="ruleForm.softwareDescription" type="textarea" auto-complete="off"
+                            @change="onVlaueChange()" style="width:520px;"></el-input>
                     </div>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.softType" prop="softwareType" class="softType">
                     <div>
                         <el-col v-bind:span="12">
                             <el-select v-model="templateValue" placeholder="">
-                                <el-option v-for="item in templateOptions" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option v-for="item in templateOptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-col>
@@ -213,7 +222,8 @@
                 <el-form-item v-bind:label="i18ns.software.softVersion" prop="softwareVersion" class="softVersion">
                     <div>
                         <el-col v-bind:span="12">
-                            <el-select v-model="ruleForm.softwareVersion" placeholder="" @change="versionTypeValueChange">
+                            <el-select v-model="ruleForm.softwareVersion" placeholder=""
+                                @change="versionTypeValueChange">
                                 <el-option v-for="item in versionTypeOptions" :key="item.value" :label="item.label"
                                     :value="item.value">
                                 </el-option>
@@ -221,8 +231,8 @@
                         </el-col>
                         <el-col v-bind:span="12">
                             <!--ruleForm.softwareVersion-->
-                            <el-select v-model="ruleForm.softwareEdition" placeholder="" @change="softwareEditionValueChange"
-                                v-show="showSoftEdition">
+                            <el-select v-model="ruleForm.softwareEdition" placeholder=""
+                                @change="softwareEditionValueChange" v-show="showSoftEdition">
                                 <el-option v-for="item in softEditionOptions" :key="item.value" :label="item.label"
                                     :value="item.value">
                                 </el-option>
@@ -245,12 +255,14 @@
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.sourceName" prop="sourceName">
                     <div>
-                        <el-input v-model="ruleForm.sourceName" auto-complete="off" @change="onVlaueChange()"></el-input>
+                        <el-input v-model="ruleForm.sourceName" auto-complete="off" @change="onVlaueChange()">
+                        </el-input>
                     </div>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.sftipIP" prop="sftpServerIP">
                     <div>
-                        <el-input v-model="ruleForm.sftpServerIP" auto-complete="off" @change="onVlaueChange()"></el-input>
+                        <el-input v-model="ruleForm.sftpServerIP" auto-complete="off" @change="onVlaueChange()">
+                        </el-input>
                     </div>
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.sftpPort" prop="sftpPort">
@@ -265,12 +277,14 @@
                 </el-form-item>
                 <el-form-item v-bind:label="i18ns.software.sftipIPpwd" prop="password">
                     <div>
-                        <el-input type="password" v-model="ruleForm.password" auto-complete="off" @change="onVlaueChange()"></el-input>
+                        <el-input type="password" v-model="ruleForm.password" auto-complete="off"
+                            @change="onVlaueChange()"></el-input>
                     </div>
                 </el-form-item>
                 <el-form-item label="eSight:" prop="esight">
                     <el-checkbox-group v-model="ruleForm.esight">
-                        <el-checkbox v-for="item in esightList" v-bind:label="item.name" v-bind:key="item.name">{{item.label}}</el-checkbox>
+                        <el-checkbox v-for="item in esightList" v-bind:label="item.name" v-bind:key="item.name">
+                            {{item.label}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
             </el-form>
@@ -311,13 +325,7 @@
                 showSoftEdition: false,
                 showDeleteBtn: false,
                 isDisable: false,
-                languageValueOptions: [{
-                    value: 'Chinese',
-                    label: 'Chinese'
-                }, {
-                    value: 'English',
-                    label: 'English'
-                }],
+                languageValueOptions: [],
                 templateOptions: [{
                     value: 'OS',
                     label: 'OS'
@@ -331,8 +339,7 @@
                     softwareType: '',
                     softwareVersion: '',
                     softwareEdition: '',
-                    softwareLanguage: 'Chinese',
-
+                    softwareLanguage: '',
                     sourceName: '',
                     sftpPort: '',
                     sftpServerIP: '',
@@ -391,16 +398,7 @@
                         message: '',
                         trigger: 'blur'
                     }],
-                    softwareLanguage: [{
-                        required: true,
-                        message: '',
-                        tigger: 'blur'
-                    }, {
-                        min: 1,
-                        max: 100,
-                        message: '',
-                        trigger: 'blur'
-                    }],
+                    
                     // 此处以上为选择器控件
                     sourceName: {
                         required: true,
@@ -464,7 +462,11 @@
                         trigger: 'change'
                     }]
                 },
-                multipleSelection: []
+                multipleSelection: [],
+                isShowMessageBox: true,
+                isShowMessageBox1: true,
+                isDetailShow: false,
+                osArry: []
             },
             created: function () {
                 this.i18ns = getIn18();
@@ -482,7 +484,7 @@
                     //获取eSight数据配置
                     getEsightList(app.bindEsight);
                 }, 0);
-                this.resetType();
+                // this.resetType();
             },
             methods: {
                 /**
@@ -592,6 +594,7 @@
                     this.doneListData = [];
                     this.keyword = '';
                     this.secondloading = true;
+                    this.getOS();
                     this.getDoneListData();
                 },
                 /**
@@ -672,8 +675,12 @@
                         this.loading = true;
                         this.secondloading = true;
                     }
-                    softManager.getList({}, this.bindList);
-                    this.getDoneListData(); //获取上传完成的软件源列表
+                    if (!this.isDetailShow) {
+                        softManager.getList({}, this.bindList);
+                        if (this.multipleSelection.length == 0) {
+                            this.getDoneListData(); //获取上传完成的软件源列表
+                        }
+                    }
                 },
                 /**
                  * 定时刷新
@@ -691,7 +698,8 @@
                     this.$refs['ruleForm'].validate(function (valid) {
                         if (valid) {
                             var _softwareEdition = "";
-                            var _softwareEditionOption = _.find(app.softEditionOptions, function (x) {
+                            var _softwareEditionOption = _.find(app.softEditionOptions, function (
+                                x) {
                                 return x.value == app.ruleForm.softwareEdition;
                             })
                             if (_softwareEditionOption) {
@@ -705,7 +713,8 @@
                                     softwareType: _.find(app.systemTypeOptions, function (x) {
                                         return x.value == app.ruleForm.softwareType;
                                     }).label,
-                                    softwareVersion: _.find(app.versionTypeOptions, function (x) {
+                                    softwareVersion: _.find(app.versionTypeOptions, function (
+                                        x) {
                                         return x.value == app.ruleForm.softwareVersion;
                                     }).label,
                                     softwareLanguage: app.ruleForm.softwareLanguage,
@@ -717,7 +726,9 @@
                                     password: app.ruleForm.password
                                 }
                             }
+                            app.fullscreenLoading=true;
                             softManager.add(param, app.postDataCallback, function (ret) {
+                                app.fullscreenLoading=false;
                                 if (ret.code == "-100000") {
                                     app.dialogFormVisible = false;
                                     app.getListData();
@@ -745,10 +756,20 @@
                 systemTypeValueChange: function (val) {
                     this.showLanguage = true;
                     this.showSoftEdition = true;
-                    var list = softManager.getChildDropList(val);
-                    this.versionTypeOptions = list;
-                    this.ruleForm.softwareVersion = this.versionTypeOptions[0].value;
-                    console.log(list);
+                    var arry = this.osArry[val];
+                    this.versionTypeOptions = [];
+                    for (var i = 0; i < arry.length; i++) {
+                        this.versionTypeOptions.push({
+                            label: arry[i].version,
+                            value: arry[i].version,
+                            language: arry[i].language,
+                            edition: arry[i].edition
+
+                        })
+                    }
+                    if (this.versionTypeOptions.length > 0) {
+                        this.ruleForm.softwareVersion = this.versionTypeOptions[0].value;
+                    }
                 },
                 /**
                  * 添加软件源弹出框 软件版本类型 切换操作
@@ -757,17 +778,41 @@
                  */
                 versionTypeValueChange: function (val) {
                     this.softEditionOptions = [];
-                    var list = softManager.getChildDropList(val);
-                    if (list.length <= 0) {
+                    this.languageValueOptions = [];
+                    var item = _.find(this.versionTypeOptions, function (x) {
+                        return x.value == val;
+                    });
+                    if (!item || !item.edition || item.edition.length == 0 || !item.edition[0]) {
                         this.showSoftEdition = false;
-                        this.showLanguage = false;
-
                     } else {
-                        this.softEditionOptions = list;
+                        for (var i = 0; i < item.edition.length; i++) {
+                            this.softEditionOptions.push({
+                                label: item.edition[i],
+                                value: item.edition[i]
+                            })
+                        }
                         this.showSoftEdition = true;
+                        if (this.softEditionOptions.length > 0) {
+                            this.ruleForm.softwareEdition = this.softEditionOptions[0].value;
+                        }else{
+                            this.ruleForm.softwareEdition = "";
+                        }
+                    }
+                    if (!item || !item.language || item.language.length == 0 || !item.language[0]) {
+                        this.showLanguage = false;
+                    } else {
+                        for (var i = 0; i < item.language.length; i++) {
+                            this.languageValueOptions.push({
+                                label: item.language[i],
+                                value: item.language[i]
+                            })
+                        }
                         this.showLanguage = true;
-                        this.ruleForm.softwareEdition = this.softEditionOptions[0].value;
-                        console.log(list);
+                        if (this.languageValueOptions.length > 0) {
+                            this.ruleForm.softwareLanguage = this.languageValueOptions[0].value;
+                        }else{
+                            this.ruleForm.softwareLanguage="";
+                        }
                     }
                 },
                 softwareEditionValueChange: function (val) {
@@ -833,7 +878,7 @@
                     this.secondloading = true;
                     softManager.getList({}, this.bindList);
                     this.getDoneListData(); //获取上传完成的软件源列表
-                    this.commonfunc();
+                    this.getOS();
                 },
                 /**
                  * 获取上传完成的软件源列表
@@ -855,10 +900,17 @@
                  * 
                  */
                 commonfunc: function () {
-                    var list = softManager.getChildDropList('0001');
-                    this.systemTypeOptions = list;
-                    this.ruleForm.softwareType = this.systemTypeOptions[0].value;
-                    console.log(list);
+                    this.systemTypeOptions = [];
+                    var arry = _.keys(this.osArry);
+                    for (var i = 0; i < arry.length; i++) {
+                        this.systemTypeOptions.push({
+                            label: arry[i],
+                            value: arry[i]
+                        })
+                    }
+                    if (this.systemTypeOptions.length > 0) {
+                        this.ruleForm.softwareType = this.systemTypeOptions[0].value;
+                    }
                 },
                 /**
                  * 获取上传中的软件源 回调函数
@@ -904,7 +956,15 @@
                         this.listData = [];
                         this.failListData = [];
                         var msg = getErrorMsg(ret.code);
-                        this.alertMsg(msg);
+                        if (this.isShowMessageBox1 && this.dialogFormVisible == false) {
+                            this.isShowMessageBox1 = false;
+                            this.$alert(msg, this.i18ns.common.prompt, {
+                                confirmButtonText: this.i18ns.common.confirm,
+                                callback: function action() {
+                                    app.isShowMessageBox1 = true;
+                                }
+                            });
+                        }
                     }
                     app.loading = false;
                     app.secondloading = false;
@@ -931,8 +991,21 @@
                     } else {
                         this.doneListData = [];
                         app.secondloading = false;
+                        //var msg = getErrorMsg(ret.code);
+                        //this.alertMsg(msg);
+                        if (this.menuKey != ret.ip) {
+                            return false;
+                        }
                         var msg = getErrorMsg(ret.code);
-                        this.alertMsg(msg);
+                        if (this.isShowMessageBox && this.dialogFormVisible == false) {
+                            this.isShowMessageBox = false;
+                            this.$alert(msg, this.i18ns.common.prompt, {
+                                confirmButtonText: this.i18ns.common.confirm,
+                                callback: function action() {
+                                    app.isShowMessageBox = true;
+                                }
+                            });
+                        }
                     }
                     app.loading = false;
                     app.secondloading = false;
@@ -944,6 +1017,7 @@
                  */
                 postDataCallback: function (ret) {
                     var msg = app.i18ns.software.addSuccessMsg;
+                    app.fullscreenLoading=false;
                     if (ret.code == '0') {
                         this.alertMsg(msg, function () {
                             app.dialogFormVisible = false;
@@ -1047,17 +1121,18 @@
                                     var h = app.$createElement;
                                     var nodes = [];
                                     nodes.push(h('span', {
-                                        type: "circle",
-                                        style: {
-                                            'font-size': '14px',
-                                            'margin-top': '-20px',
-                                            'display': 'block',
-                                            'margin-bottom': '5px'
-                                        },
-                                    }, app.i18ns.common.deleteResultTips.replace(
-                                        '#', app.multipleSelection.length -
-                                        errorInfo.length).replace('&',
-                                        errorInfo.length)));
+                                            type: "circle",
+                                            style: {
+                                                'font-size': '14px',
+                                                'margin-top': '-20px',
+                                                'display': 'block',
+                                                'margin-bottom': '5px'
+                                            },
+                                        }, app.i18ns.common.deleteResultTips
+                                        .replace(
+                                            '#', app.multipleSelection.length -
+                                            errorInfo.length).replace('&',
+                                            errorInfo.length)));
                                     for (var i = 0; i < errorInfo.length; i++) {
                                         nodes.push(h('tr', null, [
                                             h('td', {
@@ -1081,6 +1156,27 @@
                             }
                         }, 100)
                     }).catch(function () {});
+                },
+                getOS: function () {
+                    softManager.getOS({
+                        ip: app.menuKey
+                    }, function (ret) {
+                        if (ret.code == '0' && ret.data.code == '0') {
+                            app.osArry = ret.data.data;
+                        } else {
+                            var msg = getErrorMsg(ret.code);
+                            if (app.isShowMessageBox && app.dialogFormVisible == false) {
+                                app.isShowMessageBox = false;
+                                app.$alert(msg, app.i18ns.common.prompt, {
+                                    confirmButtonText: app.i18ns.common.confirm,
+                                    callback: function action() {
+                                        app.isShowMessageBox = true;
+                                    }
+                                });
+                            }
+                        }
+                        app.commonfunc();
+                    });
                 }
             }
         });

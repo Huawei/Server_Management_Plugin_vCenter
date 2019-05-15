@@ -71,31 +71,43 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item v-bind:label="i18ns.vCenter.port" prop="hostPort">
+                        <div>
+                            <el-input v-model="ruleForm.hostPort" auto-complete="off" style="width:180px;"></el-input>
+                            <el-tooltip :content="i18ns.vCenter.portTips" placement="right" effect="light">
+                                <i class="el-icon-information" style="color: #0190fe;"></i>
+                            </el-tooltip>
+                        </div>
+                    </el-form-item>
                     <el-form-item v-bind:label="i18ns.vCenter.userName" prop="userName">
                         <div>
                             <el-input v-model="ruleForm.userName" :disabled="!isEsight" auto-complete="off"></el-input>
                         </div>
                     </el-form-item>
-                    <el-form-item v-show="!isUpdate" v-bind:label="i18ns.vCenter.password" prop="password">
+                    <el-form-item  v-bind:label="i18ns.vCenter.password" prop="password">
                         <div>
                             <el-input type="password" :disabled="!isEsight" v-model="ruleForm.password" auto-complete="off"></el-input>
                         </div>
                     </el-form-item>
                 </el-row>
-                <el-row v-if="isUpdate">
-                    <!--  <div style="margin-top:15px;margin-bottom:15px;margin-left:10px">
-                            <el-checkbox :disabled="!ruleForm.state" v-model="checked">{{i18ns.vCenter.changeInfo}}</el-checkbox>
-                          </div>-->
-
+               <!--  <el-row v-if="isUpdate">
                     <el-form-item v-bind:label="i18ns.vCenter.password" prop="password1">
                         <div>
                             <el-input type="password" v-model="ruleForm.password1" auto-complete="off" :disabled="!isEsight"></el-input>
                         </div>
                     </el-form-item>
-                </el-row>
+                </el-row> -->
                 <el-form-item v-show="isVisible">
                     <span style="font-size:12px; text-align:left; color:green;">{{isWhatDescription}}</span>
                 </el-form-item>
+                <el-row>
+                    <el-form-item v-bind:label="i18ns.vCenter.description">
+                        <div style="color: #67c23a;">
+                            {{i18ns.vCenter.vCenterTips}}
+                        </div>
+                    </el-form-item>
+
+                </el-row>
             </el-card>
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
@@ -121,7 +133,7 @@
                     <el-radio-group v-model="ruleForm.pushEventLevel" @change="pushEventLevelChange" :disabled="support_alarm">
                         <el-radio class="radio" :label="3"> {{i18ns.vCenter.all}}</el-radio>
                         <el-radio class="radio" :label="1"> {{i18ns.vCenter.critical}}</el-radio>
-                        <el-radio class="radio" :label="2"> {{i18ns.vCenter.majorAndcritical}}</el-radio>
+                        <!--<el-radio class="radio" :label="2"> {{i18ns.vCenter.majorAndcritical}}</el-radio>-->
                     </el-radio-group>
                 </el-form-item>
             </el-card>
@@ -133,7 +145,7 @@
             </el-button>
         </div>
         <!-- 点击保弹出框-->
-        <el-dialog :title="i18ns.vCenter.prompt" :visible.sync="centerDialogVisible" width="30%" fullscreen='true'
+        <el-dialog  :close-on-click-modal="false" :title="i18ns.vCenter.prompt" :visible.sync="centerDialogVisible" width="30%" fullscreen='true'
             center size="large">
             <div class="info">
                 <p>{{i18ns.vCenter.operationINfo}}</p>
@@ -142,10 +154,11 @@
                     </el-table-column>
                     <el-table-column prop="aliasName" :label="i18ns.vCenter.tableAliasName" header-align="left" align="left">
                     </el-table-column>
-                    <el-table-column v-if="isShowHAResult" prop="HAResult" :label="i18ns.vCenter.HAOperationResult" header-align="left" align="left">
+                    <el-table-column v-if="isShowHAResult" prop="HAResult" :label="i18ns.vCenter.HAOperationResult"
+                        header-align="left" align="left">
                     </el-table-column>
-                    <el-table-column  v-if="isShowAlarmResult" prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult" header-align="left"
-                        align="left">
+                    <el-table-column v-if="isShowAlarmResult" prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult"
+                        header-align="left" align="left">
                     </el-table-column>
                 </el-table>
             </div>
@@ -189,10 +202,11 @@
             },
             ruleForm: {
                 hostIp: '',
+                hostPort: '',
                 userName: '',
                 password: '',
                 state: false,
-                password1: '',
+                //password1: '',
                 pushEvent: false,
                 pushEventLevel: 0
             },
@@ -252,8 +266,9 @@
                         } else {
                             if (app.isUpdate) {
                                 return callback();
+                            } else {
+                                return callback(new Error(app.i18ns.vCenter.passwordNull));
                             }
-                            return callback(new Error(app.i18ns.vCenter.passwordNull));
                         }
                     },
                     trigger: 'change'
@@ -266,14 +281,33 @@
                                 /^[a-zA-Z0-9\~\`\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]|{\}\;\'\:\"\,\.\/\<\>\?]{1,100}$/
                                 .test(value)) {
                                 return callback(new Error(app.i18ns.vCenter.passwordError));
+                            } else {
+                                return callback();
                             }
                         } else {
-                            return callback(new Error(app.i18ns.vCenter.passwordNull));
+                            if (app.isUpdate) {
+                                return callback(new Error(app.i18ns.vCenter.passwordNull));
+                            } else {
+                                return callback();
+                            }
                         }
-                        return callback();
                     },
                     trigger: 'change'
-                }
+                },
+                hostPort: {
+                    required: true,
+                    validator: function (rule, value, callback) {
+                        if (value) {
+                            if (!/^[0-9]{1,5}$/.test(value) || value > 65535 || value < 1) {
+                                return callback(new Error(app.i18ns.vCenter.legthCheckMore));
+                            } else
+                                return callback();
+                        } else {
+                            return callback(new Error(app.i18ns.vCenter.portNull));
+                        }
+                    },
+                    trigger: 'change'
+                },
             }
         },
         created: function () {
@@ -332,6 +366,7 @@
                             app.isUpdate = true;
                         }
                         app.ruleForm.hostIp = response.data['HOST_IP'];
+                        app.ruleForm.hostPort = response.data['HOST_PORT'];
                         app.ruleForm.userName = response.data['USER_NAME'];
                         app.ruleForm.state = response.data['STATE'];
                         app.ruleForm.pushEvent = response.data['PUSH_EVENT'];
@@ -388,14 +423,16 @@
                             userName: app.ruleForm.userName,
                             state: app.ruleForm.state,
                             hostIp: app.ruleForm.hostIp,
+                            hostPort: app.ruleForm.hostPort,
                             pushEvent: app.ruleForm.pushEvent,
-                            pushEventLevel: app.ruleForm.pushEventLevel
+                            pushEventLevel: app.ruleForm.pushEventLevel,
+                            password:app.ruleForm.password
                         }
-                        if (app.isUpdate && app.ruleForm.password1.length > 0) {
+                      /*   if (app.isUpdate && app.ruleForm.password1.length > 0) {
                             param.password = app.ruleForm.password1
                         } else if (app.ruleForm.password && app.ruleForm.password.length > 0) {
                             param.password = app.ruleForm.password
-                        }
+                        } */
                         vCenterManage.save(param, function (response) {
                             app.loading = false;
                             if (response.code === '0') {

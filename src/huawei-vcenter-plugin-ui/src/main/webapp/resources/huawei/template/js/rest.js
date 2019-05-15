@@ -16,7 +16,7 @@
              	totalNum = response.data.totalNum;
              }
              if (typeof callback === "function") {
-                 var ret = {code: response.code, msg: response.description,data:data, totalNum:totalNum };
+                 var ret = {code: response.code, msg: response.description,data:data, totalNum:totalNum ,ip: response.ip};
                  dealResult(ret, callback);
              }
            },"json");
@@ -100,7 +100,7 @@
             	data = response.data.data;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description,data: { data: data, totalNum:totalCount } };
+                var ret = {code: response.code, msg: response.description,data: { data: data, totalNum:totalCount } ,ip: response.ip};
                 dealResult(ret, callback);
             }
           },"json");
@@ -266,7 +266,7 @@
             	data = response.data.data;
             }
             if (typeof callback === "function") {
-                var ret = {code: response.code, msg: response.description, data:  data };
+                var ret = {code: response.code, msg: response.description, data:  data ,ip: response.ip};
                 dealResult(ret, callback);
             }
           },"json");

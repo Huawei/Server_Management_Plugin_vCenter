@@ -70,7 +70,8 @@ public class Validations {
     } catch (UnsupportedEncodingException e) {
       url = packageUrl;
     }
-    String response = unsubscribeAlarm(vcenterIP, vcenterUsername, vcenterPassword, "install");
+    String response = unsubscribeAlarm(vcenterIP, vcenterUsername, vcenterPassword, vcenterPort,
+        "install", false);
     if (response != null) {
       try {
         Map<String, Object> result = JSON_PARSER.parseMap(response);
@@ -115,16 +116,24 @@ public class Validations {
   }
 
   public static Map unRegister(String packageUrl, String vcenterUsername, String vcenterPassword,
-      String vcenterIP, String vcenterPort) {
+      String vcenterIP, String vcenterPort, String keepData) {
     if ((vcenterIP == null) || (vcenterIP.isEmpty())) {
       return Collections.singletonMap("error", "E003");
     }
     if ((vcenterPort == null) || (vcenterPort.isEmpty())) {
       return Collections.singletonMap("error", "E004");
     }
+
+    LOGGER.info("After the plugin is uninstalled, please restart the vSphere Web Client service manually");
+
     String pluginKey = "com.huawei.vcenterpluginui";
+    boolean removeData = false;
     LOGGER.info("Removing vCenter plugin data, please wait patiently...");
-    String response = unsubscribeAlarm(vcenterIP, vcenterUsername, vcenterPassword, "uninstall");
+    if (keepData != null && !"1".equals(keepData)) {
+      removeData = true;
+    }
+    String response = unsubscribeAlarm(vcenterIP, vcenterUsername, vcenterPassword, vcenterPort, "uninstall",
+        removeData);
     if (response != null) {
       try {
         Map<String, Object> result = JSON_PARSER.parseMap(response);
@@ -158,18 +167,19 @@ public class Validations {
   }
 
   public static String unsubscribeAlarm(String vcenterIP, String vcenterUsername,
-      String vcenterPassword, String action) {
+      String vcenterPassword, String vcenterPort, String action, boolean removeData) {
     String result = null;
     try {
       Map<String, String> bodyParamMap = new HashMap<String, String>();
       bodyParamMap.put("vcenterUsername", vcenterUsername);
       bodyParamMap.put("vcenterPassword", vcenterPassword);
       bodyParamMap.put("action", action);
+      bodyParamMap.put("removeData", removeData ? "true" : "false");
       String body = HttpRequestUtil.concatParamAndEncode(bodyParamMap);
 
       result = HttpRequestUtil
-          .requestWithBody(String.format(RESTURL_UNSUBSCRIBE, vcenterIP), HttpMethod.POST, HEADERS,
-              body, String.class).getBody();
+          .requestWithBody(String.format(RESTURL_UNSUBSCRIBE, vcenterIP + ":" + vcenterPort),
+              HttpMethod.POST, HEADERS, body, String.class).getBody();
       LOGGER.debug("unsubscribe: " + result);
     } catch (Exception e) {
       LOGGER.debug(e.getMessage(), e);

@@ -1,9 +1,7 @@
 package com.huawei.vcenterpluginui.utils;
 
-import com.huawei.vcenterpluginui.constant.DeviceComponent;
 import com.huawei.vcenterpluginui.entity.AlarmDefinition;
 import com.huawei.vcenterpluginui.entity.ESightHAServer;
-import com.huawei.vcenterpluginui.entity.ServerDeviceDetail;
 import com.huawei.vcenterpluginui.entity.VCenterInfo;
 import com.huawei.vcenterpluginui.exception.VcenterException;
 import com.huawei.vcenterpluginui.exception.VersionNotSupportException;
@@ -12,6 +10,7 @@ import com.vmware.common.ssl.TrustAll;
 import com.vmware.connection.BasicConnection;
 import com.vmware.connection.ConnectedVimServiceBase;
 import com.vmware.connection.Connection;
+import com.vmware.vim25.AlarmExpression;
 import com.vmware.vim25.AlarmSetting;
 import com.vmware.vim25.AlarmSpec;
 import com.vmware.vim25.ClusterConfigInfoEx;
@@ -23,6 +22,7 @@ import com.vmware.vim25.EventAlarmExpression;
 import com.vmware.vim25.ExtendedEvent;
 import com.vmware.vim25.HealthUpdate;
 import com.vmware.vim25.HealthUpdateInfo;
+import com.vmware.vim25.HealthUpdateInfoComponentType;
 import com.vmware.vim25.HostHardwareInfo;
 import com.vmware.vim25.InvalidPropertyFaultMsg;
 import com.vmware.vim25.InvalidStateFaultMsg;
@@ -31,6 +31,7 @@ import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.NotFoundFaultMsg;
 import com.vmware.vim25.ObjectContent;
 import com.vmware.vim25.ObjectSpec;
+import com.vmware.vim25.OrAlarmExpression;
 import com.vmware.vim25.PropertyFilterSpec;
 import com.vmware.vim25.PropertySpec;
 import com.vmware.vim25.RetrieveOptions;
@@ -44,13 +45,11 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
@@ -72,6 +71,8 @@ public class ConnectedVim extends ConnectedVimServiceBase {
 
   private String providerNamePrefix;
   private String providerName;
+
+  private static String vcenterVersion = null;
 
   public ConnectedVim(String providerNamePrefix, String providerNameVersion) {
     super();
@@ -132,9 +133,8 @@ public class ConnectedVim extends ConnectedVimServiceBase {
       }
 
       return result;
-    } catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | NoSuchMethodException | IllegalAccessException |
-        InvocationTargetException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (Exception e) {
+      LOGGER.error("Failed to get server list");
       throw e;
     } finally {
       this.disconnect();
@@ -191,91 +191,49 @@ public class ConnectedVim extends ConnectedVimServiceBase {
   }
 
   /**
-   * 推送健康状态
-   *
-   * @param vCenterInfo vCenter信息
-   * @param serverDeviceDetails 接收的告警信息列表
+   * 推送HA
    */
-  public void pushHealth(VCenterInfo vCenterInfo, List<ESightHAServer> eSightHAServers,
-      List<ServerDeviceDetail> serverDeviceDetails) throws RuntimeFaultFaultMsg, NotFoundFaultMsg {
-    connect(vCenterInfo);
+  public void pushHealth(String deviceComponentId, Collection<String> hostSystems,
+      String severity, boolean closeConnection) {
+    if (hostSystems == null || hostSystems.size() == 0) {
+      LOGGER.info("No host system, do not push health.");
+      return;
+    }
     try {
       ManagedObjectReference healthUpdateManager = getHealthUpdateManager();
       String providerId = getProviderId(healthUpdateManager);
+      List<HealthUpdate> healthUpdates = new ArrayList<>();
 
-      List<HealthUpdate> healthUpdates = getHealthUpdates(eSightHAServers, serverDeviceDetails,
-          healthUpdateManager, providerId);
-      LOGGER.info("healthUpdates size: " + healthUpdates.size());
-      if (healthUpdates.isEmpty()) {
-        return;
-      }
-      this.vimPort.postHealthUpdates(healthUpdateManager, providerId, healthUpdates);
-      LOGGER.info("push health update success.");
-    } catch (RuntimeFaultFaultMsg | NotFoundFaultMsg e) {
-      LOGGER.error(e.getMessage(), e);
-      throw e;
-    } finally {
-      this.disconnect();
-    }
-  }
-
-  private List<HealthUpdate> getHealthUpdates(List<ESightHAServer> eSightHAServers,
-      List<ServerDeviceDetail> serverDeviceDetails, ManagedObjectReference healthUpdateManager,
-      String providerId)
-      throws NotFoundFaultMsg, RuntimeFaultFaultMsg {
-    List<HealthUpdate> healthUpdates = new LinkedList<>();
-
-    Map<String, Set<String>> dnHostSystemMap = new HashMap<>();
-    for (ESightHAServer eSightHAServer : eSightHAServers) {
-      dnHostSystemMap
-          .put(eSightHAServer.geteSightServerDN(),
-              Collections.singleton(eSightHAServer.getHaHostSystem()));
-      if (StringUtils.hasLength(eSightHAServer.geteSightServerParentDN())) {
-        Set<String> hostSystems = dnHostSystemMap.get(eSightHAServer.geteSightServerParentDN());
-        if (hostSystems == null) {
-          hostSystems = new HashSet<>();
-        }
-        hostSystems.add(eSightHAServer.getHaHostSystem());
-        dnHostSystemMap.put(eSightHAServer.geteSightServerParentDN(), hostSystems);
-      }
-    }
-
-    IdWorker idWorker = new IdWorker(1, 1, 1);
-    Map<String, ManagedObjectReference> hostSystemMap = new HashMap<>();
-    for (ServerDeviceDetail serverDeviceDetail : serverDeviceDetails) {
-      String healthUpdateInfoId = DeviceComponent.getComponentId(serverDeviceDetail.getComponent());
-      if (healthUpdateInfoId == null) {
-        LOGGER.warn("push fail, component type error: " + serverDeviceDetail.getComponent());
-        continue;
-      }
-
-      Set<String> hostSystems = dnHostSystemMap.get(serverDeviceDetail.getDn());
-      if (hostSystems == null) {
-        LOGGER.warn("push fail, not found host system, dn: " + serverDeviceDetail.getDn());
-        continue;
-      }
+      IdWorker idWorker = new IdWorker(1, 1, 1);
       for (String hostSystemValue : hostSystems) {
-        ManagedObjectReference hostSystem = hostSystemMap.get(hostSystemValue);
-        if (hostSystem == null) {
-          hostSystem = getHostSystem(hostSystemValue);
-          hostSystemMap.put(hostSystemValue, hostSystem);
-          addMonitored(healthUpdateManager, providerId, hostSystem);
-        }
+        ManagedObjectReference hostSystem = getHostSystem(hostSystemValue);
+        addMonitored(healthUpdateManager, providerId, hostSystem);
 
         HealthUpdate healthUpdate = new HealthUpdate();
-        healthUpdate.setId(serverDeviceDetail.getComponent() + String.valueOf(idWorker.nextId()));
-        healthUpdate.setHealthUpdateInfoId(healthUpdateInfoId);
+        healthUpdate.setId(deviceComponentId + idWorker.nextId());
+        healthUpdate.setHealthUpdateInfoId(deviceComponentId);
         healthUpdate.setEntity(hostSystem);
-        healthUpdate.setStatus(convertHealthStatus(serverDeviceDetail.getHealthState()));
+        healthUpdate.setStatus(convertHealthStatus(severity));
         if (healthUpdate.getStatus() != ManagedEntityStatus.GREEN) {
-          healthUpdate.setRemediation("please refer to Proposed Repair Actions in eSight");
+          healthUpdate.setRemediation("please refer to Proposed Repair Actions in Fusion Director");
         } else {
           healthUpdate.setRemediation("");
         }
         healthUpdates.add(healthUpdate);
       }
+
+      LOGGER.info("Health Updates size: " + healthUpdates.size());
+      if (healthUpdates.isEmpty()) {
+        return;
+      }
+      this.vimPort.postHealthUpdates(healthUpdateManager, providerId, healthUpdates);
+    } catch (Exception e) {
+      LOGGER.info("Failed to push health: " + deviceComponentId + " to " + hostSystems, e);
+    } finally {
+      if (closeConnection) {
+        disconnect();
+      }
     }
-    return healthUpdates;
   }
 
   private void addMonitored(ManagedObjectReference healthUpdateManager, String providerId,
@@ -327,28 +285,29 @@ public class ConnectedVim extends ConnectedVimServiceBase {
 
   /**
    * 检查版本兼容性：是否支持provider和HA
-   * @param version
    */
-  public static void checkVersionCompatible(String version) {
+  public static void checkVersionCompatible() {
     boolean isCompatibleVersion = true;
     try {
-      String[] targetVersionsSince = COMPATIBLE_VCENTER_VERSION_SINCE.split("\\.");
-      String[] currentVersions = version.split("\\.");
-      for (int i = 0; i < Math.max(targetVersionsSince.length, currentVersions.length); i++) {
-        String currentVersion = currentVersions.length - 1 < i ? "0" : currentVersions[i];
-        String targetVersion = targetVersionsSince.length - 1 < i ? "0" : targetVersionsSince[i];
-        if (Integer.parseInt(currentVersion) < Integer.parseInt(targetVersion)) {
-          isCompatibleVersion = false;
-          break;
-        } else if (Integer.parseInt(currentVersion) > Integer.parseInt(targetVersion)) {
-          break;
+      if (vcenterVersion != null) {
+        String[] targetVersionsSince = COMPATIBLE_VCENTER_VERSION_SINCE.split("\\.");
+        String[] currentVersions = vcenterVersion.split("\\.");
+        for (int i = 0; i < Math.max(targetVersionsSince.length, currentVersions.length); i++) {
+          String currentVersion = currentVersions.length - 1 < i ? "0" : currentVersions[i];
+          String targetVersion = targetVersionsSince.length - 1 < i ? "0" : targetVersionsSince[i];
+          if (Integer.parseInt(currentVersion) < Integer.parseInt(targetVersion)) {
+            isCompatibleVersion = false;
+            break;
+          } else if (Integer.parseInt(currentVersion) > Integer.parseInt(targetVersion)) {
+            break;
+          }
         }
       }
     } catch (Exception e) {
       LOGGER.error(e.getCause(), e);
     }
     if (!isCompatibleVersion) {
-      throw new VersionNotSupportException(version);
+      throw new VersionNotSupportException(vcenterVersion);
     }
   }
 
@@ -360,9 +319,8 @@ public class ConnectedVim extends ConnectedVimServiceBase {
    */
   public String createProvider(boolean enable) {
     try {
-      String version = getVersion();
-      LOGGER.info("Current version is: " + version);
-      checkVersionCompatible(version);
+      LOGGER.info("Current version is: " + vcenterVersion);
+      checkVersionCompatible();
 
       ManagedObjectReference healthUpdateManager = getHealthUpdateManager();
       String providerId = getProviderId(healthUpdateManager);
@@ -401,7 +359,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
         }
       }
     } catch (Exception e) {
-      LOGGER.warn("Failed to remove provider, " + e.getMessage());
+      LOGGER.warn("Failed to remove provider, " + e.getMessage(), e);
       result = false;
     } finally {
       disconnect();
@@ -425,7 +383,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
             vimPort.removeAlarm(mor);
             ++removed;
           } catch (Exception e) {
-            LOGGER.info("Failed remove alarm definition " + morValue);
+            LOGGER.info("Failed remove alarm definition " + morValue, e);
           }
         }
       }
@@ -449,15 +407,12 @@ public class ConnectedVim extends ConnectedVimServiceBase {
       for (AlarmDefinition alarmDefinition : alarmDefinitionList) {
         LOGGER.info("creating " + alarmDefinition);
         try {
-          EventAlarmExpression expression = creatEventAlarmExpression(
-              getManagedEntityStatus(alarmDefinition.getSeverity()),
-              alarmDefinition.getEventType(),
-              alarmDefinition.getEventTypeID());
+          AlarmExpression expression = creatEventAlarmExpression(
+              getManagedEntityStatus(alarmDefinition.getSeverity()), alarmDefinition.getEventType(),
+              alarmDefinition.getVcEventId(), alarmDefinition.getVcResumeEventId());
           ManagedObjectReference mor = vimPort
-              .createAlarm(serviceContent.getAlarmManager(),
-                  serviceContent.getRootFolder(),
-                  createAlarmSpec(alarmDefinition.getEventName(),
-                      alarmDefinition.getDescription(),
+              .createAlarm(serviceContent.getAlarmManager(), serviceContent.getRootFolder(),
+                  createAlarmSpec(alarmDefinition.getEventName(), alarmDefinition.getDescription(),
                       expression));
           alarmDefinition.setMorValue(mor.getValue());
           alarmDefinitionListResult.add(alarmDefinition);
@@ -490,7 +445,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
   }
 
   private AlarmSpec createAlarmSpec(String alarmName, String description,
-      EventAlarmExpression expression) {
+      AlarmExpression expression) {
     AlarmSpec spec = new AlarmSpec();
     AlarmSetting alarmset = new AlarmSetting();
     alarmset.setReportingFrequency(300);
@@ -503,14 +458,27 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     return spec;
   }
 
-  private static EventAlarmExpression creatEventAlarmExpression(ManagedEntityStatus status,
-      String eventType, String eventTypeId) {
-    EventAlarmExpression expression = new EventAlarmExpression();
-    expression.setStatus(status);
-    expression.setEventType(eventType);
-    expression.setEventTypeId(eventTypeId);
-    expression.setObjectType(ConnectedVim.HOST_SYSTEM);
-    return expression;
+  private static AlarmExpression creatEventAlarmExpression(ManagedEntityStatus status,
+      String eventType, String eventTypeId, String resumeEventTypeId) {
+    OrAlarmExpression orAlarmExpression = new OrAlarmExpression();
+
+    EventAlarmExpression e1 = new EventAlarmExpression();
+    e1.setStatus(status);
+    e1.setEventType(eventType);
+    e1.setEventTypeId(eventTypeId);
+    e1.setObjectType(ConnectedVim.HOST_SYSTEM);
+
+    // resume alarm
+    EventAlarmExpression e2 = new EventAlarmExpression();
+    e2.setStatus(ManagedEntityStatus.GREEN);
+    e2.setEventType(eventType);
+    e2.setEventTypeId(resumeEventTypeId);
+    e2.setObjectType(ConnectedVim.HOST_SYSTEM);
+
+    orAlarmExpression.getExpression().add(e1);
+    orAlarmExpression.getExpression().add(e2);
+
+    return orAlarmExpression;
   }
 
   /**
@@ -577,12 +545,24 @@ public class ConnectedVim extends ConnectedVimServiceBase {
   private String registerHealthUpdateProvider(ManagedObjectReference healthUpdateManager) throws
       RuntimeFaultFaultMsg {
     LOGGER.info("register health update provider.");
-    List<HealthUpdateInfo> healthUpdateInfos = DeviceComponent.getHealthUpdateInfos();
+    List<HealthUpdateInfo> healthUpdateInfos = defaultHealthUpdateInfos();
     String providerId = this.vimPort
         .registerHealthUpdateProvider(healthUpdateManager, this.providerName,
             healthUpdateInfos);
     LOGGER.info("new providerId: " + providerId);
     return providerId;
+  }
+
+  private List<HealthUpdateInfo> defaultHealthUpdateInfos() {
+    List<HealthUpdateInfo> healthUpdateInfos = new ArrayList<>();
+    for (HealthUpdateInfoComponentType huict : HealthUpdateInfoComponentType.values()) {
+      HealthUpdateInfo healthUpdateInfo = new HealthUpdateInfo();
+      healthUpdateInfo.setComponentType(huict.value());
+      healthUpdateInfo.setId(huict.name());
+      healthUpdateInfo.setDescription(huict.value() + " was failure.");
+      healthUpdateInfos.add(healthUpdateInfo);
+    }
+    return healthUpdateInfos;
   }
 
   /**
@@ -628,45 +608,48 @@ public class ConnectedVim extends ConnectedVimServiceBase {
    * 连接vim
    */
   public void connect(VCenterInfo vCenterInfo) {
-    connect(vCenterInfo.getHostIp(), vCenterInfo.getUserName(),
+    connect(vCenterInfo.getHostIp(), vCenterInfo.getHostPort(), vCenterInfo.getUserName(),
         CipherUtils.aesDncode(vCenterInfo.getPassword()));
   }
 
   /**
    * 连接vim
    */
-  private void connect(String host, String username, String password) {
-    Connection basicConnection = new BasicConnection();
-    URL sdkUrl = null;
-    try {
-      sdkUrl = new URL("https", host, "/sdk");
-    } catch (MalformedURLException e) {
-      throw new VcenterException("-90007", "connect vim fail.");
+  private void connect(String host, int port, String username, String password) {
+    synchronized (ConnectedVim.class) {
+      Connection basicConnection = new BasicConnection();
+      URL sdkUrl = null;
+      try {
+        sdkUrl = new URL("https", host, port, "/sdk");
+      } catch (MalformedURLException e) {
+        throw new VcenterException("-90007", "connect vim fail.");
+      }
+      basicConnection.setPassword(password);
+      basicConnection.setUrl(sdkUrl.toString());
+      basicConnection.setUsername(username);
+      this.setIgnoreCert();
+      this.setHostConnection(true);
+      this.setConnection(basicConnection);
+      LOGGER.info("host: " + host + " username: " + username + " password: ******");
+      Connection connect = this.connect();
+      if (connect == null || !connect.isConnected()) {
+        throw new VcenterException("-90007", "connect vim fail.");
+      }
+      LOGGER.info("connect vim success.");
+      setVersion();
     }
-    basicConnection.setPassword(password);
-    basicConnection.setUrl(sdkUrl.toString());
-    basicConnection.setUsername(username);
-    this.setIgnoreCert();
-    this.setHostConnection(true);
-    this.setConnection(basicConnection);
-    LOGGER.info("host: " + host + " username: " + username + " password: ******");
-    Connection connect = this.connect();
-    if (connect == null || !connect.isConnected()) {
-      throw new VcenterException("-90007", "connect vim fail.");
-    }
-    LOGGER.info("connect vim success.");
   }
 
-  public void postEvent(VCenterInfo vCenterInfo, String eventTypeID, String haHostSystem) {
+  /**
+   * 推送告警
+   */
+  public void pushEvent(String username, String eventTypeID, String haHostSystem) {
     try {
-      connect(vCenterInfo);
-      ExtendedEvent event = createEvent(vCenterInfo.getUserName(), eventTypeID, haHostSystem);
+      ExtendedEvent event = createEvent(username, eventTypeID, haHostSystem);
       this.vimPort.postEvent(this.serviceContent.getEventManager(), event, null);
       LOGGER.info("Post event " + eventTypeID + " completed.");
     } catch (Exception e) {
       LOGGER.info("Failed to post event: " + eventTypeID, e);
-    } finally {
-      disconnect();
     }
   }
 
@@ -674,6 +657,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
   public Connection disconnect() {
     try {
       if (connection != null) {
+        LOGGER.info("disconnecting...");
         return super.disconnect();
       }
     } catch (Exception e) {
@@ -682,7 +666,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     return connection;
   }
 
-  private void setIgnoreCert() {
+  public static void setIgnoreCert() {
     System.setProperty(Main.Properties.TRUST_ALL, Boolean.TRUE.toString());
     try {
       TrustAll.trust();
@@ -703,8 +687,17 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     return this.serviceContent.getHealthUpdateManager();
   }
 
-  private String getVersion() {
-    return this.serviceContent.getAbout().getVersion();
+  public static String getVersion() {
+    return vcenterVersion;
+  }
+
+  public void setVersion() {
+    synchronized (ConnectedVim.class) {
+      if (vcenterVersion == null) {
+        vcenterVersion = this.serviceContent.getAbout().getVersion();
+        LOGGER.info("Got vCenter version: " + vcenterVersion);
+      }
+    }
   }
 
   private Object getDynamicProperty(ManagedObjectReference mor, String propertyName) throws

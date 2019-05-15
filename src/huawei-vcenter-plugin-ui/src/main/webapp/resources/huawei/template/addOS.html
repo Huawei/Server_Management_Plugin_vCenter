@@ -118,7 +118,7 @@
         </template>
 
 
-        <el-dialog v-bind:title="i18ns.template.choiceSoftware" v-bind:visible.sync="dialogSoftwareVisible" size="small">
+        <el-dialog  :close-on-click-modal="false" v-bind:title="i18ns.template.choiceSoftware" v-bind:visible.sync="dialogSoftwareVisible" size="small">
             <el-table ref="softwareTable" v-bind:data="softwareData" v-loading="softwareLoading" element-loading-text="Loading" highlight-current-row
                 border @row-dblclick="doubleRow">
                 <el-table-column width="55">
@@ -233,6 +233,9 @@
                 </el-col>
             </el-row>
             <div v-show="class_data.isPartitionOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.deployOStips" show-icon :closable="false"></el-alert>
+                </el-row>
                 <el-row>
                     <el-button size="small" v-on:click="addDisk">{{i18ns.template.addHardDisk}}</el-button>
                     <el-button size="small" v-on:click="deleteDisk">{{i18ns.template.deleteHardDisk}}</el-button>
@@ -362,6 +365,9 @@
                 </el-col>
             </el-row>
             <div v-show="class_data.isPartitionOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.deployOStips" show-icon :closable="false"></el-alert>
+                </el-row>
                 <el-row>
                     <el-button size="small" v-on:click="addDisk">{{i18ns.template.addHardDisk}}</el-button>
                     <el-button size="small" v-on:click="deleteDisk">{{i18ns.template.deleteHardDisk}}</el-button>
@@ -501,6 +507,9 @@
                 </el-col>
             </el-row>
             <div v-show="class_data.isPartitionOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.deployOStips" show-icon :closable="false"></el-alert>
+                </el-row>
                 <el-row>
                     <el-button size="small" v-on:click="addDisk">{{i18ns.template.addHardDisk}}</el-button>
                     <el-button size="small" v-on:click="deleteDisk">{{i18ns.template.deleteHardDisk}}</el-button>
@@ -639,6 +648,9 @@
                 </el-col>
             </el-row>
             <div v-show="class_data.isPartitionOpen" style="margin-top: 10px; margin-bottom:10px;">
+                <el-row class="el-alert--info">
+                    <el-alert v-bind:title="i18ns.template.deployOStips" show-icon :closable="false"></el-alert>
+                </el-row>
                 <el-row>
                     <el-button size="small" v-on:click="addDisk">{{i18ns.template.addHardDisk}}</el-button>
                     <el-button size="small" v-on:click="deleteDisk">{{i18ns.template.deleteHardDisk}}</el-button>
@@ -1826,11 +1838,8 @@
                         value: '4',
                         label: 'CentOS'
                     }, {
-                        value: '5',
-                        label: 'VMware ESXi 5.0'
-                    }, {
                         value: '6',
-                        label: 'VMware ESXi 5.1/5.5/6.0/6.5'
+                        label: 'VMware ESXi'
                     }, {
                         value: '7',
                         label: 'Ubuntu'

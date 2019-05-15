@@ -15,7 +15,7 @@ var manager = {
             	data = response.data.data;
             }
             if (typeof cb === "function") {
-                var ret = {code: response.code, msg: response.description,data: { totalCount: totalCount, data: data } };
+                var ret = {code: response.code, msg: response.description,data: { totalCount: totalCount, data: data } ,ip: response.ip};
                 dealResult(ret, cb);
             }
           },"json");
@@ -72,7 +72,7 @@ var manager = {
             	data = response.data.data;
             }
             if (typeof cb === "function") {
-                var ret = {code: response.code, msg: response.description, data: { totalCount: totalCount, data: data } };
+                var ret = {code: response.code, msg: response.description, data: { totalCount: totalCount, data: data },ip: response.ip };
                 dealResult(ret, cb);
             }
           },"json");
@@ -94,7 +94,7 @@ var manager = {
             	data = response.data.data;
             }
             if (typeof cb === "function") {
-                var ret = {code: response.code, msg: response.description,data: { data: data, totalCount:totalCount } };
+                var ret = {code: response.code, msg: response.description,data: { data: data, totalCount:totalCount },ip: response.ip };
                 dealResult(ret, cb);
             }
           },"json");

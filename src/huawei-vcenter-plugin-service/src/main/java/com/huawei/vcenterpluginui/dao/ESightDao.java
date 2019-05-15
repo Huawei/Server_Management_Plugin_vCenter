@@ -28,7 +28,7 @@ public class ESightDao extends H2DataBaseDao {
         return buildESight(rs);
       }
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get eSight by Id: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -51,7 +51,7 @@ public class ESightDao extends H2DataBaseDao {
         return buildESight(rs);
       }
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get eSight by IP: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -98,7 +98,7 @@ public class ESightDao extends H2DataBaseDao {
       }
       return eSightList;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get eSight list: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -144,7 +144,7 @@ public class ESightDao extends H2DataBaseDao {
       }
       return eSightList;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get eSight list with password: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -166,7 +166,7 @@ public class ESightDao extends H2DataBaseDao {
       }
       return eSightList;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get eSights: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -221,7 +221,7 @@ public class ESightDao extends H2DataBaseDao {
       }
 
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to get eSight list count: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -257,7 +257,7 @@ public class ESightDao extends H2DataBaseDao {
       }
       return re;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to save eSight: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, rs);
@@ -282,7 +282,7 @@ public class ESightDao extends H2DataBaseDao {
       ps.setInt(7, eSight.getId());
       return ps.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to update eSight: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -333,7 +333,7 @@ public class ESightDao extends H2DataBaseDao {
 
       return result;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to delete eSight: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -351,7 +351,7 @@ public class ESightDao extends H2DataBaseDao {
       ps.setString(2, ip);
       return ps.executeUpdate() > 0;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to update SKA status: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -369,7 +369,7 @@ public class ESightDao extends H2DataBaseDao {
       ps.setString(2, ip);
       return ps.executeUpdate() > 0;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to update HA status: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -386,7 +386,7 @@ public class ESightDao extends H2DataBaseDao {
       ps.setInt(1, haProviderStatus);
       return ps.executeUpdate() > 0;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to update HA provider: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -403,7 +403,7 @@ public class ESightDao extends H2DataBaseDao {
       ps.setInt(1, alarmDefinitionStatus);
       return ps.executeUpdate() > 0;
     } catch (SQLException e) {
-      LOGGER.error(e);
+      LOGGER.error("Failed to update alarm definitions: " + e.getMessage());
       throw e;
     } finally {
       closeConnection(con, ps, null);
@@ -435,10 +435,12 @@ public class ESightDao extends H2DataBaseDao {
   }
 
   private void checkAliasName(String aliasName) throws SQLException {
+    if (aliasName == null) {
+      aliasName = "";
+    }
     if (aliasName != null && aliasName.length() > 255) {
       throw new SQLException("parameter aliasName is not correct");
     }
-
     String regEx = "[a-zA-Z0-9_\\-\\.]{1,100}";
     Matcher matcher = Pattern.compile(regEx).matcher(aliasName);
     if (aliasName != null && aliasName.length() > 0 && !matcher.matches()) {

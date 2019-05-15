@@ -24,37 +24,37 @@
         [v-cloak] {
             display: none;
         }
-        
+
         body {
             min-width: 900px;
         }
-        
+
         form input {
             max-width: 217px;
         }
-        
+
         form tabs {
             margin-right: 100px;
         }
-        
+
         .margin-top-8 {
             margin-top: 8px;
         }
-        
+
         .el-tooltip__popper.is-light {
             max-width: 300px;
         }
-        
+
         .el-col-6 {
             text-align: right;
             padding-right: 10px;
         }
-        
+
         .el-dialog {
             min-width: 800px;
             max-width: 1000px;
         }
-        
+
         .el-dialog input {
             max-width: 185px !important;
         }
@@ -63,10 +63,12 @@
 
 <body>
     <div id="app" v-cloak>
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" v-bind:label-width="labelWidth" label-position="left" class="cna-ruleForm" label-suffix=":">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" v-bind:label-width="labelWidth" label-position="left"
+            class="cna-ruleForm" label-suffix=":">
             <el-form-item v-bind:label="i18ns.CNA_template.templateType" prop="templateType">
                 <el-select v-model="ruleForm.templateType" @change="templateChange">
-                    <el-option v-for="item in templateOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="item in templateOptions" :key="item.value" :label="item.label"
+                        :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -77,7 +79,8 @@
                 <el-input type="textarea" v-model="ruleForm.templateDesc" style=" max-width:400px;"></el-input>
             </el-form-item>
             <el-form-item v-bind:label="i18ns.CNA_template.templateMode" prop="adapterModel">
-                <el-select v-model="ruleForm.adapterModel" :placeholder="i18ns.CNA_template.pleaseSelect" @change="modeChange">
+                <el-select v-model="ruleForm.adapterModel" :placeholder="i18ns.CNA_template.pleaseSelect"
+                    @change="modeChange">
                     <el-option v-for="item in modeOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -104,20 +107,26 @@
                 </el-select>
             </el-form-item>
 
-            <os-item-oce11102mode v-bind:class_data="classData" v-bind:form_data="ruleForm" v-if="ruleForm.adapterModel == 'OCE11102'"></os-item-oce11102mode>
-            <os-item-oce11102mode v-bind:class_data="classData" v-bind:form_data="ruleForm" v-else-if="ruleForm.adapterModel == 'MZ510'"></os-item-oce11102mode>
-            <os-item-mz512mode v-bind:class_data="classData" v-bind:form_data="ruleForm" v-else-if="ruleForm.adapterModel == 'MZ512'"></os-item-mz512mode>
-            <os-item-mz910mode v-bind:class_data="classData" v-bind:form_data="ruleForm" v-else-if="ruleForm.adapterModel == 'MZ910'"></os-item-mz910mode>
+            <os-item-oce11102mode v-bind:class_data="classData" v-bind:form_data="ruleForm"
+                v-if="ruleForm.adapterModel == 'OCE11102'"></os-item-oce11102mode>
+            <os-item-oce11102mode v-bind:class_data="classData" v-bind:form_data="ruleForm"
+                v-else-if="ruleForm.adapterModel == 'MZ510'"></os-item-oce11102mode>
+            <os-item-mz512mode v-bind:class_data="classData" v-bind:form_data="ruleForm"
+                v-else-if="ruleForm.adapterModel == 'MZ512'"></os-item-mz512mode>
+            <os-item-mz910mode v-bind:class_data="classData" v-bind:form_data="ruleForm"
+                v-else-if="ruleForm.adapterModel == 'MZ910'"></os-item-mz910mode>
 
             <el-form-item label="eSight" prop="esight">
                 <el-checkbox-group v-model="ruleForm.esight">
-                    <el-checkbox v-for="item in esightList" v-bind:label="item.name" v-bind:key="item.name">{{item.label}}</el-checkbox>
+                    <el-checkbox v-for="item in esightList" v-bind:label="item.name" v-bind:key="item.name">
+                        {{item.label}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
         </el-form>
         <div style="margin-left:10px; margin-top:20px;">
             <el-button @click="submitForm()">{{i18ns.common.confirm}}</el-button>
-            <el-button @click="cancel()" v-loading.fullscreen.lock="fullscreenLoading ">{{i18ns.common.back}}</el-button>
+            <el-button @click="cancel()" v-loading.fullscreen.lock="fullscreenLoading ">{{i18ns.common.back}}
+            </el-button>
         </div>
     </div>
 
@@ -277,7 +286,7 @@
                 </el-row>
             </div>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceDialogFormVisible" @close="oceCloseDialog" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceDialogFormVisible" @close="oceCloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -311,7 +320,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible0" @close="iSCSICancel0" size="large" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible0" @close="iSCSICancel0" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -523,7 +532,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible1" @close="iSCSICancel1" size="large" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceISCSIDialogFormVisible1" @close="iSCSICancel1" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -735,7 +744,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible0" @close="oceFCoECancel0" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible0" @close="oceFCoECancel0" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -818,7 +827,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible1" @close="oceFCoECancel1" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="oceDialogTitle" v-bind:visible.sync="oceFCoEDialogFormVisible1" @close="oceFCoECancel1" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1211,7 +1220,7 @@
                 </el-row>
             </div>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512DialogFormVisible" @close="mz512CloseDialog" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512DialogFormVisible" @close="mz512CloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1264,7 +1273,7 @@
             </el-dialog>
 
             <!--以下新增内容-->
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible0" @close="iSCSICancel2" size="large" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible0" @close="iSCSICancel2" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1476,7 +1485,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible1" @close="iSCSICancel3" size="large" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible1" @close="iSCSICancel3" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1688,7 +1697,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible2" @close="iSCSICancel4" size="large" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible2" @close="iSCSICancel4" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -1900,7 +1909,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible3" @close="iSCSICancel5" size="large" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512ISCSIDialogFormVisible3" @close="iSCSICancel5" size="large" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2112,7 +2121,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible0" @close="mz512FCoECancel0" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible0" @close="mz512FCoECancel0" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2195,7 +2204,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible1" @close="mz512FCoECancel1" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible1" @close="mz512FCoECancel1" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2278,7 +2287,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible2" @close="mz512FCoECancel2" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible2" @close="mz512FCoECancel2" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2361,7 +2370,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible3" @close="mz512FCoECancel3" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="mz512DialogTitle" v-bind:visible.sync="mz512FCOEDialogFormVisible3" @close="mz512FCoECancel3" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;" v-if="pfBandShow">
                     {{i18ns.CNA_template.pfProp}}
                 </div>
@@ -2517,7 +2526,7 @@
                     </el-row>
                 </div>
             </div>
-            <el-dialog v-bind:title="dialogTitle" v-bind:visible.sync="dialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="dialogTitle" v-bind:visible.sync="dialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;">
                     {{i18ns.CNA_template.pxeProp}}
                 </div>
@@ -2539,7 +2548,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog v-bind:title="hardDialogTitle" v-bind:visible.sync="hardDialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
+            <el-dialog :close-on-click-modal="false" v-bind:title="hardDialogTitle" v-bind:visible.sync="hardDialogFormVisible" @close="hardCloseDialog" size="small" top="10%">
                 <div style="background: none repeat scroll 0 0 #EAEAEA; margin-bottom:10px; height:30px; text-align:left; padding-top:12px;padding-left:10px;">
                     {{i18ns.CNA_template.sanProp}}
                 </div>
@@ -2687,7 +2696,7 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     oceDialogTitle: '',
@@ -2822,28 +2831,32 @@
                         value: 'FCoE'
                     }],
                     AuthBootOptions: [{
-                        label: 'NONE',
-                        value: 'NONE'
-                    }, {
-                        label: 'Single CHAP',
-                        value: 'Single CHAP'
-                    }, {
-                        label: 'Mutual CHAP',
-                        value: 'Mutual CHAP'
-                    }],
+                            label: 'NONE',
+                            value: 'NONE'
+                        }
+                        /*  , {
+                             label: 'Single CHAP',
+                             value: 'Single CHAP'
+                         }, {
+                             label: 'Mutual CHAP',
+                             value: 'Mutual CHAP'
+                         } */
+                    ],
                     TargetAuth0Options: [{
-                        label: 'NONE',
-                        value: 'NONE'
-                    }, {
-                        label: 'Single CHAP',
-                        value: 'Single CHAP'
-                    }, {
-                        label: 'Mutual CHAP',
-                        value: 'Mutual CHAP'
-                    }]
+                            label: 'NONE',
+                            value: 'NONE'
+                        }
+                        /* , {
+                            label: 'Single CHAP',
+                            value: 'Single CHAP'
+                        }, {
+                            label: 'Mutual CHAP',
+                            value: 'Mutual CHAP'
+                        } */
+                    ]
                 };
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 this.PXEBootOptions = getForbiddenType();
                 this.iSCSIBootOptions = getForbiddenType();
@@ -2882,7 +2895,7 @@
                  * 
                  * @param {any} i 
                  */
-                setTypeValue: function(i) {
+                setTypeValue: function (i) {
                     this['iSCSIBoot' + i + ''] = this.iSCSIBootOptions[1].value;
                     this['VLANBoot' + i + ''] = this.VLANBoot0Options[1].value;
                     this['DHCPBoot' + i + ''] = this.DHCPBoot0Options[1].value;
@@ -2902,7 +2915,7 @@
                  * 
                  * @param {any} i 
                  */
-                middleFunction: function(i) {
+                middleFunction: function (i) {
                     this.form_data['iSCSIBoot' + i + ''] = this['iSCSIBoot' + i + ''];
                     this.form_data['VLANBoot' + i + ''] = this['VLANBoot' + i + ''];
                     this.form_data['VLANID' + i + ''] = this['VLANID' + i + ''];
@@ -2921,9 +2934,12 @@
                     this.form_data['AuthTargetSecret' + i + ''] = this['AuthTargetSecret' + i + ''];
                     this.form_data['InitiaorCHAPName' + i + ''] = this['InitiaorCHAPName' + i + ''];
                     this.form_data['InitiaorSecret' + i + ''] = this['InitiaorSecret' + i + ''];
-                    this.form_data['TargetAuthTargetCHAPName' + i + ''] = this['TargetAuthTargetCHAPName' + i + ''];
-                    this.form_data['TargetAuthTargetSecret' + i + ''] = this['TargetAuthTargetSecret' + i + ''];
-                    this.form_data['TargetInitiaorCHAPName' + i + ''] = this['TargetInitiaorCHAPName' + i + ''];
+                    this.form_data['TargetAuthTargetCHAPName' + i + ''] = this['TargetAuthTargetCHAPName' +
+                        i + ''];
+                    this.form_data['TargetAuthTargetSecret' + i + ''] = this['TargetAuthTargetSecret' + i +
+                        ''];
+                    this.form_data['TargetInitiaorCHAPName' + i + ''] = this['TargetInitiaorCHAPName' + i +
+                        ''];
                     this.form_data['TargetInitiaorSecret' + i + ''] = this['TargetInitiaorSecret' + i + ''];
                     this.form_data['TargetIP' + i + ''] = this['TargetIP' + i + ''];
                     this.form_data['TargetPort' + i + ''] = this['TargetPort' + i + ''];
@@ -2941,7 +2957,7 @@
                  * 
                  * @param {any} i 
                  */
-                reverseMiddleFun: function(i) {
+                reverseMiddleFun: function (i) {
                     this['iSCSIBoot' + i + ''] = this.form_data['iSCSIBoot' + i + ''];
                     this['VLANBoot' + i + ''] = this.form_data['VLANBoot' + i + ''];
                     this['VLANID' + i + ''] = this.form_data['VLANID' + i + ''];
@@ -2960,9 +2976,12 @@
                     this['AuthTargetSecret' + i + ''] = this.form_data['AuthTargetSecret' + i + ''];
                     this['InitiaorCHAPName' + i + ''] = this.form_data['InitiaorCHAPName' + i + ''];
                     this['InitiaorSecret' + i + ''] = this.form_data['InitiaorSecret' + i + ''];
-                    this['TargetAuthTargetCHAPName' + i + ''] = this.form_data['TargetAuthTargetCHAPName' + i + ''];
-                    this['TargetAuthTargetSecret' + i + ''] = this.form_data['TargetAuthTargetSecret' + i + ''];
-                    this['TargetInitiaorCHAPName' + i + ''] = this.form_data['TargetInitiaorCHAPName' + i + ''];
+                    this['TargetAuthTargetCHAPName' + i + ''] = this.form_data['TargetAuthTargetCHAPName' +
+                        i + ''];
+                    this['TargetAuthTargetSecret' + i + ''] = this.form_data['TargetAuthTargetSecret' + i +
+                        ''];
+                    this['TargetInitiaorCHAPName' + i + ''] = this.form_data['TargetInitiaorCHAPName' + i +
+                        ''];
                     this['TargetInitiaorSecret' + i + ''] = this.form_data['TargetInitiaorSecret' + i + ''];
                     this['TargetIP' + i + ''] = this.form_data['TargetIP' + i + ''];
                     this['TargetPort' + i + ''] = this.form_data['TargetPort' + i + ''];
@@ -2980,7 +2999,7 @@
                  * 
                  * @param {any} val 
                  */
-                port0HandleClick: function(val) {
+                port0HandleClick: function (val) {
                     this.class_data.pfindex0 = val.label;
                     if (val.label != "PF0") {
                         this.class_data.pxeShow0 = false;
@@ -2995,7 +3014,7 @@
                  * 
                  * @param {any} val 
                  */
-                port1HandleClick: function(val) {
+                port1HandleClick: function (val) {
                     this.class_data.pfindex1 = val.label;
                     if (val.label != "PF0") {
                         this.class_data.pxeShow1 = false;
@@ -3009,7 +3028,7 @@
                  * Port0 高级按钮点击事件
                  * 
                  */
-                port0highBtn: function() {
+                port0highBtn: function () {
                     this.form_data.oce111PXEBoot0 = this.temp0;
                     this.portIndex = '0';
                     var index = parseInt(this.class_data.activeName0.replace('tab', ''));
@@ -3059,7 +3078,7 @@
                  * Port1 高级按钮点击事件
                  * 
                  */
-                port1highBtn: function() {
+                port1highBtn: function () {
                     this.form_data.oce111PXEBoot1 = this.temp1;
                     this.portIndex = '1';
                     var index = parseInt(this.class_data.activeName1.replace('tab', ''));
@@ -3108,7 +3127,7 @@
                  * 
                  * @param {any} val 
                  */
-                oceP0PF1TypeChange: function(val) {
+                oceP0PF1TypeChange: function (val) {
                     this.p0PF1PFType = val;
                     if (val == "NIC") {
                         this.oceP0PF1VlanAble = false;
@@ -3135,7 +3154,7 @@
                  * 
                  * @param {any} val 
                  */
-                oceP1PF1TypeChange: function(val) {
+                oceP1PF1TypeChange: function (val) {
                     this.p1PF1PFType = val;
                     if (val == "NIC") {
                         this.oceP1PF1VlanAble = false;
@@ -3164,7 +3183,7 @@
                  * 
                  * @param {any} val 
                  */
-                DHCPBoot0Change: function(val) {
+                DHCPBoot0Change: function (val) {
                     if (val == "Disabled") {
                         this.class_data.DHCPBoot0Show = true;
                     } else {
@@ -3176,7 +3195,7 @@
                  * 
                  * @param {any} val 
                  */
-                DHCPBoot1Change: function(val) {
+                DHCPBoot1Change: function (val) {
                     if (val == "Disabled") {
                         this.class_data.DHCPBoot1Show = true;
                     } else {
@@ -3188,7 +3207,7 @@
                  * 
                  * @param {any} val 
                  */
-                AuthChange0: function(val) {
+                AuthChange0: function (val) {
                     if (val == "NONE") {
                         this.class_data.AuthChange0Show0 = false;
                         this.class_data.AuthChange0Show1 = false;
@@ -3205,7 +3224,7 @@
                  * 
                  * @param {any} val 
                  */
-                AuthChange1: function(val) {
+                AuthChange1: function (val) {
                     if (val == "NONE") {
                         this.class_data.AuthChange1Show0 = false;
                         this.class_data.AuthChange1Show1 = false;
@@ -3222,7 +3241,7 @@
                  * 
                  * @param {any} val 
                  */
-                TargetAuthChange0: function(val) {
+                TargetAuthChange0: function (val) {
                     if (val == "NONE") {
                         this.class_data.TargetAuthChange0Show0 = false;
                         this.class_data.TargetAuthChange0Show1 = false;
@@ -3239,7 +3258,7 @@
                  * 
                  * @param {any} val 
                  */
-                TargetAuthChange1: function(val) {
+                TargetAuthChange1: function (val) {
                     if (val == "NONE") {
                         this.class_data.TargetAuthChange1Show0 = false;
                         this.class_data.TargetAuthChange1Show1 = false;
@@ -3256,7 +3275,7 @@
                  * 
                  * @param {any} val 
                  */
-                oceFCoESanBootChange0: function(val) {
+                oceFCoESanBootChange0: function (val) {
                     if (val == "Disabled") {
                         this.showOceFCoESANBoot0 = false;
                     } else {
@@ -3268,7 +3287,7 @@
                  * 
                  * @param {any} val 
                  */
-                oceFCoESanBootChange1: function(val) {
+                oceFCoESanBootChange1: function (val) {
                     if (val == "Disabled") {
                         this.showOceFCoESANBoot1 = false;
                     } else {
@@ -3279,7 +3298,7 @@
                  * 常规高级弹出框 确定事件
                  * 
                  */
-                confirm: function() {
+                confirm: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.temp0 = this.form_data.oce111PXEBoot0;
@@ -3287,12 +3306,12 @@
                         this.oceDialogFormVisible = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -3321,7 +3340,7 @@
                  * 常规高级弹出框 取消事件
                  * 
                  */
-                cancel: function() {
+                cancel: function () {
                     this.oceDialogFormVisible = false;
                     if (this.$refs['ruleForm']) {
                         this.$refs['ruleForm'].resetFields();
@@ -3332,7 +3351,7 @@
                  * 
                  * @returns 
                  */
-                iSCSIConfirm0: function() {
+                iSCSIConfirm0: function () {
                     var k = validates(0);
                     if (k > 0) {
                         return false;
@@ -3341,12 +3360,12 @@
                         this.oceISCSIDialogFormVisible0 = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -3382,7 +3401,7 @@
                  * 
                  * @returns 
                  */
-                iSCSIConfirm1: function() {
+                iSCSIConfirm1: function () {
                     var k = validates(1);
                     if (k > 0) {
                         return false;
@@ -3392,12 +3411,12 @@
                     } else {
 
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -3433,7 +3452,7 @@
                  * 
                  * @returns 
                  */
-                iSCSICancel0: function() {
+                iSCSICancel0: function () {
 
                     this.oceISCSIDialogFormVisible0 = false;
                 },
@@ -3442,7 +3461,7 @@
                  * 
                  * @returns 
                  */
-                iSCSICancel1: function() {
+                iSCSICancel1: function () {
 
                     this.oceISCSIDialogFormVisible1 = false;
                 },
@@ -3451,23 +3470,25 @@
                  * 
                  * @returns 
                  */
-                oceFCoEConfirm0: function() {
+                oceFCoEConfirm0: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.oceFCoEDialogFormVisible0 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData1.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData1.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData1.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData1.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData1.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -3495,23 +3516,25 @@
                  * 
                  * @returns 
                  */
-                oceFCoEConfirm1: function() {
+                oceFCoEConfirm1: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.oceFCoEDialogFormVisible1 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData2.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -3538,27 +3561,29 @@
                  * 校验Port0 FCoE类型 TargetWWPN TargetLUN 是否符合验证规则
                  * 
                  */
-                commonCheck0: function() {
+                commonCheck0: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.oceFCoEDialogFormVisible0 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData1.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField('listData1.' + i + '.TargetWWPN', function(m) {
-                                    if (m) {
-                                        app.form_data.listData1[i].TargetWWPN = '';
-                                        app.form_data.listData1[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField('listData1.' + i + '.TargetLUN', function(m) {
-                                    if (m) {
-                                        app.form_data.listData1[i].TargetWWPN = '';
-                                        app.form_data.listData1[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField('listData1.' + i + '.TargetWWPN',
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData1[i].TargetWWPN = '';
+                                            app.form_data.listData1[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField('listData1.' + i + '.TargetLUN',
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData1[i].TargetWWPN = '';
+                                            app.form_data.listData1[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -3571,27 +3596,29 @@
                  * 校验Port1 FCoE类型 TargetWWPN TargetLUN 是否符合验证规则
                  * 
                  */
-                commonCheck1: function() {
+                commonCheck1: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.oceFCoEDialogFormVisible1 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData2.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        app.form_data.listData2[i].TargetWWPN = '';
-                                        app.form_data.listData2[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        app.form_data.listData2[i].TargetWWPN = '';
-                                        app.form_data.listData2[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData2[i].TargetWWPN = '';
+                                            app.form_data.listData2[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData2.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData2[i].TargetWWPN = '';
+                                            app.form_data.listData2[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -3604,7 +3631,7 @@
                  * Port0 PF1 FCoE弹出框 取消操作
                  * 
                  */
-                oceFCoECancel0: function() {
+                oceFCoECancel0: function () {
                     this.commonCheck0();
                     this.oceFCoEDialogFormVisible0 = false;
                 },
@@ -3612,7 +3639,7 @@
                  * Port1 PF1 FCoE弹出框 取消操作
                  * 
                  */
-                oceFCoECancel1: function() {
+                oceFCoECancel1: function () {
                     this.commonCheck1();
                     this.oceFCoEDialogFormVisible1 = false;
                 },
@@ -3620,7 +3647,7 @@
                  * 关闭弹出框操作
                  * 
                  */
-                oceCloseDialog: function() {
+                oceCloseDialog: function () {
                     if (this.$refs['ruleForm']) {
                         this.$refs['ruleForm'].resetFields();
                     }
@@ -3634,7 +3661,7 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     mz512DialogTitle: '',
@@ -3851,26 +3878,14 @@
                     AuthBootOptions: [{
                         label: 'NONE',
                         value: 'NONE'
-                    }, {
-                        label: 'Single CHAP',
-                        value: 'Single CHAP'
-                    }, {
-                        label: 'Mutual CHAP',
-                        value: 'Mutual CHAP'
                     }],
                     TargetAuth0Options: [{
                         label: 'NONE',
                         value: 'NONE'
-                    }, {
-                        label: 'Single CHAP',
-                        value: 'Single CHAP'
-                    }, {
-                        label: 'Mutual CHAP',
-                        value: 'Mutual CHAP'
                     }]
                 };
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 this.PXEBootOptions = getForbiddenType();
                 this.form_data.pfType = this.pfTypeOptions[0].value;
@@ -3920,7 +3935,7 @@
                  * 
                  * @param {any} i 
                  */
-                setTypeValue: function(i) {
+                setTypeValue: function (i) {
                     this['iSCSIBoot' + i + ''] = this.iSCSIBootOptions[1].value;
                     this['VLANBoot' + i + ''] = this.VLANBoot0Options[1].value;
                     this['DHCPBoot' + i + ''] = this.DHCPBoot0Options[1].value;
@@ -3940,7 +3955,7 @@
                  * 
                  * @param {any} i 
                  */
-                middleFunction: function(i) {
+                middleFunction: function (i) {
                     this.form_data['iSCSIBoot' + i + ''] = this['iSCSIBoot' + i + ''];
                     this.form_data['VLANBoot' + i + ''] = this['VLANBoot' + i + ''];
                     this.form_data['VLANID' + i + ''] = this['VLANID' + i + ''];
@@ -3959,9 +3974,12 @@
                     this.form_data['AuthTargetSecret' + i + ''] = this['AuthTargetSecret' + i + ''];
                     this.form_data['InitiaorCHAPName' + i + ''] = this['InitiaorCHAPName' + i + ''];
                     this.form_data['InitiaorSecret' + i + ''] = this['InitiaorSecret' + i + ''];
-                    this.form_data['TargetAuthTargetCHAPName' + i + ''] = this['TargetAuthTargetCHAPName' + i + ''];
-                    this.form_data['TargetAuthTargetSecret' + i + ''] = this['TargetAuthTargetSecret' + i + ''];
-                    this.form_data['TargetInitiaorCHAPName' + i + ''] = this['TargetInitiaorCHAPName' + i + ''];
+                    this.form_data['TargetAuthTargetCHAPName' + i + ''] = this['TargetAuthTargetCHAPName' +
+                        i + ''];
+                    this.form_data['TargetAuthTargetSecret' + i + ''] = this['TargetAuthTargetSecret' + i +
+                        ''];
+                    this.form_data['TargetInitiaorCHAPName' + i + ''] = this['TargetInitiaorCHAPName' + i +
+                        ''];
                     this.form_data['TargetInitiaorSecret' + i + ''] = this['TargetInitiaorSecret' + i + ''];
                     this.form_data['TargetIP' + i + ''] = this['TargetIP' + i + ''];
                     this.form_data['TargetPort' + i + ''] = this['TargetPort' + i + ''];
@@ -3979,7 +3997,7 @@
                  * 
                  * @param {any} i 
                  */
-                reverseMiddleFun: function(i) {
+                reverseMiddleFun: function (i) {
                     this['iSCSIBoot' + i + ''] = this.form_data['iSCSIBoot' + i + ''];
                     this['VLANBoot' + i + ''] = this.form_data['VLANBoot' + i + ''];
                     this['VLANID' + i + ''] = this.form_data['VLANID' + i + ''];
@@ -3998,9 +4016,12 @@
                     this['AuthTargetSecret' + i + ''] = this.form_data['AuthTargetSecret' + i + ''];
                     this['InitiaorCHAPName' + i + ''] = this.form_data['InitiaorCHAPName' + i + ''];
                     this['InitiaorSecret' + i + ''] = this.form_data['InitiaorSecret' + i + ''];
-                    this['TargetAuthTargetCHAPName' + i + ''] = this.form_data['TargetAuthTargetCHAPName' + i + ''];
-                    this['TargetAuthTargetSecret' + i + ''] = this.form_data['TargetAuthTargetSecret' + i + ''];
-                    this['TargetInitiaorCHAPName' + i + ''] = this.form_data['TargetInitiaorCHAPName' + i + ''];
+                    this['TargetAuthTargetCHAPName' + i + ''] = this.form_data['TargetAuthTargetCHAPName' +
+                        i + ''];
+                    this['TargetAuthTargetSecret' + i + ''] = this.form_data['TargetAuthTargetSecret' + i +
+                        ''];
+                    this['TargetInitiaorCHAPName' + i + ''] = this.form_data['TargetInitiaorCHAPName' + i +
+                        ''];
                     this['TargetInitiaorSecret' + i + ''] = this.form_data['TargetInitiaorSecret' + i + ''];
                     this['TargetIP' + i + ''] = this.form_data['TargetIP' + i + ''];
                     this['TargetPort' + i + ''] = this.form_data['TargetPort' + i + ''];
@@ -4018,7 +4039,7 @@
                  * 
                  * @param {any} val 
                  */
-                port0HandleClick: function(val) {
+                port0HandleClick: function (val) {
                     this.class_data.pfindex2 = val.label;
                     if (val.label != "PF0") {
                         this.class_data.pxeShow2 = false;
@@ -4037,7 +4058,7 @@
                  * 
                  * @param {any} val 
                  */
-                port1HandleClick: function(val) {
+                port1HandleClick: function (val) {
                     this.class_data.pfindex3 = val.label;
                     if (val.label != "PF0") {
                         this.class_data.pxeShow3 = false;
@@ -4056,7 +4077,7 @@
                  * 
                  * @param {any} val 
                  */
-                port2HandleClick: function(val) {
+                port2HandleClick: function (val) {
                     this.class_data.pfindex4 = val.label;
                     if (val.label != "PF0") {
                         this.class_data.pxeShow4 = false;
@@ -4075,7 +4096,7 @@
                  * 
                  * @param {any} val 
                  */
-                port3HandleClick: function(val) {
+                port3HandleClick: function (val) {
                     this.class_data.pfindex5 = val.label;
                     if (val.label != "PF0") {
                         this.class_data.pxeShow5 = false;
@@ -4093,7 +4114,7 @@
                  * Port0 高级按钮点击事件
                  * 
                  */
-                port0highBtn: function() {
+                port0highBtn: function () {
                     this.form_data.oce111PXEBoot0 = this.mz512Temp0;
                     this.portIndex = '0';
                     var index = parseInt(this.class_data.activeName0.replace('tab', ''));
@@ -4149,7 +4170,7 @@
                  * Port1 高级按钮点击事件
                  * 
                  */
-                port1highBtn: function() {
+                port1highBtn: function () {
                     this.form_data.oce111PXEBoot1 = this.mz512Temp1;
                     this.portIndex = '1';
                     var index = parseInt(this.class_data.activeName1.replace('tab', ''));
@@ -4203,7 +4224,7 @@
                  * Port2 高级按钮点击事件
                  * 
                  */
-                port2highBtn: function() {
+                port2highBtn: function () {
                     this.form_data.oce111PXEBoot2 = this.mz512Temp2;
                     this.portIndex = '2';
                     var index = parseInt(this.class_data.activeName2.replace('tab', ''));
@@ -4257,7 +4278,7 @@
                  * Port3 高级按钮点击事件
                  * 
                  */
-                port3highBtn: function() {
+                port3highBtn: function () {
                     this.form_data.oce111PXEBoot3 = this.mz512Temp3;
                     this.portIndex = '3';
                     var index = parseInt(this.class_data.activeName3.replace('tab', ''));
@@ -4311,7 +4332,7 @@
                  * 常规高级弹出框 确定事件
                  * 
                  */
-                confirm: function() {
+                confirm: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.mz512Temp0 = this.form_data.oce111PXEBoot0;
@@ -4322,12 +4343,12 @@
                         this.mz512DialogFormVisible = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -4366,7 +4387,7 @@
                  * 常规高级弹出框 取消事件
                  * 
                  */
-                cancel: function() {
+                cancel: function () {
                     this.mz512DialogFormVisible = false;
                     if (this.$refs['ruleForm']) {
                         this.$refs['ruleForm'].resetFields();
@@ -4376,7 +4397,7 @@
                  * 关闭弹出对话框事件
                  * 
                  */
-                mz512CloseDialog: function() {
+                mz512CloseDialog: function () {
                     if (this.$refs['ruleForm']) {
                         this.$refs['ruleForm'].resetFields();
                     }
@@ -4386,7 +4407,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512Port0PF1TypeChange: function(val) {
+                mz512Port0PF1TypeChange: function (val) {
                     this.mz512Port0PF1Type = val;
                     if (val == "NIC") {
                         this.mz512Port0PF1VlanAble = false;
@@ -4413,7 +4434,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512Port1PF1TypeChange: function(val) {
+                mz512Port1PF1TypeChange: function (val) {
                     this.mz512Port1PF1Type = val;
                     if (val == "NIC") {
                         this.mz512Port1PF1VlanAble = false;
@@ -4440,7 +4461,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512Port2PF1TypeChange: function(val) {
+                mz512Port2PF1TypeChange: function (val) {
                     this.mz512Port2PF1Type = val;
                     if (val == "NIC") {
                         this.mz512Port2PF1VlanAble = false;
@@ -4469,7 +4490,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512Port3PF1TypeChange: function(val) {
+                mz512Port3PF1TypeChange: function (val) {
                     this.mz512Port3PF1Type = val;
                     if (val == "NIC") {
                         this.mz512Port3PF1VlanAble = false;
@@ -4496,7 +4517,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512FCoESanBootChange0: function(val) {
+                mz512FCoESanBootChange0: function (val) {
                     if (val == "Disabled") {
                         this.showMZ512FCoESANBoot0 = false;
                     } else {
@@ -4508,7 +4529,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512FCoESanBootChange1: function(val) {
+                mz512FCoESanBootChange1: function (val) {
                     if (val == "Disabled") {
                         this.showMZ512FCoESANBoot1 = false;
                     } else {
@@ -4520,7 +4541,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512FCoESanBootChange2: function(val) {
+                mz512FCoESanBootChange2: function (val) {
                     if (val == "Disabled") {
                         this.showMZ512FCoESANBoot2 = false;
                     } else {
@@ -4532,7 +4553,7 @@
                  * 
                  * @param {any} val 
                  */
-                mz512FCoESanBootChange3: function(val) {
+                mz512FCoESanBootChange3: function (val) {
                     if (val == "Disabled") {
                         this.showMZ512FCoESANBoot3 = false;
                     } else {
@@ -4544,23 +4565,25 @@
                  * 
                  * @returns 
                  */
-                mz512FCoEConfirm0: function() {
+                mz512FCoEConfirm0: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.mz512FCOEDialogFormVisible0 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData5.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData5.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData5.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData5.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData5.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -4587,23 +4610,25 @@
                  * 
                  * @returns 
                  */
-                mz512FCoEConfirm1: function() {
+                mz512FCoEConfirm1: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.mz512FCOEDialogFormVisible1 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData6.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData6.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData6.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData6.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData6.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -4630,23 +4655,25 @@
                  * 
                  * @returns 
                  */
-                mz512FCoEConfirm2: function() {
+                mz512FCoEConfirm2: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.mz512FCOEDialogFormVisible2 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData7.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData7.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData7.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData7.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData7.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -4673,23 +4700,25 @@
                  * 
                  * @returns 
                  */
-                mz512FCoEConfirm3: function() {
+                mz512FCoEConfirm3: function () {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this.mz512FCOEDialogFormVisible3 = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData8.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData8.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData8.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData8.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData8.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -4715,27 +4744,31 @@
                  * 校验FCoE类型 TargetWWPN TargetLUN 是否符合验证规则
                  * 
                  */
-                commonCheck: function(index, arrNum) {
+                commonCheck: function (index, arrNum) {
                     var k = 0;
                     if (this.class_data.isForbid == true) {
                         this['mz512FCOEDialogFormVisible' + index + ''] = false;
                     } else {
                         for (var i = 0; i < this.form_data.listData1.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData' + arrNum + '.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        app.form_data['listData' + arrNum + ''][i].TargetWWPN = '';
-                                        app.form_data['listData' + arrNum + ''][i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData' + arrNum + '.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        app.form_data['listData' + arrNum + ''][i].TargetWWPN = '';
-                                        app.form_data['listData' + arrNum + ''][i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField(
+                                    "'listData' + arrNum + '.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data['listData' + arrNum + ''][i].TargetWWPN = '';
+                                            app.form_data['listData' + arrNum + ''][i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField(
+                                    "'listData' + arrNum + '.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data['listData' + arrNum + ''][i].TargetWWPN = '';
+                                            app.form_data['listData' + arrNum + ''][i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -4748,7 +4781,7 @@
                  * Port0 PF1 FCoE类型弹出框 确定操作
                  * 
                  */
-                mz512FCoECancel0: function() {
+                mz512FCoECancel0: function () {
                     this.commonCheck(0, 5);
                     this.mz512FCOEDialogFormVisible0 = false;
                 },
@@ -4756,7 +4789,7 @@
                  * Port1 PF1 FCoE类型弹出框 确定操作
                  * 
                  */
-                mz512FCoECancel1: function() {
+                mz512FCoECancel1: function () {
                     this.commonCheck(1, 6);
                     this.mz512FCOEDialogFormVisible1 = false;
                 },
@@ -4764,7 +4797,7 @@
                  * Port2 PF1 FCoE类型弹出框 确定操作
                  * 
                  */
-                mz512FCoECancel2: function() {
+                mz512FCoECancel2: function () {
                     this.commonCheck(2, 7);
                     this.mz512FCOEDialogFormVisible2 = false;
                 },
@@ -4772,7 +4805,7 @@
                  * Port3 PF1 FCoE类型弹出框 确定操作
                  * 
                  */
-                mz512FCoECancel3: function() {
+                mz512FCoECancel3: function () {
                     this.commonCheck(3, 8);
                     this.mz512FCOEDialogFormVisible3 = false;
                 },
@@ -4781,7 +4814,7 @@
                  * 
                  * @param {any} val 
                  */
-                DHCPBoot2Change: function(val) {
+                DHCPBoot2Change: function (val) {
                     if (val == "Disabled") {
                         this.class_data.DHCPBoot2Show = true;
                     } else {
@@ -4793,7 +4826,7 @@
                  * 
                  * @param {any} val 
                  */
-                AuthChange2: function(val) {
+                AuthChange2: function (val) {
                     if (val == "NONE") {
                         this.class_data.AuthChange2Show0 = false;
                         this.class_data.AuthChange2Show1 = false;
@@ -4810,7 +4843,7 @@
                  * 
                  * @param {any} val 
                  */
-                TargetAuthChange2: function(val) {
+                TargetAuthChange2: function (val) {
                     if (val == "NONE") {
                         this.class_data.TargetAuthChange2Show0 = false;
                         this.class_data.TargetAuthChange2Show1 = false;
@@ -4827,7 +4860,7 @@
                  * 
                  * @returns 
                  */
-                iSCSIConfirm2: function() {
+                iSCSIConfirm2: function () {
                     var k = validates(2);
                     if (k > 0) {
                         return false;
@@ -4836,12 +4869,12 @@
                         this.mz512ISCSIDialogFormVisible0 = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -4874,7 +4907,7 @@
                  * 
                  * @returns 
                  */
-                iSCSICancel2: function() {
+                iSCSICancel2: function () {
                     this.mz512ISCSIDialogFormVisible0 = false;
                 },
                 /**
@@ -4882,7 +4915,7 @@
                  * 
                  * @param {any} val 
                  */
-                DHCPBoot3Change: function(val) {
+                DHCPBoot3Change: function (val) {
                     if (val == "Disabled") {
                         this.class_data.DHCPBoot3Show = true;
                     } else {
@@ -4894,7 +4927,7 @@
                  * 
                  * @param {any} val 
                  */
-                AuthChange3: function(val) {
+                AuthChange3: function (val) {
                     if (val == "NONE") {
                         this.class_data.AuthChange3Show0 = false;
                         this.class_data.AuthChange3Show1 = false;
@@ -4911,7 +4944,7 @@
                  * 
                  * @param {any} val 
                  */
-                TargetAuthChange3: function(val) {
+                TargetAuthChange3: function (val) {
                     if (val == "NONE") {
                         this.class_data.TargetAuthChange3Show0 = false;
                         this.class_data.TargetAuthChange3Show1 = false;
@@ -4928,7 +4961,7 @@
                  * 
                  * @returns 
                  */
-                iSCSIConfirm3: function() {
+                iSCSIConfirm3: function () {
                     var k = validates(3);
                     if (k > 0) {
                         return false;
@@ -4937,12 +4970,12 @@
                         this.mz512ISCSIDialogFormVisible1 = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -4975,7 +5008,7 @@
                  * 
                  * @returns 
                  */
-                iSCSICancel3: function() {
+                iSCSICancel3: function () {
                     this.mz512ISCSIDialogFormVisible1 = false;
                 },
                 /**
@@ -4983,7 +5016,7 @@
                  * 
                  * @param {any} val 
                  */
-                DHCPBoot4Change: function(val) {
+                DHCPBoot4Change: function (val) {
                     if (val == "Disabled") {
                         this.class_data.DHCPBoot4Show = true;
                     } else {
@@ -4995,7 +5028,7 @@
                  * 
                  * @param {any} val 
                  */
-                AuthChange4: function(val) {
+                AuthChange4: function (val) {
                     if (val == "NONE") {
                         this.class_data.AuthChange4Show0 = false;
                         this.class_data.AuthChange4Show1 = false;
@@ -5012,7 +5045,7 @@
                  * 
                  * @param {any} val 
                  */
-                TargetAuthChange4: function(val) {
+                TargetAuthChange4: function (val) {
                     if (val == "NONE") {
                         this.class_data.TargetAuthChange4Show0 = false;
                         this.class_data.TargetAuthChange4Show1 = false;
@@ -5029,7 +5062,7 @@
                  * 
                  * @returns 
                  */
-                iSCSIConfirm4: function() {
+                iSCSIConfirm4: function () {
                     var k = validates(4);
                     if (k > 0) {
                         return false;
@@ -5038,12 +5071,12 @@
                         this.mz512ISCSIDialogFormVisible2 = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -5076,7 +5109,7 @@
                  * 
                  * @returns 
                  */
-                iSCSICancel4: function() {
+                iSCSICancel4: function () {
                     this.mz512ISCSIDialogFormVisible2 = false;
                 },
                 /**
@@ -5084,7 +5117,7 @@
                  * 
                  * @param {any} val 
                  */
-                DHCPBoot5Change: function(val) {
+                DHCPBoot5Change: function (val) {
                     if (val == "Disabled") {
                         this.class_data.DHCPBoot5Show = true;
                     } else {
@@ -5096,7 +5129,7 @@
                  * 
                  * @param {any} val 
                  */
-                AuthChange5: function(val) {
+                AuthChange5: function (val) {
                     if (val == "NONE") {
                         this.class_data.AuthChange5Show0 = false;
                         this.class_data.AuthChange5Show1 = false;
@@ -5113,7 +5146,7 @@
                  * 
                  * @param {any} val 
                  */
-                TargetAuthChange5: function(val) {
+                TargetAuthChange5: function (val) {
                     if (val == "NONE") {
                         this.class_data.TargetAuthChange5Show0 = false;
                         this.class_data.TargetAuthChange5Show1 = false;
@@ -5130,7 +5163,7 @@
                  * 
                  * @returns 
                  */
-                iSCSIConfirm5: function() {
+                iSCSIConfirm5: function () {
                     var k = validates(5);
                     if (k > 0) {
                         return false;
@@ -5139,12 +5172,12 @@
                         this.mz512ISCSIDialogFormVisible3 = false;
                     } else {
                         try {
-                            app.$refs['ruleForm'].validateField('MinBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MinBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
                             });
-                            app.$refs['ruleForm'].validateField('MaxBandWidth', function(m) {
+                            app.$refs['ruleForm'].validateField('MaxBandWidth', function (m) {
                                 if (m) {
                                     return k++;
                                 }
@@ -5177,7 +5210,7 @@
                  * 
                  * @returns 
                  */
-                iSCSICancel5: function() {
+                iSCSICancel5: function () {
                     this.mz512ISCSIDialogFormVisible3 = false;
                 },
                 /**
@@ -5185,7 +5218,7 @@
                  * 
                  * @returns 
                  */
-                oceCloseDialog: function() {
+                oceCloseDialog: function () {
                     if (this.$refs['ruleForm']) {
                         this.$refs['ruleForm'].resetFields();
                     }
@@ -5200,7 +5233,7 @@
                 class_data: Object,
                 form_data: Object
             },
-            data: function() {
+            data: function () {
                 return {
                     i18ns: [],
                     dialogTitle: '',
@@ -5229,7 +5262,7 @@
                     SANBootOptions: []
                 };
             },
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 this.SANBootOptions = getForbiddenType();
                 this.PXEBootOptions = getForbiddenType();
@@ -5243,7 +5276,7 @@
                  * Port0 高级按钮点击事件
                  * 
                  */
-                port0highBtn: function() {
+                port0highBtn: function () {
                     this.dialogTitle = app.i18ns.CNA_template.high;
                     this.dialogFormVisible = true;
                     this.mzPXEBoot0Show = true;
@@ -5255,7 +5288,7 @@
                  * Port1 高级按钮点击事件
                  * 
                  */
-                port1highBtn: function() {
+                port1highBtn: function () {
                     this.dialogTitle = app.i18ns.CNA_template.high;
                     this.dialogFormVisible = true;
                     this.mzPXEBoot1Show = true;
@@ -5267,7 +5300,7 @@
                  * Port2 高级按钮点击事件
                  * 
                  */
-                port2highBtn: function() {
+                port2highBtn: function () {
                     this.hardDialogTitle = app.i18ns.CNA_template.high;
                     this.hardDialogFormVisible = true;
                     this.form_data.SANBoot3 = this.temp3;
@@ -5285,7 +5318,7 @@
                  * Port3 高级按钮点击事件
                  * 
                  */
-                port3highBtn: function() {
+                port3highBtn: function () {
                     this.hardDialogTitle = app.i18ns.CNA_template.high;
                     this.hardDialogFormVisible = true;
                     this.form_data.SANBoot4 = this.temp4;
@@ -5304,7 +5337,7 @@
                  * 
                  * @param {any} val 
                  */
-                sanBootChange3: function(val) {
+                sanBootChange3: function (val) {
                     if (val == "Disabled") {
                         this.showSANBoot3 = false;
                         this.showSANBoot4 = false;
@@ -5318,7 +5351,7 @@
                  * 
                  * @param {any} val 
                  */
-                sanBootChange4: function(val) {
+                sanBootChange4: function (val) {
                     if (val == "Disabled") {
                         this.showSANBoot4 = false;
                         this.showSANBoot3 = false;
@@ -5331,21 +5364,23 @@
                  * Port2 & Port3 高级按钮弹出框 确定操作
                  * 
                  */
-                hardConfirm: function() {
+                hardConfirm: function () {
                     var k = 0;
                     if (this.flag == "2") {
                         for (var i = 0; i < this.form_data.listData3.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -5358,16 +5393,18 @@
                     } else {
                         for (var i = 0; i < this.form_data.listData4.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -5386,14 +5423,14 @@
                  * Port2 & Port3 高级按钮弹出框 取消操作
                  * 
                  */
-                hardCancel: function() {
+                hardCancel: function () {
                     this.commonCheck();
                 },
                 /**
                  * Port0 & Port1 高级按钮弹出框 确定操作
                  * 
                  */
-                confirm: function() {
+                confirm: function () {
                     if (this.portFlag == 'port0') {
                         this.portTemp0 = this.form_data.mzPXEBoot0;
                     } else {
@@ -5405,7 +5442,7 @@
                  * Port0 & Port1 高级按钮弹出框 取消操作
                  * 
                  */
-                cancel: function() {
+                cancel: function () {
                     this.portFlag = '';
                     this.dialogFormVisible = false;
                 },
@@ -5413,7 +5450,7 @@
                  * 点击弹出框右上角❌号关闭弹框操作
                  * 
                  */
-                hardCloseDialog: function() {
+                hardCloseDialog: function () {
                     this.commonCheck();
                     if (this.$refs['ruleForm']) {
                         this.$refs['ruleForm'].resetFields();
@@ -5423,45 +5460,49 @@
                  * 校验Port2 & Port3 TargetWWPN TargetLUN 是否符合验证规则
                  * 
                  */
-                commonCheck: function() {
+                commonCheck: function () {
                     var k = 0;
                     if (this.flag == "2") {
                         for (var i = 0; i < this.form_data.listData3.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        app.form_data.listData3[i].TargetWWPN = '';
-                                        app.form_data.listData3[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        app.form_data.listData3[i].TargetWWPN = '';
-                                        app.form_data.listData3[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData3[i].TargetWWPN = '';
+                                            app.form_data.listData3[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData3.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData3[i].TargetWWPN = '';
+                                            app.form_data.listData3[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
                     } else {
                         for (var i = 0; i < this.form_data.listData4.length; i++) {
                             try {
-                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetWWPN'", function(m) {
-                                    if (m) {
-                                        app.form_data.listData4[i].TargetWWPN = '';
-                                        app.form_data.listData4[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
-                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetLUN'", function(m) {
-                                    if (m) {
-                                        app.form_data.listData4[i].TargetWWPN = '';
-                                        app.form_data.listData4[i].TargetLUN = '';
-                                        return k++;
-                                    }
-                                });
+                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetWWPN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData4[i].TargetWWPN = '';
+                                            app.form_data.listData4[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
+                                app.$refs['ruleForm'].validateField("'listData4.' + i + '.TargetLUN'",
+                                    function (m) {
+                                        if (m) {
+                                            app.form_data.listData4[i].TargetWWPN = '';
+                                            app.form_data.listData4[i].TargetLUN = '';
+                                            return k++;
+                                        }
+                                    });
                             } catch (err) {}
 
                         }
@@ -5476,7 +5517,7 @@
         function validateField(filedName) {
             var k = 0;
             try {
-                app.$refs['ruleForm'].validateField(filedName, function(m) {
+                app.$refs['ruleForm'].validateField(filedName, function (m) {
                     if (m) {
                         return k++;
                     }
@@ -5509,9 +5550,10 @@
             return k;
         }
 
-        var validateVLANID = function(rule, value, callback) {
+        var validateVLANID = function (rule, value, callback) {
             if (value) {
-                if (!/^([0-9]|[1-9][0-9]|[1-9][0-9]{2}|[1-3][0-9]{3}|[4][0][0-8][0-9]|[4][0][9][0-4]){1}$/.test(value)) {
+                if (!/^([0-9]|[1-9][0-9]|[1-9][0-9]{2}|[1-3][0-9]{3}|[4][0][0-8][0-9]|[4][0][9][0-4]){1}$/.test(
+                        value)) {
                     return callback(new Error(app.i18ns.CNA_template.inputAll));
                 } else
                     return callback();
@@ -5519,7 +5561,7 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         };
-        var validatePriority = function(rule, value, callback) {
+        var validatePriority = function (rule, value, callback) {
             if (value) {
                 if (!/^([0-7]){1}$/.test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.inputLittle));
@@ -5529,9 +5571,11 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateIPAddress = function(rule, value, callback) {
+        var validateIPAddress = function (rule, value, callback) {
             if (value) {
-                if (!/^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/.test(value)) {
+                if (!
+                    /^(22[0-3]|2[0-1]\d|1[0-1][0-9]|12[012345689]|1[3-9]\d|[1-9]\d|[1-9])\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|[1-9])$/
+                    .test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.ipCheck));
                 } else
                     return callback();
@@ -5539,9 +5583,11 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateSubnetMask = function(rule, value, callback) {
+        var validateSubnetMask = function (rule, value, callback) {
             if (value) {
-                if (!/^(254|252|248|240|224|192|128|0)\.0\.0\.0|255\.(254|252|248|240|224|192|128|0)\.0\.0|255\.255\.(254|252|248|240|224|192|128|0)\.0|255\.255\.255\.(254|252|248|240|224|192|128|0)$/.test(value)) {
+                if (!
+                    /^(254|252|248|240|224|192|128|0)\.0\.0\.0|255\.(254|252|248|240|224|192|128|0)\.0\.0|255\.255\.(254|252|248|240|224|192|128|0)\.0|255\.255\.255\.(254|252|248|240|224|192|128|0)$/
+                    .test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.childCode));
                 } else
                     return callback();
@@ -5549,7 +5595,7 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateInitiatorName = function(rule, value, callback) {
+        var validateInitiatorName = function (rule, value, callback) {
             if (value) {
                 if (!/^([i][q][n][.]([0-9a-zA-Z.:-]){7,219})$/.test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.inputIQN));
@@ -5559,17 +5605,17 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateInitiatorAlias = function(rule, value, callback) {
+        var validateInitiatorAlias = function (rule, value, callback) {
             if (value) {
-                if (!/^([\w\W]{0,31})$/.test(value)) {
-                    return callback(new Error(app.i18ns.CNA_template.input31));
+                if (!/^((?![0-9]+$)[0-9a-z]{0,31})$/.test(value)) {
+                    return callback(new Error(app.i18ns.CNA_template.input31az09));
                 } else
                     return callback();
             } else {
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateCHAPName = function(rule, value, callback) {
+        var validateCHAPName = function (rule, value, callback) {
             if (value) {
                 if (!/^([\w\W]{1,255})$/.test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.input255));
@@ -5579,7 +5625,7 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateSecret = function(rule, value, callback) {
+        var validateSecret = function (rule, value, callback) {
             if (value) {
                 if (!/^([\w\W]{12,16})$/.test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.input16));
@@ -5589,9 +5635,11 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validatePort = function(rule, value, callback) {
+        var validatePort = function (rule, value, callback) {
             if (value) {
-                if (!/^([1][0][2][4-9]|[1][0][3-9][0-9]|[1][1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|[6][0-5][0-5][0-3][0-5]){1}$/.test(value)) {
+                if (!
+                    /^([1][0][2][4-9]|[1][0][3-9][0-9]|[1][1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|[6][0-5][0-5][0-3][0-5]){1}$/
+                    .test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.input65535));
                 } else
                     return callback();
@@ -5599,10 +5647,10 @@
                 return callback(new Error(app.i18ns.common.requiredErrorMsg));
             }
         }
-        var validateTargetName = function(rule, value, callback) {
+        var validateTargetName = function (rule, value, callback) {
             if (value) {
-                if (!/^([\w\W]{11,223})$/.test(value)) {
-                    return callback(new Error(app.i18ns.CNA_template.input223));
+                if (!/^([0-9a-z.:-]{11,223})$/.test(value)) {
+                    return callback(new Error(app.i18ns.CNA_template.input223az09));
                 } else
                     return callback();
             } else {
@@ -5610,7 +5658,7 @@
             }
         }
 
-        var validateETO = function(rule, value, callback) {
+        var validateETO = function (rule, value, callback) {
             if (value) {
                 if (!/^([0-9]|[1-9][0-9]|[1-9][0-9]{2}|[1-3][0-5][0-9]{2}|[3][6][0]{2}){1}$/.test(value)) {
                     return callback(new Error(app.i18ns.CNA_template.input3600));
@@ -5621,15 +5669,17 @@
             }
         }
 
-        var validatePfVlanId = function(rule, value, callback) {
+        var validatePfVlanId = function (rule, value, callback) {
             var field = rule.field;
             var index = parseInt(field.replace('pfVlanID', ''));
             if (index === 1 || index === 5 || index === 9 || index === 13) {
                 for (var i = 0; i < 4; i++) {
-                    if (app.ruleForm['oceP' + i + 'PF1Type'] == 'iSCSI' || app.ruleForm['oceP' + i + 'PF1Type'] == 'FCoE') {
+                    if (app.ruleForm['oceP' + i + 'PF1Type'] == 'iSCSI' || app.ruleForm['oceP' + i + 'PF1Type'] ==
+                        'FCoE') {
                         return callback();
                     }
-                    if (app.ruleForm['mz512Port' + i + 'PF1Type'] == 'iSCSI' || app.ruleForm['mz512Port' + i + 'PF1Type'] == 'FCoE') {
+                    if (app.ruleForm['mz512Port' + i + 'PF1Type'] == 'iSCSI' || app.ruleForm['mz512Port' + i +
+                            'PF1Type'] == 'FCoE') {
                         return callback();
                     }
                 }
@@ -6272,10 +6322,11 @@
                     }],
                     templateName: [{
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (!/^[a-zA-Z0-9_\-]{6,32}$/.test(value)) {
-                                    return callback(new Error(app.i18ns.CNA_template.templateNameErrorMsg));
+                                    return callback(new Error(app.i18ns.CNA_template
+                                        .templateNameErrorMsg));
                                 } else
                                     return callback();
                             } else {
@@ -6285,7 +6336,7 @@
                         trigger: 'change'
                     }],
                     templateDesc: {
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (/[\u4E00-\u9FA5\uF900-\uFA2D]/.test(value)) {
                                     callback(new Error(app.i18ns.template.templateDescErrorMsg));
@@ -6442,7 +6493,7 @@
                     }],
                     MinBandWidth: {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (value > 100 || value < 1) {
                                     return callback(new Error(app.i18ns.CNA_template.bandTips));
@@ -6456,7 +6507,7 @@
                     },
                     MaxBandWidth: {
                         required: true,
-                        validator: function(rule, value, callback) {
+                        validator: function (rule, value, callback) {
                             if (value) {
                                 if (value > 100 || value < 1) {
                                     return callback(new Error(app.i18ns.CNA_template.bandTips));
@@ -7175,7 +7226,7 @@
                 }
             },
 
-            created: function() {
+            created: function () {
                 this.i18ns = getIn18();
                 var lang = localStorage.getItem('lang');
                 if (lang) {
@@ -7191,8 +7242,8 @@
                 this.ruleForm.MFState = this.MFStateOptions[0].value;
                 this.ruleForm.SRIOV = this.SRIOVOptions[1].value;
             },
-            mounted: function() {
-                setTimeout(function() {
+            mounted: function () {
+                setTimeout(function () {
                     getEsightList(app.bindEsight); //获取eSight数据配置
                 }, 0);
                 this.getListData();
@@ -7205,14 +7256,14 @@
                  * 
                  * @param {any} val 
                  */
-                templateChange: function(val) {
+                templateChange: function (val) {
                     select_templateChange(val);
                 },
                 /**
                  * 从rest.js获取固定数据
                  * 
                  */
-                getListData: function() {
+                getListData: function () {
                     templateManage.getModeList({}, this.bindMode);
                     templateManage.getSlotList({}, this.bindSlot);
                 },
@@ -7221,7 +7272,7 @@
                  * 
                  * @param {any} ret 
                  */
-                bindMode: function(ret) {
+                bindMode: function (ret) {
                     this.modeOptions = [];
                     if (ret.code === '0') {
                         if (ret.data.length > 0) {
@@ -7234,7 +7285,7 @@
                  * 
                  * @param {any} ret 
                  */
-                bindSlot: function(ret) {
+                bindSlot: function (ret) {
                     this.slotOptions = [];
                     if (ret.code === '0') {
                         if (ret.data.length > 0) {
@@ -7248,7 +7299,7 @@
                  * 
                  * @param {any} ret 
                  */
-                bindEsight: function(ret) {
+                bindEsight: function (ret) {
                     if (ret.code === '0') {
                         var lg = ret.data.length;
                         if (lg > 0) {
@@ -7279,7 +7330,7 @@
                  * 
                  * @param {any} val 
                  */
-                modeChange: function(val) {
+                modeChange: function (val) {
                     if (val == "MZ910") {
                         this.MFStateIsShow = false,
                             this.SRIOVIsShow = false
@@ -7288,14 +7339,14 @@
                             this.SRIOVIsShow = true
                     }
                 },
-                slotChange: function(val) {}, //预留方法
-                showDialog: function() {}, //预留方法
+                slotChange: function (val) {}, //预留方法
+                showDialog: function () {}, //预留方法
                 /**
                  * 模板类型切换操作
                  * 
                  * @param {any} val 
                  */
-                mfStateChange: function(val) {
+                mfStateChange: function (val) {
                     this.classData.pxeShow0 = true;
                     this.classData.pxeShow1 = true;
                     this.classData.pxeShow2 = true;
@@ -7333,7 +7384,7 @@
                  * @param {any} num1 
                  * @returns 
                  */
-                checkPort: function(num0, num1) {
+                checkPort: function (num0, num1) {
                     var list = [];
                     var isHaveRapeat = true;
                     var arr = [];
@@ -7350,12 +7401,12 @@
 
                     for (var i = 0; i < list.length; i++) {
                         var x = list[i];
-                        var result = list.filter(function(y) {
+                        var result = list.filter(function (y) {
                             return y.value == x.value
                         })
                         var count = result.length;
                         if (count > 1) {
-                            arr = result.map(function(x) {
+                            arr = result.map(function (x) {
                                 return x.key
                             });
                             isHaveRapeat = false;
@@ -7370,27 +7421,43 @@
                  * 
                  * @returns 
                  */
-                checkAllPFCal: function() {
+                checkAllPFCal: function () {
                     var isOneHundred = '';
-                    if (parseInt(app.classData.min0) + parseInt(app.classData.min1) + parseInt(app.classData.min2) + parseInt(app.classData.min3) != 100 ||
-                        parseInt(app.classData.min0) + parseInt(app.classData.min16) + parseInt(app.classData.min2) + parseInt(app.classData.min3) != 100 ||
-                        parseInt(app.classData.min0) + parseInt(app.classData.min17) + parseInt(app.classData.min2) + parseInt(app.classData.min3) != 100 ||
-                        parseInt(app.classData.min0) + parseInt(app.classData.min20) + parseInt(app.classData.min2) + parseInt(app.classData.min3) != 100 ||
-                        parseInt(app.classData.min0) + parseInt(app.classData.min21) + parseInt(app.classData.min2) + parseInt(app.classData.min3) != 100) {
+                    if (parseInt(app.classData.min0) + parseInt(app.classData.min1) + parseInt(app.classData
+                            .min2) + parseInt(app.classData.min3) != 100 ||
+                        parseInt(app.classData.min0) + parseInt(app.classData.min16) + parseInt(app
+                            .classData.min2) + parseInt(app.classData.min3) != 100 ||
+                        parseInt(app.classData.min0) + parseInt(app.classData.min17) + parseInt(app
+                            .classData.min2) + parseInt(app.classData.min3) != 100 ||
+                        parseInt(app.classData.min0) + parseInt(app.classData.min20) + parseInt(app
+                            .classData.min2) + parseInt(app.classData.min3) != 100 ||
+                        parseInt(app.classData.min0) + parseInt(app.classData.min21) + parseInt(app
+                            .classData.min2) + parseInt(app.classData.min3) != 100) {
                         isOneHundred = '0';
-                    } else if (parseInt(app.classData.min4) + parseInt(app.classData.min5) + parseInt(app.classData.min6) + parseInt(app.classData.min7) != 100 ||
-                        parseInt(app.classData.min4) + parseInt(app.classData.min18) + parseInt(app.classData.min6) + parseInt(app.classData.min7) != 100 ||
-                        parseInt(app.classData.min4) + parseInt(app.classData.min19) + parseInt(app.classData.min6) + parseInt(app.classData.min7) != 100 ||
-                        parseInt(app.classData.min4) + parseInt(app.classData.min22) + parseInt(app.classData.min6) + parseInt(app.classData.min7) != 100 ||
-                        parseInt(app.classData.min4) + parseInt(app.classData.min23) + parseInt(app.classData.min6) + parseInt(app.classData.min7) != 100) {
+                    } else if (parseInt(app.classData.min4) + parseInt(app.classData.min5) + parseInt(app
+                            .classData.min6) + parseInt(app.classData.min7) != 100 ||
+                        parseInt(app.classData.min4) + parseInt(app.classData.min18) + parseInt(app
+                            .classData.min6) + parseInt(app.classData.min7) != 100 ||
+                        parseInt(app.classData.min4) + parseInt(app.classData.min19) + parseInt(app
+                            .classData.min6) + parseInt(app.classData.min7) != 100 ||
+                        parseInt(app.classData.min4) + parseInt(app.classData.min22) + parseInt(app
+                            .classData.min6) + parseInt(app.classData.min7) != 100 ||
+                        parseInt(app.classData.min4) + parseInt(app.classData.min23) + parseInt(app
+                            .classData.min6) + parseInt(app.classData.min7) != 100) {
                         isOneHundred = '1';
-                    } else if (parseInt(app.classData.min8) + parseInt(app.classData.min9) + parseInt(app.classData.min10) + parseInt(app.classData.min11) != 100 ||
-                        parseInt(app.classData.min8) + parseInt(app.classData.min24) + parseInt(app.classData.min10) + parseInt(app.classData.min11) != 100 ||
-                        parseInt(app.classData.min8) + parseInt(app.classData.min25) + parseInt(app.classData.min10) + parseInt(app.classData.min11) != 100) {
+                    } else if (parseInt(app.classData.min8) + parseInt(app.classData.min9) + parseInt(app
+                            .classData.min10) + parseInt(app.classData.min11) != 100 ||
+                        parseInt(app.classData.min8) + parseInt(app.classData.min24) + parseInt(app
+                            .classData.min10) + parseInt(app.classData.min11) != 100 ||
+                        parseInt(app.classData.min8) + parseInt(app.classData.min25) + parseInt(app
+                            .classData.min10) + parseInt(app.classData.min11) != 100) {
                         isOneHundred = '2';
-                    } else if (parseInt(app.classData.min12) + parseInt(app.classData.min13) + parseInt(app.classData.min14) + parseInt(app.classData.min15) != 100 ||
-                        parseInt(app.classData.min12) + parseInt(app.classData.min26) + parseInt(app.classData.min14) + parseInt(app.classData.min15) != 100 ||
-                        parseInt(app.classData.min12) + parseInt(app.classData.min27) + parseInt(app.classData.min14) + parseInt(app.classData.min15) != 100) {
+                    } else if (parseInt(app.classData.min12) + parseInt(app.classData.min13) + parseInt(app
+                            .classData.min14) + parseInt(app.classData.min15) != 100 ||
+                        parseInt(app.classData.min12) + parseInt(app.classData.min26) + parseInt(app
+                            .classData.min14) + parseInt(app.classData.min15) != 100 ||
+                        parseInt(app.classData.min12) + parseInt(app.classData.min27) + parseInt(app
+                            .classData.min14) + parseInt(app.classData.min15) != 100) {
                         isOneHundred = '3';
                     }
                     return isOneHundred;
@@ -7403,11 +7470,11 @@
                  * @param {any} port1 
                  * @param {any} pf1 
                  */
-                alertSameTips: function(port0, pf0, port1, pf1) {
+                alertSameTips: function (port0, pf0, port1, pf1) {
                     var label = app.i18ns.CNA_template.notEquil;
                     this.$alert(label.format(port0, pf0, port1, pf1), app.i18ns.CNA_template.error, {
                         confirmButtonText: app.i18ns.common.confirm,
-                        callback: function() {}
+                        callback: function () {}
                     });
                 },
                 /**
@@ -7415,31 +7482,31 @@
                  * 
                  * @param {any} port 
                  */
-                alertCalTips: function(port) {
+                alertCalTips: function (port) {
                     var title = app.i18ns.CNA_template.notSame
                     this.$alert(title.format(port), app.i18ns.CNA_template.error, {
                         confirmButtonText: app.i18ns.common.confirm,
-                        callback: function() {}
+                        callback: function () {}
                     });
                 },
                 /**
                  * MF状态和SRIOV不可同时启用 提醒方法
                  * 
                  */
-                alertStartTips: function() {
+                alertStartTips: function () {
                     this.$alert(app.i18ns.CNA_template.sameStart, app.i18ns.CNA_template.error, {
                         confirmButtonText: app.i18ns.common.confirm,
-                        callback: function() {}
+                        callback: function () {}
                     });
                 },
                 /**
                  * Port0与Port1的PF1类型必须相同 提醒方法
                  * 
                  */
-                alertPF1Type: function() {
+                alertPF1Type: function () {
                     this.$alert(app.i18ns.CNA_template.pf1TypeSame, app.i18ns.CNA_template.error, {
                         confirmButtonText: app.i18ns.common.confirm,
-                        callback: function() {}
+                        callback: function () {}
                     });
                 },
                 /**
@@ -7447,7 +7514,7 @@
                  * 
                  * @returns 
                  */
-                checkMZ512PortPF1Type: function() {
+                checkMZ512PortPF1Type: function () {
                     var port = [];
                     if (app.ruleForm.mz512Port0PF1Type != app.ruleForm.mz512Port1PF1Type) {
                         port = ['Port0', 'Port1'];
@@ -7466,7 +7533,7 @@
                  * @param {any} port 
                  * @returns 
                  */
-                chargeSame: function(num0, num1, port) {
+                chargeSame: function (num0, num1, port) {
                     var port0Arr = app.checkPort(num0, num1)[1];
                     var PFArr = [];
                     var pfNum = '';
@@ -7492,11 +7559,11 @@
                  * @param {any} port1 
                  * @param {any} port2 
                  */
-                alertMZ512PF1Type: function(port1, port2) {
+                alertMZ512PF1Type: function (port1, port2) {
                     var titleTips = app.i18ns.CNA_template.mz512PF1TypeSame;
                     this.$alert(titleTips.format(port1, port2), app.i18ns.CNA_template.error, {
                         confirmButtonText: app.i18ns.common.confirm,
-                        callback: function() {}
+                        callback: function () {}
                     });
                 },
                 /**
@@ -7504,20 +7571,20 @@
                  * 
                  * @param {any} port 
                  */
-                alertOCE11102HighBtn: function(port) {
+                alertOCE11102HighBtn: function (port) {
                     var title = app.i18ns.CNA_template.highBtnCon
                     this.$alert(title.format(port), app.i18ns.CNA_template.error, {
                         confirmButtonText: app.i18ns.common.confirm,
-                        callback: function() {}
+                        callback: function () {}
                     });
                 },
                 /**
                  * 添加CNA模板编辑完成后 最后的提交操作
                  * 
                  */
-                submitForm: function() {
+                submitForm: function () {
                     this.errorpfVlanID = [];
-                    this.$refs['ruleForm'].validate(function(valid) {
+                    this.$refs['ruleForm'].validate(function (valid) {
                         if (valid) {
                             app.fullscreenLoading = true;
                             var param = {};
@@ -7571,7 +7638,8 @@
                                         })
                                     }
                                 } else {
-                                    if (app.ruleForm.adapterModel == "OCE11102" || app.ruleForm.adapterModel == "MZ510") {
+                                    if (app.ruleForm.adapterModel == "OCE11102" || app.ruleForm
+                                        .adapterModel == "MZ510") {
                                         param = {
                                             esights: app.ruleForm.esight,
                                             data: {
@@ -7585,8 +7653,10 @@
                                                     Slot: app.ruleForm.Slot,
                                                     Port0: {
                                                         PF0: {
-                                                            MinBandWidth: app.classData.min0.toString(),
-                                                            MaxBandWidth: app.classData.max0.toString(),
+                                                            MinBandWidth: app.classData.min0
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max0
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID0,
                                                             PXEBoot: app.ruleForm.oce111PXEBoot0
                                                         },
@@ -7594,8 +7664,10 @@
                                                     },
                                                     Port1: {
                                                         PF0: {
-                                                            MinBandWidth: app.classData.min4.toString(),
-                                                            MaxBandWidth: app.classData.max4.toString(),
+                                                            MinBandWidth: app.classData.min4
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max4
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID4,
                                                             PXEBoot: app.ruleForm.oce111PXEBoot1
                                                         },
@@ -7646,8 +7718,10 @@
                                                     Slot: app.ruleForm.Slot,
                                                     Port0: {
                                                         PF0: {
-                                                            MinBandWidth: app.classData.min0.toString(),
-                                                            MaxBandWidth: app.classData.max0.toString(),
+                                                            MinBandWidth: app.classData.min0
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max0
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID0,
                                                             PXEBoot: app.ruleForm.oce111PXEBoot0
                                                         },
@@ -7655,20 +7729,26 @@
                                                         PF1: app.getMZ512Param0(),
 
                                                         PF2: {
-                                                            MinBandWidth: app.classData.min2.toString(),
-                                                            MaxBandWidth: app.classData.max2.toString(),
+                                                            MinBandWidth: app.classData.min2
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max2
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID2
                                                         },
                                                         PF3: {
-                                                            MinBandWidth: app.classData.min3.toString(),
-                                                            MaxBandWidth: app.classData.max3.toString(),
+                                                            MinBandWidth: app.classData.min3
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max3
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID3
                                                         }
                                                     },
                                                     Port1: {
                                                         PF0: {
-                                                            MinBandWidth: app.classData.min4.toString(),
-                                                            MaxBandWidth: app.classData.max4.toString(),
+                                                            MinBandWidth: app.classData.min4
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max4
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID4,
                                                             PXEBoot: app.ruleForm.oce111PXEBoot1
                                                         },
@@ -7676,20 +7756,26 @@
                                                         PF1: app.getMZ512Param1(),
 
                                                         PF2: {
-                                                            MinBandWidth: app.classData.min6.toString(),
-                                                            MaxBandWidth: app.classData.max6.toString(),
+                                                            MinBandWidth: app.classData.min6
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max6
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID6
                                                         },
                                                         PF3: {
-                                                            MinBandWidth: app.classData.min7.toString(),
-                                                            MaxBandWidth: app.classData.max7.toString(),
+                                                            MinBandWidth: app.classData.min7
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max7
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID7
                                                         }
                                                     },
                                                     Port2: {
                                                         PF0: {
-                                                            MinBandWidth: app.classData.min8.toString(),
-                                                            MaxBandWidth: app.classData.max8.toString(),
+                                                            MinBandWidth: app.classData.min8
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max8
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID8,
                                                             PXEBoot: app.ruleForm.oce111PXEBoot2
                                                         },
@@ -7697,20 +7783,26 @@
                                                         PF1: app.getMZ512Param2(),
 
                                                         PF2: {
-                                                            MinBandWidth: app.classData.min10.toString(),
-                                                            MaxBandWidth: app.classData.max10.toString(),
+                                                            MinBandWidth: app.classData.min10
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max10
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID10
                                                         },
                                                         PF3: {
-                                                            MinBandWidth: app.classData.min11.toString(),
-                                                            MaxBandWidth: app.classData.max11.toString(),
+                                                            MinBandWidth: app.classData.min11
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max11
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID11
                                                         }
                                                     },
                                                     Port3: {
                                                         PF0: {
-                                                            MinBandWidth: app.classData.min12.toString(),
-                                                            MaxBandWidth: app.classData.max12.toString(),
+                                                            MinBandWidth: app.classData.min12
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max12
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID12,
                                                             PXEBoot: app.ruleForm.oce111PXEBoot3
                                                         },
@@ -7718,13 +7810,17 @@
                                                         PF1: app.getMZ512Param3(),
 
                                                         PF2: {
-                                                            MinBandWidth: app.classData.min14.toString(),
-                                                            MaxBandWidth: app.classData.max14.toString(),
+                                                            MinBandWidth: app.classData.min14
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max14
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID14
                                                         },
                                                         PF3: {
-                                                            MinBandWidth: app.classData.min15.toString(),
-                                                            MaxBandWidth: app.classData.max15.toString(),
+                                                            MinBandWidth: app.classData.min15
+                                                                .toString(),
+                                                            MaxBandWidth: app.classData.max15
+                                                                .toString(),
                                                             PFVLANID: app.ruleForm.pfVlanID15
                                                         }
                                                     }
@@ -7734,19 +7830,23 @@
                                     }
                                 }
                             }
-                            if (app.ruleForm.MFState == "Enabled" && app.ruleForm.SRIOV == "Enabled") {
+                            if (app.ruleForm.MFState == "Enabled" && app.ruleForm.SRIOV ==
+                                "Enabled") {
                                 app.alertStartTips();
                                 app.fullscreenLoading = false;
                             } else if (app.ruleForm.oceP0PF1Type != app.ruleForm.oceP1PF1Type) {
                                 app.alertPF1Type();
                                 app.fullscreenLoading = false;
-                            } else if (app.ruleForm.mz512Port0PF1Type != app.ruleForm.mz512Port1PF1Type) {
+                            } else if (app.ruleForm.mz512Port0PF1Type != app.ruleForm
+                                .mz512Port1PF1Type) {
                                 app.alertMZ512PF1Type('Port0', 'Port1');
                                 app.fullscreenLoading = false;
-                            } else if (app.ruleForm.mz512Port1PF1Type != app.ruleForm.mz512Port2PF1Type) {
+                            } else if (app.ruleForm.mz512Port1PF1Type != app.ruleForm
+                                .mz512Port2PF1Type) {
                                 app.alertMZ512PF1Type('Port1', 'Port2');
                                 app.fullscreenLoading = false;
-                            } else if (app.ruleForm.mz512Port2PF1Type != app.ruleForm.mz512Port3PF1Type) {
+                            } else if (app.ruleForm.mz512Port2PF1Type != app.ruleForm
+                                .mz512Port3PF1Type) {
                                 app.alertMZ512PF1Type('Port2', 'Port3');
                                 app.fullscreenLoading = false;
                             } else if (app.checkPort(0, 4)[0] &&
@@ -7784,19 +7884,19 @@
                         } else {
                             // 验证有无未填写的必填项
                             if (app.errorpfVlanID.length > 0) {
-                                app.errorpfVlanID.sort(function(a, b) {
+                                app.errorpfVlanID.sort(function (a, b) {
                                     return a - b;
                                 });
-                                var t0 = app.errorpfVlanID.filter(function(v) {
+                                var t0 = app.errorpfVlanID.filter(function (v) {
                                     return v < 4;
                                 });
-                                var t1 = app.errorpfVlanID.filter(function(v) {
+                                var t1 = app.errorpfVlanID.filter(function (v) {
                                     return v > 3 && v < 8;
                                 });
-                                var t2 = app.errorpfVlanID.filter(function(v) {
+                                var t2 = app.errorpfVlanID.filter(function (v) {
                                     return v > 7 && v < 12;
                                 });
-                                var t3 = app.errorpfVlanID.filter(function(v) {
+                                var t3 = app.errorpfVlanID.filter(function (v) {
                                     return v > 11;
                                 });
                                 if (t0.length > 0) {
@@ -7821,7 +7921,7 @@
                  * 返回模板列表
                  * 
                  */
-                cancel: function() {
+                cancel: function () {
                     goBack('List.html');
                 },
                 /**
@@ -7829,11 +7929,11 @@
                  * 
                  * @param {any} ret 
                  */
-                postDataCallback: function(ret) {
+                postDataCallback: function (ret) {
                     var msg = app.i18ns.CNA_template.createSucc;
                     app.fullscreenLoading = false;
                     if (ret.code === '0') {
-                        this.alertMsg(msg, function() {
+                        this.alertMsg(msg, function () {
                             //to do 添加成功后的操作
                             window.location.href = 'List.html?s=' + Math.random();
                         });
@@ -7848,10 +7948,10 @@
                  * @param {any} msg 
                  * @param {any} callback 
                  */
-                alertMsg: function(msg, callback) {
+                alertMsg: function (msg, callback) {
                     this.$alert(msg, this.i18ns.common.prompt, {
                         confirmButtonText: this.i18ns.common.confirm,
-                        callback: function() {
+                        callback: function () {
                             callback && callback()
                         }
                     });
@@ -7861,7 +7961,7 @@
                  * 
                  * @returns 
                  */
-                getMZ910Param: function() {
+                getMZ910Param: function () {
                     var param = {
                         esights: app.ruleForm.esight,
                         data: {
@@ -7886,20 +7986,22 @@
                             }
                         }
                     };
-                    _.forEach(app.ruleForm.listData3, function(item, i) {
+                    _.forEach(app.ruleForm.listData3, function (item, i) {
                         if (item.TargetWWPN && app.ruleForm.SANBoot3 == 'Enabled') {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            param.data.templateProp.Port2[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            param.data.templateProp.Port2[target] = "TargetWWPN:" + targetWWPN +
+                                ";" + "TargetLUN:" + targetLUN + '';
                         }
                     })
-                    _.forEach(app.ruleForm.listData4, function(item, i) {
+                    _.forEach(app.ruleForm.listData4, function (item, i) {
                         if (item.TargetWWPN && app.ruleForm.SANBoot4 == 'Enabled') {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            param.data.templateProp.Port3[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            param.data.templateProp.Port3[target] = "TargetWWPN:" + targetWWPN +
+                                ";" + "TargetLUN:" + targetLUN + '';
                         }
                     })
                     return param;
@@ -7909,7 +8011,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102Param0: function() {
+                getOCE11102Param0: function () {
                     var PF1 = {};
                     if (app.ruleForm.oceP0PF1Type == "NIC") {
                         PF1 = {
@@ -7949,7 +8051,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102Param1: function() {
+                getOCE11102Param1: function () {
                     var PF1 = {};
                     if (app.ruleForm.oceP1PF1Type == "NIC") {
                         PF1 = {
@@ -7989,7 +8091,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512Param0: function() {
+                getMZ512Param0: function () {
                     var PF1 = {};
                     if (app.ruleForm.mz512Port0PF1Type == "NIC") {
                         PF1 = {
@@ -8029,7 +8131,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512Param1: function() {
+                getMZ512Param1: function () {
                     var PF1 = {};
                     if (app.ruleForm.mz512Port1PF1Type == "NIC") {
                         PF1 = {
@@ -8069,7 +8171,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512Param2: function() {
+                getMZ512Param2: function () {
                     var PF1 = {};
                     if (app.ruleForm.mz512Port2PF1Type == "NIC") {
                         PF1 = {
@@ -8109,7 +8211,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512Param3: function() {
+                getMZ512Param3: function () {
                     var PF1 = {};
                     if (app.ruleForm.mz512Port3PF1Type == "NIC") {
                         PF1 = {
@@ -8149,7 +8251,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102NetWorkParam0: function() {
+                getOCE11102NetWorkParam0: function () {
                     var Network = {};
                     if (app.ruleForm.VLANBoot0 == "Enabled") {
                         if (app.ruleForm.DHCPBoot0 == "Disabled") {
@@ -8193,7 +8295,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102NetWorkParam1: function() {
+                getOCE11102NetWorkParam1: function () {
                     var Network = {};
                     if (app.ruleForm.VLANBoot1 == "Enabled") {
                         if (app.ruleForm.DHCPBoot1 == "Disabled") {
@@ -8237,7 +8339,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512NetWorkParam: function(i) {
+                getMZ512NetWorkParam: function (i) {
                     var Network = {};
                     if (app.ruleForm['VLANBoot' + i + ''] == "Enabled") {
                         if (app.ruleForm['DHCPBoot' + i + ''] == "Disabled") {
@@ -8281,7 +8383,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102InitiaorParam0: function() {
+                getOCE11102InitiaorParam0: function () {
                     var Initiator = {}
                     if (app.ruleForm.AuthBoot0 == "NONE") {
                         Initiator = {
@@ -8324,7 +8426,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102InitiaorParam1: function() {
+                getOCE11102InitiaorParam1: function () {
                     var Initiator = {}
                     if (app.ruleForm.AuthBoot1 == "NONE") {
                         Initiator = {
@@ -8367,7 +8469,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512InitiaorParam: function(i) {
+                getMZ512InitiaorParam: function (i) {
                     var Initiator = {}
                     if (app.ruleForm['AuthBoot' + i + ''] == "NONE") {
                         Initiator = {
@@ -8410,7 +8512,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102TargetParam0: function() {
+                getOCE11102TargetParam0: function () {
                     var Target = {};
                     if (app.ruleForm.TargetAuth0 == "NONE") {
                         Target = {
@@ -8465,7 +8567,7 @@
                  * 
                  * @returns 
                  */
-                getOCE11102TargetParam1: function() {
+                getOCE11102TargetParam1: function () {
                     var Target = {};
                     if (app.ruleForm.TargetAuth1 == "NONE") {
                         Target = {
@@ -8520,7 +8622,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512TargetParam: function(i) {
+                getMZ512TargetParam: function (i) {
                     var Target = {};
                     if (app.ruleForm['TargetAuth' + i + ''] == "NONE") {
                         Target = {
@@ -8575,7 +8677,7 @@
                  * 
                  * @returns 
                  */
-                getFCoEParam0: function() {
+                getFCoEParam0: function () {
                     var PF1 = {
                         PFType: app.ruleForm.oceP0PF1Type,
                         MinBandWidth: this.classData.min17.toString(),
@@ -8583,12 +8685,13 @@
                         PFVLANID: '0',
                         SANBoot: app.ruleForm.oceFCoESANBoot0
                     };
-                    _.forEach(app.ruleForm.listData1, function(item, i) {
+                    _.forEach(app.ruleForm.listData1, function (item, i) {
                         if (item.TargetWWPN) {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" +
+                                targetLUN + '';
                         }
                     })
                     return PF1;
@@ -8598,7 +8701,7 @@
                  * 
                  * @returns 
                  */
-                getFCoEParam1: function() {
+                getFCoEParam1: function () {
                     var PF1 = {
                         PFType: app.ruleForm.oceP1PF1Type,
                         MinBandWidth: this.classData.min19.toString(),
@@ -8606,12 +8709,13 @@
                         PFVLANID: '0',
                         SANBoot: app.ruleForm.oceFCoESANBoot1
                     };
-                    _.forEach(app.ruleForm.listData2, function(item, i) {
+                    _.forEach(app.ruleForm.listData2, function (item, i) {
                         if (item.TargetWWPN) {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" +
+                                targetLUN + '';
                         }
                     })
                     return PF1;
@@ -8621,7 +8725,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512FCoEParam0: function() {
+                getMZ512FCoEParam0: function () {
                     var PF1 = {
                         PFType: app.ruleForm.mz512Port0PF1Type,
                         MinBandWidth: this.classData.min21.toString(),
@@ -8629,12 +8733,13 @@
                         PFVLANID: '0',
                         SANBoot: app.ruleForm.mz512FCoESANBoot0
                     };
-                    _.forEach(app.ruleForm.listData5, function(item, i) {
+                    _.forEach(app.ruleForm.listData5, function (item, i) {
                         if (item.TargetWWPN) {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" +
+                                targetLUN + '';
                         }
                     })
                     return PF1;
@@ -8644,7 +8749,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512FCoEParam1: function() {
+                getMZ512FCoEParam1: function () {
                     var PF1 = {
                         PFType: app.ruleForm.mz512Port1PF1Type,
                         MinBandWidth: this.classData.min23.toString(),
@@ -8652,12 +8757,13 @@
                         PFVLANID: '0',
                         SANBoot: app.ruleForm.mz512FCoESANBoot1
                     };
-                    _.forEach(app.ruleForm.listData6, function(item, i) {
+                    _.forEach(app.ruleForm.listData6, function (item, i) {
                         if (item.TargetWWPN) {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" +
+                                targetLUN + '';
                         }
                     })
                     return PF1;
@@ -8667,7 +8773,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512FCoEParam2: function() {
+                getMZ512FCoEParam2: function () {
                     var PF1 = {
                         PFType: app.ruleForm.mz512Port2PF1Type,
                         MinBandWidth: this.classData.min25.toString(),
@@ -8675,12 +8781,13 @@
                         PFVLANID: '0',
                         SANBoot: app.ruleForm.mz512FCoESANBoot2
                     };
-                    _.forEach(app.ruleForm.listData7, function(item, i) {
+                    _.forEach(app.ruleForm.listData7, function (item, i) {
                         if (item.TargetWWPN) {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" +
+                                targetLUN + '';
                         }
                     })
                     return PF1;
@@ -8690,7 +8797,7 @@
                  * 
                  * @returns 
                  */
-                getMZ512FCoEParam3: function() {
+                getMZ512FCoEParam3: function () {
                     var PF1 = {
                         PFType: app.ruleForm.mz512Port3PF1Type,
                         MinBandWidth: this.classData.min27.toString(),
@@ -8698,12 +8805,13 @@
                         PFVLANID: '0',
                         SANBoot: app.ruleForm.mz512FCoESANBoot3
                     };
-                    _.forEach(app.ruleForm.listData8, function(item, i) {
+                    _.forEach(app.ruleForm.listData8, function (item, i) {
                         if (item.TargetWWPN) {
                             var target = 'Target' + i + '';
                             var targetWWPN = item.TargetWWPN;
                             var targetLUN = item.TargetLUN;
-                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" + targetLUN + '';
+                            PF1[target] = "TargetWWPN:" + targetWWPN + ";" + "TargetLUN:" +
+                                targetLUN + '';
                         }
                     })
                     return PF1;

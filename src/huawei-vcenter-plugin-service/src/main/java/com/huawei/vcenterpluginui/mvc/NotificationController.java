@@ -57,8 +57,7 @@ public class NotificationController extends BaseController {
   public ResponseBodyBean callback(HttpServletRequest request,
       @RequestHeader String openid,
       @RequestBody String body) throws SQLException {
-    // 比较有变化的健康状态并推送到HA
-    notificationAlarmService.handleAlarm(request.getParameter("data"), openid);
+    notificationAlarmService.handleCallbackEvent(request.getParameter("data"), openid);
     return success();
   }
 
@@ -66,77 +65,91 @@ public class NotificationController extends BaseController {
   @RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
   @ResponseBody
   public ResponseBodyBean unsubscribeAll(HttpServletRequest request,
-      @RequestParam String vcenterUsername,
-      @RequestParam String vcenterPassword,
-      @RequestParam(required = false) String action) throws SQLException {
+      @RequestParam String vcenterUsername, @RequestParam String vcenterPassword,
+      @RequestParam(required = false) String action,
+      @RequestParam(required = false) String removeData)
+      throws SQLException {
     LOGGER.info("unsubscribeAll action: " + action);
     synchronized (globalSession) {
+      boolean isRemoveData = false;
       final VCenterInfo vCenterInfo = vCenterInfoService.getVCenterInfo();
-      // unregister alarm definitions
-      try {
-        if ("uninstall".equals(action) && vCenterInfo != null) {
-          List<AlarmDefinition> alarmDefinitions = vCenterInfoService
-              .getAlarmDefinitions();
-          if (!alarmDefinitions.isEmpty()) {
-            final List<String> morValList = new ArrayList<>();
-            for (AlarmDefinition alarmDefinition : alarmDefinitions) {
-              if (alarmDefinition.getMorValue() != null && !""
-                  .equals(alarmDefinition.getMorValue().trim())) {
-                morValList.add(alarmDefinition.getMorValue());
-              }
-            }
-            LOGGER.info("Unregistering " + morValList.size() + " alarm definitions.");
-            int alarmDefStatus = 0;
-            if (!morValList.isEmpty()) {
-              try {
-                int removed = vCenterHAService.unregisterAlarmDef(vCenterInfo, morValList);
-                alarmDefStatus = removed == morValList.size() ? 0 : 2;
-              } catch (Exception e) {
-                LOGGER.error("Cannot delete alarm definitions in vCenter.", e);
-                alarmDefStatus = 2;
-              }
-              try {
-                vCenterInfoService.deleteAlarmDefinitions();
-              } catch (Exception e) {
-                LOGGER.error("Cannot delete alarm definitions in DB.", e);
-                alarmDefStatus = 2;
-              }
-              LOGGER.info("Removed alarm definition from vCenter");
-            }
-            eSightService.updateAlarmDefinition(alarmDefStatus);
-          }
-        }
-      } catch (Exception e) {
-        LOGGER.error("Cannot remove alarm definitions", e);
-      }
-
       Boolean uninstallProviderResult = null;
       if (vCenterInfo == null) {
         LOGGER.info("No vcenterHA info or vcenterHA is not enabled. Do not unsubscribe.");
+      } else if (!vcenterUsername.equalsIgnoreCase(vCenterInfo.getUserName())
+          || !vcenterPassword.equals(CipherUtils.aesDncode(vCenterInfo.getPassword()))) {
+        LOGGER.info("vcenter username and passsword do not match. Do not unsubscribe.");
+        return failure("Please check username and password.");
       } else {
-        if (vcenterUsername.equals(vCenterInfo.getUserName())
-            && vcenterPassword.equals(CipherUtils.aesDncode(vCenterInfo.getPassword()))) {
-          uninstallProviderResult = notificationAlarmService.uninstallProvider();
-          if (uninstallProviderResult == null || uninstallProviderResult) {
-            // 20180803: only uninstall plugin needs to unsubscribe
-            if ("uninstall".equals(action)) {
-              notificationAlarmService.unsubscribeAll();
-            }
-            //vCenterInfoService.disableVCenterInfo();
+        // remove provider
+        uninstallProviderResult = notificationAlarmService.uninstallProvider();
+        if (uninstallProviderResult == null || uninstallProviderResult) {
+          // 20180803: only uninstall plugin needs to unsubscribe
+          if ("uninstall".equals(action)) {
+            notificationAlarmService.unsubscribeAll();
+            isRemoveData = (removeData != null && ("1".equals(removeData) || Boolean
+                .valueOf(removeData)));
           }
-        } else {
-          LOGGER.info("vcenter username and passsword do not match. Do not unsubscribe.");
-          return failure("Please check username and password.");
+          //vCenterInfoService.disableVCenterInfo();
+
+          // unregister alarm definitions
+          try {
+            if (vcenterUsername
+                .equalsIgnoreCase(vCenterInfo.getUserName()) && vcenterPassword
+                .equals(CipherUtils.aesDncode(vCenterInfo.getPassword()))) {
+              LOGGER.info("Remove data: " + isRemoveData);
+              List<AlarmDefinition> alarmDefinitions = vCenterInfoService
+                  .getAlarmDefinitions();
+              if (!alarmDefinitions.isEmpty()) {
+                final List<String> morValList = new ArrayList<>();
+                for (AlarmDefinition alarmDefinition : alarmDefinitions) {
+                  if (alarmDefinition.getMorValue() != null && !""
+                      .equals(alarmDefinition.getMorValue().trim())) {
+                    morValList.add(alarmDefinition.getMorValue());
+                  }
+                }
+                LOGGER.info("Unregistering " + morValList.size() + " alarm definitions.");
+                int alarmDefStatus = 0;
+                if (!morValList.isEmpty()) {
+                  try {
+                    int removed = vCenterHAService.unregisterAlarmDef(vCenterInfo, morValList);
+                    alarmDefStatus = (removed == morValList.size() ? 0 : 2);
+                  } catch (Exception e) {
+                    LOGGER.error("Cannot delete alarm definitions in vCenter.", e);
+                    alarmDefStatus = 2;
+                  }
+                  try {
+                    vCenterInfoService.deleteAlarmDefinitions();
+                  } catch (Exception e) {
+                    LOGGER.error("Cannot delete alarm definitions in DB.");
+                    alarmDefStatus = 2;
+                  }
+                  LOGGER.info("Removed alarm definition from vCenter");
+                }
+                eSightService.updateAlarmDefinition(alarmDefStatus);
+              }
+            }
+          } catch (Exception e) {
+            LOGGER.error("Cannot remove alarm definitions", e);
+          }
         }
+
       }
+
       if (uninstallProviderResult == null) {
         if ("uninstall".equals(action)) {
           vCenterInfoService.deleteHAData();
+          if (isRemoveData) {
+            notificationAlarmService.cleanData();
+          }
         }
         return failure("-1", "No HA provider can be removed."); // no provider
       } else if (uninstallProviderResult) {
         if ("uninstall".equals(action)) {
           vCenterInfoService.deleteHAData();
+          if (isRemoveData) {
+            notificationAlarmService.cleanData();
+          }
         }
         return success();
       } else {
