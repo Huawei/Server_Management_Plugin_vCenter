@@ -8,7 +8,7 @@ I. General Information
 
     Name:     Management Plugin Pack for Huawei Server
     Category: Monitoring and Configuration
-    version : 1.4.68
+    version : 1.5.111
     
 II. Description
 
@@ -22,7 +22,7 @@ III. Supported Software Version
     
 IV.Software Requirements
 
-    eSight V300R009C00SPC201
+    eSight V300R0010C00SPC301
 
 V. Supported Device
 
