@@ -22,7 +22,7 @@ III. Supported Software Version
     
 IV.Software Requirements
 
-    eSight V300R0010C00SPC301
+    eSight V300R010C00SPC301
 
 V. Supported Device
 
