@@ -35,3 +35,7 @@ V. Supported Device
 VI. Additional Resources
 
     For more information consult User Guide: https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs
+
+VII. Open Source Software Notice
+    
+    https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs/Open_Source_Software_Notice.doc
