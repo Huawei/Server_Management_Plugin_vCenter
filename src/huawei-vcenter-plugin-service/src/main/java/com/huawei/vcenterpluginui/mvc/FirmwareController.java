@@ -49,7 +49,7 @@ public class FirmwareController extends BaseController {
      *                "basepackageDescription": "This is a basepackage.",
      *                "basepackageType": "Firmware",
      *                "fileList": "iBMC.zip,iBMC.zip.asc",
-     *                "sftpserverIP": "188.10.18.188",
+     *                "sftpserverIP": "192.168.0.2",
      *                "username": "itSftpUser"
      *                }
      *                }
