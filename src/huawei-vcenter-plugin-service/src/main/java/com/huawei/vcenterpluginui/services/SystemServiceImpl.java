@@ -4,15 +4,15 @@ import com.huawei.vcenterpluginui.constant.SqlFileConstant;
 import com.huawei.vcenterpluginui.dao.SystemDao;
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by hyuan on 2017/5/10.
  */
 public class SystemServiceImpl implements SystemService {
 
-  private static final Log LOGGER = LogFactory.getLog(SystemServiceImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SystemServiceImpl.class);
 
   private SystemDao systemDao;
 

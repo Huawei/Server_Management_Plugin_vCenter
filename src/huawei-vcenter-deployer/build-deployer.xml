@@ -1,0 +1,132 @@
+<project name="huawei-vcenter-plugin-service" default="make-jar-bundle">
+   <description>
+       Ant script to build huawei-vcenter-deployer.
+       The output is a bundle in target/vcenter-deployer.jar
+       -----------------------------------------------------------------------
+       NOTE: in Eclipse/STS you can use the project builder directly.
+       -----------------------------------------------------------------------
+   </description>
+
+   <!-- name of the jar output file -->
+   <property name="project.name" value="vcenter-deployer"/>
+   <property name="project.version" value="0.1.5"/>
+   <property name="ROOT_DIR" location="../../" />
+   <property name="BUILD_DIR" value="${basedir}/target"/>
+   <property name="CLASSES" value="${BUILD_DIR}/classes"/>
+   <property name="BOOT_INF_PATH" value="${CLASSES}/BOOT-INF"/>
+   <property name="BOOT_INF_LIB_PATH" value="${BOOT_INF_PATH}/lib"/>
+   <property name="BOOT_INF_CLASSS_PATH" value="${BOOT_INF_PATH}/classes"/>
+   <property name="DEST_META_INF_PATH" value="${CLASSES}/META-INF"/>
+   <property name="DEST_STATIC_PATH" value="${BOOT_INF_CLASSS_PATH}/static"/>
+   <property name="tool.dir" location="${ROOT_DIR}/tool"/>
+   <property name="start.class" value="com.huawei.vcenter.VcenterDeployerApplication"/>
+   
+   <property name="RES_DIR" value="${basedir}/src/main/resources"/>
+   <property name="META_INF_DIR" value="${basedir}/src/main/resources/META-INF"/>
+
+   <!-- clean the generated build files -->
+   <target name="clean" description="Do not select this internal target.">
+      <delete dir="${BUILD_DIR}" />
+      <mkdir dir="${CLASSES}"/>
+      <mkdir dir="${BOOT_INF_LIB_PATH}"/>
+      <mkdir dir="${BOOT_INF_CLASSS_PATH}" />
+	  <mkdir dir="${DEST_META_INF_PATH}"/>
+      <mkdir dir="${DEST_STATIC_PATH}" />
+   </target>
+   
+  <target name="classpaths" depends="clean">
+    <path id="compile.classpath">
+      <fileset dir="${ROOT_DIR}/open_source/" includes="**/*.jar"/>  
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="samples-core-*.jar"/>
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="vim25.jar"/>  
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="wssamples.jar"/>
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="extension-registration-jar-with-dependencies.jar"/>  
+    </path>
+   </target>
+
+   <target name="compile-java" depends="classpaths" description="Do not select this internal target.">
+      <javac target="1.8"  source="1.8"
+             includeantruntime="false"
+             destdir="${BOOT_INF_CLASSS_PATH}"
+			 classpathref="compile.classpath"
+             debug="true" encoding="UTF-8">
+			 <src path="${basedir}/src/main/java"/>
+			 <!-- <src path="${basedir}/src/test/java"/> for future test files -->
+      </javac>
+   </target>
+
+   <!-- Build the jar -->
+   <target name="make-jar-bundle" depends="compile-java"
+           description="No need to use this script within Eclipse, use the native project builder!">
+      <!-- Add resources -->
+      <copy todir="${DEST_STATIC_PATH}">
+         <fileset dir="${RES_DIR}/static"/>
+      </copy>
+	  
+	  <copy file="${basedir}/src/main/resources/application.properties"
+        tofile="${BOOT_INF_CLASSS_PATH}/application.properties"/>
+		
+      <copy todir="${BOOT_INF_LIB_PATH}">
+         <fileset dir="${ROOT_DIR}/open_source/jackson" includes="*.jar"/>
+         <fileset dir="${ROOT_DIR}/open_source/javax.annotation" includes="*.annotation-api-*.jar"/>
+         <fileset dir="${ROOT_DIR}/open_source/logback" includes="*.jar"/>
+		 <fileset dir="${ROOT_DIR}/open_source/Simple Logging Facade for Java" includes="*.jar"/>
+		 <fileset dir="${ROOT_DIR}/open_source/spring-framework" includes="*.jar"/>
+       <fileset dir="${ROOT_DIR}/open_source/Spring Boot" includes="*.jar"/>
+         <fileset dir="${ROOT_DIR}/open_source/Apache Tomcat" includes="*.jar"/>			 
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="samples-core-*.jar"/>
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="vim25.jar"/>  
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="wssamples.jar"/> 
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="extension-registration-jar-with-dependencies.jar"/>
+      </copy>
+     
+      <!-- Create the jar -->
+      <jar  destfile="${BUILD_DIR}/${project.name}-${project.version}.jar" compress="false">
+	      <manifest>
+              <attribute name="Implementation-Version" value="${project.version}"/>
+         </manifest>
+         <mappedresources>
+             <fileset dir="${CLASSES}"/>
+         </mappedresources>
+	      <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/element-ui" erroronmissingdir="false"/>
+            <globmapper from="index.js" to="BOOT-INF/classes/static/js/element.js"/>
+         </mappedresources>
+         <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/element-ui/i18n" erroronmissingdir="false"/>
+            <globmapper from="*" to="BOOT-INF/classes/static/js/*"/>
+         </mappedresources>
+          <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/vue-i18n" erroronmissingdir="false"/>
+            <globmapper from="vue-i18n.js" to="BOOT-INF/classes/static/js/vue-i18n.js"/>
+         </mappedresources>
+         <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/vue" erroronmissingdir="false"/>
+            <globmapper from="vue.min.js" to="BOOT-INF/classes/static/js/vue.min.js"/>
+         </mappedresources>
+         <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/polyfill" erroronmissingdir="false"/>
+            <globmapper from="polyfill.min.js" to="BOOT-INF/classes/static/js/polyfill.min.js"/>
+         </mappedresources>
+         <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/jQuery JavaScript Library" erroronmissingdir="false"/>
+            <globmapper from="*" to="BOOT-INF/classes/static/js/jquery.min.js"/>
+         </mappedresources>
+         <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/element-ui" erroronmissingdir="false"/>
+            <globmapper from="index.css" to="BOOT-INF/classes/static/css/element.css"/>
+         </mappedresources>
+         <mappedresources>
+            <fileset dir="${ROOT_DIR}/open_source/element-ui/fonts" erroronmissingdir="false"/>
+            <globmapper from="*" to="BOOT-INF/classes/static/css/fonts/*"/>
+         </mappedresources>
+         
+		   <zipfileset src="${tool.dir}/spring-boot-loader-2.1.6.RELEASE.jar"/>
+		   <manifest>
+			 <attribute name="Main-Class" value="org.springframework.boot.loader.JarLauncher"/>
+			 <attribute name="Start-Class" value="${start.class}"/>
+		   </manifest>
+    </jar>
+   </target>
+</project>
+

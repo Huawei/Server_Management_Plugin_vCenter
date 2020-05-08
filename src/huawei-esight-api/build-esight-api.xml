@@ -1,0 +1,57 @@
+<project name="huawei-vcenter-plugin-service" default="make-jar-bundle">
+   <description>
+       Ant script to build huawei-vcenter-deployer.
+       The output is a bundle in target/vcenter-deployer.jar
+       -----------------------------------------------------------------------
+       NOTE: in Eclipse/STS you can use the project builder directly.
+       -----------------------------------------------------------------------
+   </description>
+
+   <!-- name of the jar output file -->
+   <property name="project.name" value="esight-api"/>
+   <property name="project.version" value="1.2.0"/>
+   <property name="ROOT_DIR" location="../../" />
+   <property name="BUILD_DIR" value="${basedir}/target"/>
+   <property name="CLASSES" value="${BUILD_DIR}/classes"/>
+   <property name="OPEN_SOURCE" value="${basedir}/../../open_source"/>
+   <!-- clean the generated build files -->
+   <target name="clean" description="Do not select this internal target.">
+      <delete dir="${BUILD_DIR}" />
+      <mkdir dir="${CLASSES}"/>
+   </target>
+   
+  <target name="classpaths" depends="clean">
+    <path id="compile.classpath">
+     <fileset dir="${OPEN_SOURCE}/spring-framework" includes="spring-core-*.RELEASE.jar"/>
+	  <fileset dir="${OPEN_SOURCE}/spring-framework" includes="spring-web-*.RELEASE.jar"/>
+	  <fileset dir="${OPEN_SOURCE}/gson" includes="gson-*.jar"/>
+	  <fileset dir="${OPEN_SOURCE}/Simple Logging Facade for Java" includes="*.jar"/>
+    </path>
+   </target>
+
+   <target name="compile-java" depends="classpaths" description="Do not select this internal target.">
+      <javac target="1.7"  source="1.7"
+             includeantruntime="false"
+             destdir="${CLASSES}"
+			 classpathref="compile.classpath"
+             debug="true" encoding="UTF-8">
+			 <src path="${basedir}/src/main/java"/>
+			 <!-- <src path="${basedir}/src/test/java"/> for future test files -->
+      </javac>
+   </target>
+
+   <!-- Build the jar -->
+   <target name="make-jar-bundle" depends="compile-java"
+           description="No need to use this script within Eclipse, use the native project builder!">
+      <!-- Create the jar -->
+	  <jar  destfile="${BUILD_DIR}/${project.name}-${project.version}.jar" compress="false">
+	        <manifest>
+              <attribute name="Implementation-Version" value="${project.version}"/>
+            </manifest>
+	       <mappedresources>
+             <fileset dir="${CLASSES}"/>
+           </mappedresources>
+    </jar>
+     </target>
+</project>
+

@@ -9,7 +9,7 @@
    type: keep "html" for this plugin to be deployed in the vSphere HTML client.
    name: short name displayed in the Administration < Client plugins view
 -->
-<pluginPackage id="com.huawei.vcenterpluginui" version="1.5.111" type="html" name="Huawei eSight For vCenter Plugin"
+<pluginPackage id="com.huawei.vcenterpluginui" version="1.6.156" type="html" name="Huawei eSight For vCenter Plugin"
       description="Huawei eSight For vCenter plugin" vendor="Huawei">
 
    <dependencies>

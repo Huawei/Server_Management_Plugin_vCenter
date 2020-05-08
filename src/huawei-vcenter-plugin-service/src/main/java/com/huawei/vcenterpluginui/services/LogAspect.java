@@ -1,7 +1,7 @@
 package com.huawei.vcenterpluginui.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.aspectj.lang.JoinPoint;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import java.util.Arrays;
  */
 public class LogAspect {
 
-    private static final Log LOGGER = LogFactory.getLog(LogAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogAspect.class);
     private static final String UNKNOWN = "UNKNOWN";
 
     public void logRequest(JoinPoint joinPoint) {
@@ -34,7 +34,7 @@ public class LogAspect {
                         + Arrays.toString(joinPoint.getArgs()).replaceAll("\"password\":\"[^&]*\"", "\"password\":\"******\"").replaceAll("Password\":\"[^&]*\"", "Password\":\"******\""));
             }
         } catch (Exception e) {
-            LOGGER.warn(e);
+            LOGGER.warn( e.getMessage() );
         }
     }
 

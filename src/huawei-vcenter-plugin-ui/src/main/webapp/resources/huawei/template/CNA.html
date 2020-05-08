@@ -7,9 +7,9 @@
     <meta charset="utf-8" />
     <link href="../../css/element.css" rel="stylesheet" />
     <link href="../../css/style.css" rel="stylesheet" />
-    <script src="../../scripts/vue.js"></script>
+    <script src="../../scripts/vue.min.js"></script>
     <script src="../../scripts/element.js"></script>
-    <script src="../../scripts/jquery-2.1.3.min.js"></script>
+    <script src="../../scripts/jquery.min.js"></script>
     <script src="../../scripts/i18n/zh-CN.js"></script>
     <script src="../../scripts/i18n/en.js"></script>
     <script src="../i18n/zh-CN.js"></script>
@@ -3017,11 +3017,11 @@
                 port1HandleClick: function (val) {
                     this.class_data.pfindex1 = val.label;
                     if (val.label != "PF0") {
-                        this.class_data.pxeShow1 = false;
+                        this.class_data.pxeShow0 = false;
                         this.class_data.pxeShow1 = false;
                     } else {
                         this.class_data.pxeShow1 = true;
-                        this.class_data.pxeShow1 = false;
+                        this.class_data.pxeShow0 = false;
                     }
                 },
                 /**
@@ -3280,7 +3280,7 @@
                         this.showOceFCoESANBoot0 = false;
                     } else {
                         this.showOceFCoESANBoot0 = true;
-                    }
+                    } 
                 },
                 /**
                  * Port1 FCoE弹出框中 sanBoot类型 切换操作
@@ -3321,11 +3321,11 @@
                         if (k === 0) {
                             if (this.portIndex == '0') {
                                 this.temp0 = this.form_data.oce111PXEBoot0;
-                                this.temp1 = this.form_data.oce111PXEBoot1;
                                 var index0 = parseInt(this.class_data.activeName0.replace('tab', ''));
                                 this.class_data['min' + index0] = this.form_data.MinBandWidth;
                                 this.class_data['max' + index0] = this.form_data.MaxBandWidth;
                             } else {
+                                this.temp1 = this.form_data.oce111PXEBoot1;
                                 var index1 = parseInt(this.class_data.activeName1.replace('tab', ''));
                                 this.class_data['min' + index1] = this.form_data.MinBandWidth;
                                 this.class_data['max' + index1] = this.form_data.MaxBandWidth;
@@ -3634,6 +3634,9 @@
                 oceFCoECancel0: function () {
                     this.commonCheck0();
                     this.oceFCoEDialogFormVisible0 = false;
+                    this.showOceFCoESANBoot0 = this.oceFCoESANBoot0 == "Enabled";
+                    console.log(this.form_data.oceFCoESANBoot0)
+                    console.log(this.showOceFCoESANBoot0 )
                 },
                 /**
                  * Port1 PF1 FCoE弹出框 取消操作
@@ -3642,6 +3645,7 @@
                 oceFCoECancel1: function () {
                     this.commonCheck1();
                     this.oceFCoEDialogFormVisible1 = false;
+                    this.showOceFCoESANBoot1 = this.oceFCoESANBoot1 == "Enabled";
                 },
                 /**
                  * 关闭弹出框操作
@@ -4784,6 +4788,7 @@
                 mz512FCoECancel0: function () {
                     this.commonCheck(0, 5);
                     this.mz512FCOEDialogFormVisible0 = false;
+                    this.showMZ512FCoESANBoot0 = this.mz512FCoESANBoot0 == "Enabled";
                 },
                 /**
                  * Port1 PF1 FCoE类型弹出框 确定操作
@@ -4792,6 +4797,7 @@
                 mz512FCoECancel1: function () {
                     this.commonCheck(1, 6);
                     this.mz512FCOEDialogFormVisible1 = false;
+                    this.showMZ512FCoESANBoot1 = this.mz512FCoESANBoot1 == "Enabled";
                 },
                 /**
                  * Port2 PF1 FCoE类型弹出框 确定操作
@@ -4800,6 +4806,7 @@
                 mz512FCoECancel2: function () {
                     this.commonCheck(2, 7);
                     this.mz512FCOEDialogFormVisible2 = false;
+                    this.showMZ512FCoESANBoot2 = this.mz512FCoESANBoot2 == "Enabled";
                 },
                 /**
                  * Port3 PF1 FCoE类型弹出框 确定操作
@@ -4808,6 +4815,7 @@
                 mz512FCoECancel3: function () {
                     this.commonCheck(3, 8);
                     this.mz512FCOEDialogFormVisible3 = false;
+                    this.showMZ512FCoESANBoot3 = this.mz512FCoESANBoot3 == "Enabled";
                 },
                 /**
                  * Port0 PF1 iSCSI弹出框中 DHCP类型 切换操作

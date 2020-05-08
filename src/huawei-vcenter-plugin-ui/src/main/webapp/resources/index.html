@@ -6,11 +6,11 @@
     <title></title>
     <meta charset="utf-8" />
     <link href="css/element.css" rel="stylesheet" />
-    <script src="scripts/vue.js"></script>
+    <script src="scripts/vue.min.js"></script>
     <script src="scripts/element.js"></script>
     <script src="scripts/i18n/zh-CN.js"></script>
     <script src="scripts/i18n/en.js"></script>
-    <script src="../assets/jquery-2.1.3.min.js"></script>
+    <script src="../assets/jquery.min.js"></script>
     <script src="./js/web-platform.js"></script>
     <script src="./huawei/i18n/V-zh-CN.js"></script>
     <script src="./huawei/i18n/V-en.js"></script>
@@ -109,7 +109,7 @@
                     dataType: "json",
                     async: "false",
                     success: function (data, textStatus, jqXHR) {
-                        console.log(jqXHR.getAllResponseHeaders());
+                        
                         var acceptLanguage = jqXHR.getResponseHeader("Accept-Language").slice(0,
                             2);
                         if (acceptLanguage == 'zh') {

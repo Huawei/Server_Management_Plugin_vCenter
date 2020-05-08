@@ -15,8 +15,8 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -25,7 +25,7 @@ import sun.misc.BASE64Encoder;
  */
 public class CipherUtils {
 
-  private static final Log LOGGER = LogFactory.getLog(CipherUtils.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CipherUtils.class);
 
   private static final String KEY = "668DAFB758034A97";
 
@@ -168,21 +168,21 @@ public class CipherUtils {
   }
 
   /**
-   * 二进制字符串转十六进制字符串
+   *
    *
    * @param array the byte array to convert
    * @return a length*2 character string encoding the byte array
    */
-  private static String toHex(byte[] array) {
-    BigInteger bi = new BigInteger(1, array);
-    String hex = bi.toString(16);
-    int paddingLength = (array.length * 2) - hex.length();
-    if (paddingLength > 0) {
-      return String.format("%0" + paddingLength + "d", 0) + hex;
-    } else {
-      return hex;
+  private static String toHex(byte[] array){
+    String TRANSFORMSTR = "0123456789abcdef";
+    StringBuilder stringBuilder = new StringBuilder();
+    for(byte bufferByte: array){
+        stringBuilder.append(TRANSFORMSTR.charAt((bufferByte&(0xf0))>>4));
+        stringBuilder.append(TRANSFORMSTR.charAt(bufferByte&(0x0f)));
     }
-  }
+    return stringBuilder.toString();
+  } 
+
 
   public static String getBaseKey()
       throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {

@@ -2,21 +2,8 @@
 <classpath>
 	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry kind="src" output="target/classes" path="src/main/resources"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/src_bin/esight-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/src_bin/.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/com.springsource.org.aspectj.weaver_1.6.12.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/gson-2.7.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/h2-1.4.192.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/javax.servlet-api-3.0.1.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/objenesis-2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.asm-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.beans-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.context-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.core-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.expression-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.web-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/org.springframework.web.servlet-3.1.4.RELEASE.jar"/>
-	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/vsphere-client-lib.jar"/>
+	<classpathentry kind="lib" path="/Users/licong/git/vcenter-plugin/third_party/*/.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

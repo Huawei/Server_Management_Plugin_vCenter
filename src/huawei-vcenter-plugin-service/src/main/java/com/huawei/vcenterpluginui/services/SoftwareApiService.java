@@ -21,7 +21,11 @@ public interface SoftwareApiService {
    *     "softwareVersion": "Windows Server 2008 R2 x64", //         "softwareEdition": null, //
    *     "softwareLanguage": "Chinese", //         "sourceName": "7601.17514.101119 -
    * 1850_x64fre_server_eval_en - us - GRMSXEVAL_EN_DVD.iso", //         "sftpserverIP":
-   * "192.168.0.2", //         "username": "itSftpUser" //     } // }
+<<<<<<< HEAD
+   * "192.168.2.10", //         "username": "itSftpUser" //     } // }
+=======
+   * "188.10.18.188", //         "username": "itSftpUser" //     } // }
+>>>>>>> parent of 1679c88... changip
    */
   List<Map<String, Object>> upload(String data, HttpSession session)
       throws IOException, SQLException;

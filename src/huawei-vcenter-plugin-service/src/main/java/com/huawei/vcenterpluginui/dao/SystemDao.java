@@ -145,7 +145,7 @@ public class SystemDao extends H2DataBaseDao {
 //        }
 //      }
 //    } catch (Exception e) {
-//      LOGGER.error(e.getMessage(), e);
+//      LOGGER.error(e.getMessage());
 //      throw e;
 //    } finally {
 //      closeConnection(con, rs, ps1, ps2);

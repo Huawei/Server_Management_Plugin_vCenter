@@ -6,9 +6,9 @@
     <title>eSight</title>
     <link href="../../css/element.css" rel="stylesheet" />
     <link href="../../css/style.css" rel="stylesheet" />
-    <script src="../../scripts/vue.js"></script>
+    <script src="../../scripts/vue.min.js"></script>
     <script src="../../scripts/element.js"></script>
-    <script src="../../scripts/jquery-2.1.3.min.js"></script>
+    <script src="../../scripts/jquery.min.js"></script>
     <script src="../../scripts/i18n/zh-CN.js"></script>
     <script src="../../scripts/i18n/en.js"></script>
     <script src="../i18n/en.js"></script>
@@ -145,20 +145,18 @@
             </el-button>
         </div>
         <!-- 点击保弹出框-->
-        <el-dialog  :close-on-click-modal="false" :title="i18ns.vCenter.prompt" :visible.sync="centerDialogVisible" width="30%" fullscreen='true'
+        <el-dialog  :close-on-click-modal="false" :title="i18ns.vCenter.prompt" :visible.sync="centerDialogVisible" width="30%" fullscreen
             center size="large">
             <div class="info">
                 <p>{{i18ns.vCenter.operationINfo}}</p>
-                <el-table :data="operationData" style="width: 100%">
-                    <el-table-column prop="hostIp" :label="i18ns.vCenter.tableESightIP" header-align="left" align="left">
+                <el-table :data="operationData" border align="left" header-align="left"  style="width: 100%">
+                    <el-table-column prop="hostIp" :label="i18ns.vCenter.tableESightIP"  fixed  >
                     </el-table-column>
-                    <el-table-column prop="aliasName" :label="i18ns.vCenter.tableAliasName" header-align="left" align="left">
+                    <el-table-column prop="aliasName" :label="i18ns.vCenter.tableAliasName" >
                     </el-table-column>
-                    <el-table-column v-if="isShowHAResult" prop="HAResult" :label="i18ns.vCenter.HAOperationResult"
-                        header-align="left" align="left">
+                    <el-table-column v-if="isShowHAResult" prop="HAResult" :label="i18ns.vCenter.HAOperationResult" >
                     </el-table-column>
-                    <el-table-column v-if="isShowAlarmResult" prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult"
-                        header-align="left" align="left">
+                    <el-table-column v-if="isShowAlarmResult"  prop="alarmResult" :label="i18ns.vCenter.alarmOperationResult">
                     </el-table-column>
                 </el-table>
             </div>
@@ -486,23 +484,21 @@
                 for (let i = 0; i < sucessData.length; i++) {
                     var item = sucessData[i];
                     var HAResult = "";
-                    if (app.old_state != undefined && app.old_state !== '' && app.old_state != app.ruleForm
-                        .state) {
+                    if (app.old_state != app.ruleForm.state) {
                         app.isShowHAResult = true;
-                        if (app.old_state) {
-                            HAResult = app.i18ns.vCenter.unregisterSuccess
-                        } else {
+                        if (app.ruleForm.state) {
                             HAResult = app.i18ns.vCenter.registerSuccess
+                        } else {
+                            HAResult = app.i18ns.vCenter.unregisterSuccess                          
                         }
                     }
                     var alarmResult = "";
-                    if (app.old_pushEvent !== "" && app.old_pushEvent !== undefined && app.old_pushEvent !=
-                        app.ruleForm.pushEvent) {
+                    if ( app.old_pushEvent != app.ruleForm.pushEvent) {
                         app.isShowAlarmResult = true;
-                        if (app.old_pushEvent) {
-                            alarmResult = app.i18ns.vCenter.unalarmSuccess
-                        } else {
+                        if (app.ruleForm.pushEvent) {
                             alarmResult = app.i18ns.vCenter.alarmSuccess
+                        } else {
+                            alarmResult = app.i18ns.vCenter.unalarmSuccess
                         }
                     }
                     app.operationData.push({

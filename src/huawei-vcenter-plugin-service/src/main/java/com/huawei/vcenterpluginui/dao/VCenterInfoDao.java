@@ -406,7 +406,7 @@ public class VCenterInfoDao extends H2DataBaseDao {
         if(con != null) {
           con.rollback();
         }
-        // LOGGER.error(e.getMessage(), e);
+        // LOGGER.error(e.getMessage());
         LOGGER.error("Failed to mergeSaveAndLoadAllThumbprints" + e.getMessage());
         throw e;
       } finally {

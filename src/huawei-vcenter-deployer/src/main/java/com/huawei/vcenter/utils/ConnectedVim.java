@@ -27,15 +27,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Horace on 2018/9/10.
  */
 public class ConnectedVim extends ConnectedVimServiceBase {
 
-  private static final Log LOGGER = LogFactory.getLog(ConnectedVim.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConnectedVim.class);
 
   public ConnectedVim() {
     super();
@@ -136,7 +136,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
             alarmValueToBeRemoved.add(key);
           }
         } catch (Exception e) {
-          LOGGER.debug(e.getMessage(), e);
+          LOGGER.debug(e.getMessage());
         }
       }
       int alarmDefSize = alarmValueToBeRemoved.size();
@@ -219,7 +219,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     try {
       TrustAll.trust();
     } catch (NoSuchAlgorithmException | KeyManagementException e) {
-      //LOGGER.error(e.getMessage(), e);
+      //LOGGER.error(e.getMessage());
     }
   }
 

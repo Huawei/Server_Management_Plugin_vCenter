@@ -7,8 +7,8 @@ import com.huawei.vcenterpluginui.exception.VcenterException;
 import com.huawei.vcenterpluginui.utils.ConnectedVim;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class VCenterHAServiceImpl implements VCenterHAService {
 
-  public final static Log LOGGER = LogFactory.getLog(VCenterHAService.class);
+  public final static Logger LOGGER = LoggerFactory.getLogger(VCenterHAService.class);
 
   private VCenterInfoService vCenterInfoService;
 

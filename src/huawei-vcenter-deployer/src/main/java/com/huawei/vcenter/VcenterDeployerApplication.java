@@ -6,36 +6,18 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerInitializedEvent;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.ApplicationListener;
 
 @SpringBootApplication
-public class VcenterDeployerApplication extends SpringBootServletInitializer implements
-    ApplicationListener<EmbeddedServletContainerInitializedEvent> {
+public class VcenterDeployerApplication {
 
-//	private static int SERVER_PORT;
-
-  protected static final Log LOGGER = LogFactory.getLog(VcenterDeployerApplication.class);
-
-  @Override
-  protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-    return application.sources(VcenterDeployerApplication.class);
-  }
-
-  @Override
-  public void onApplicationEvent(EmbeddedServletContainerInitializedEvent event) {
-//		this.SERVER_PORT = event.getEmbeddedServletContainer().getPort();
-  }
+  protected static final Logger LOGGER = LoggerFactory.getLogger(VcenterDeployerApplication.class);
 
   public static void main(String[] args) {
     try {

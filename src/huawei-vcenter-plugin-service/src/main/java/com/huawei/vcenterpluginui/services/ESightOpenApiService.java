@@ -6,8 +6,8 @@ import com.huawei.vcenterpluginui.entity.ESight;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class that support basic eSight API
@@ -28,7 +28,7 @@ public class ESightOpenApiService {
 
   protected static final int RESULT_ERROR_CODE = 10000;
 
-  protected final Log LOGGER = LogFactory.getLog(this.getClass());
+  protected final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
   protected static final String CODE_SUCCESS = String.valueOf(RESULT_SUCCESS_CODE);
 

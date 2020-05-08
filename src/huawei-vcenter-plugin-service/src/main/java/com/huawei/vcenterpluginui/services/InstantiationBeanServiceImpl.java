@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -31,7 +31,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 public class InstantiationBeanServiceImpl implements
     ApplicationListener<ContextRefreshedEvent>, InstantiationBeanService {
 
-  private static final Log LOGGER = LogFactory.getLog(InstantiationBeanServiceImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(InstantiationBeanServiceImpl.class);
 
   private SystemService systemService;
 
@@ -204,7 +204,7 @@ public class InstantiationBeanServiceImpl implements
       }
 
     } catch (Exception e) {
-      LOGGER.warn(e);
+      LOGGER.warn( e.getMessage());
     }
   }
 }

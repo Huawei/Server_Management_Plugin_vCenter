@@ -1,7 +1,7 @@
 package com.huawei.vcenter.utils;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +15,7 @@ public class KeytookUtil {
 
     private static final String KEY ="tomcat.keystore";
 
-    protected static final Log LOGGER = LogFactory.getLog(KeytookUtil.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(KeytookUtil.class);
 
     public static void genKey() throws IOException {
         LOGGER.info("Checking keystore file...");

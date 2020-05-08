@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HAEventHelper {
 
-  public final static Log LOGGER = LogFactory.getLog(HAEventHelper.class);
+  public final static Logger LOGGER = LoggerFactory.getLogger(HAEventHelper.class);
 
   private static final Map<Long, HAEventDef> EVENT_DEF_MAP = new HashMap<>();
 

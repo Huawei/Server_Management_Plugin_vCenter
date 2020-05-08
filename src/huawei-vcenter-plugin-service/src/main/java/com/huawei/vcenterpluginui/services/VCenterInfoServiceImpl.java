@@ -137,14 +137,21 @@ public class VCenterInfoServiceImpl extends ESightOpenApiService implements VCen
       boolean subscribeAlarm = (vCenterInfo.isPushEvent() || vCenterInfo.isState());
       for (ESight eSight : eSightList) {
         try {
-          if (!subscribeAlarm && "1".equals(eSight.getReservedInt1())) {
+          if (subscribeAlarm)
+          {
+            if (!"1".equals(eSight.getReservedInt1()))
+            {
+              LOGGER.info("Subscribe by client: " + eSight);
+              notificationAlarmService.subscribeAlarm(eSight, session, "subscribe_by_client");
+            }else
+            {
+              LOGGER.info("has been Subscribe before" + eSight);
+            }            
+          }else
+          {
             LOGGER.info("Unsubscribe by client: " + eSight);
             notificationAlarmService.unsubscribeAlarm(eSight, session, "unsubscribe_by_client");
-          } else if (subscribeAlarm && !"1".equals(eSight.getReservedInt1())) {
-            LOGGER.info("Subscribe by client: " + eSight);
-            notificationAlarmService.subscribeAlarm(eSight, session, "subscribe_by_client");
           }
-          //eSightHAServerDao.deleteAll(eSight.getId());
         } catch (Exception e) {
           LOGGER.error("Failed to unsubscribe alarm: " + eSight + ": " + e.getMessage());
         }

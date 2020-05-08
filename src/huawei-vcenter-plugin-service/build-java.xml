@@ -14,7 +14,6 @@
 
    <!-- name of the jar output file -->
    <property name="JAR_FILE" value="huawei-vcenter-plugin-service.jar"/>
-
    <property name="ROOT_DIR" location="../../" />
    <property name="BUILD_DIR" value="${basedir}/target"/>
    <property name="CLASSES" value="${BUILD_DIR}/classes"/>
@@ -25,34 +24,34 @@
       <delete dir="${BUILD_DIR}" />
       <mkdir dir="${BUILD_DIR}/classes" />
    </target>
+   
+  <target name="classpaths" depends="clean">
+    <path id="compile.classpath">
+      <fileset dir="${ROOT_DIR}/open_source/logback" includes="logback-classic-*.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/logback" includes="logback-core-*.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/Simple Logging Facade for Java" includes="*.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/jakarta Servlet" includes="jakarta.servlet-api-*.jar"/>
+      <fileset dir="${ROOT_DIR}//vendor/vSphere Web Client SDK/vsphere-client-sdk/flex-client-sdk/vsphere-client/server/repository/usr" includes="*.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/H2 Database Engine" includes="h2-*.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/gson" includes="gson-*.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/Java Native Access" includes="jna-*.jar"/>
+      <fileset dir="${ROOT_DIR}/src_bin" includes="esight-api-*.jar"/>
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="wssamples.jar"/>
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="samples-core-*.jar"/>
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="vim25.jar"/>
+      <fileset dir="${ROOT_DIR}/vendor/vmware" includes="vsphere-client-lib.jar"/>
+      <fileset dir="${ROOT_DIR}/open_source/Eclipse AspectJ" includes="aspectjweaver*.jar"/>
+    </path>
+   </target>
 
-   <target name="compile-java" depends="clean" description="Do not select this internal target.">
+   <target name="compile-java" depends="classpaths" description="Do not select this internal target.">
       <javac target="1.7"  source="1.7"
              includeantruntime="false"
              destdir="${CLASSES}"
-             fork="true" debug="on" encoding="UTF-8">
-         <src path="${basedir}/src/main/java"/>
-         <!-- <src path="${basedir}/src/test/java"/> for future test files -->
-         <classpath>
-            <pathelement path="${ROOT_DIR}/third_party/vsphere-client-lib.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/commons-logging-1.1.1.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/javax.servlet-api-3.0.1.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/org.springframework.core-3.1.4.RELEASE.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/org.springframework.web-3.1.4.RELEASE.jar"/>
-         	<pathelement path="${ROOT_DIR}/third_party/org.springframework.web.servlet-3.1.4.RELEASE.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/org.springframework.beans-3.1.4.RELEASE.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/org.springframework.context-3.1.4.RELEASE.jar"/>
-         	
-         	<pathelement path="${ROOT_DIR}/third_party/h2-1.4.192.jar"/>
-         	<pathelement path="${ROOT_DIR}/src_bin/esight-api-1.1.5.jar"/>
-         	<pathelement path="${ROOT_DIR}/third_party/gson-2.7.jar"/>
-         	<pathelement path="${ROOT_DIR}/third_party/jna-4.4.0.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/wssamples.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/samples-core-1.0.0.jar"/>
-            <pathelement path="${ROOT_DIR}/third_party/vim25.jar"/>
-
-             <pathelement path="${ROOT_DIR}/third_party/com.springsource.org.aspectj.weaver_1.6.12.RELEASE.jar"/>
-         </classpath>
+			 classpathref="compile.classpath"
+             debug="true" encoding="UTF-8">
+			 <src path="${basedir}/src/main/java"/>
+			 <!-- <src path="${basedir}/src/test/java"/> for future test files -->
       </javac>
    </target>
 
@@ -62,17 +61,15 @@
       <!-- Add resources -->
       <copy todir="${CLASSES}">
          <fileset dir="${RES_DIR}"/>
+         <!-- third-party libraries -->
+         <fileset dir="${ROOT_DIR}/open_source/H2 Database Engine" includes="h2-*.jar"/>
+         <fileset dir="${ROOT_DIR}/src_bin" includes="esight-api-*.jar"/>
+         <fileset dir="${ROOT_DIR}/open_source/gson" includes="gson-*.jar"/>
+         <fileset dir="${ROOT_DIR}/open_source/Java Native Access" includes="jna-*.jar"/>
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="wssamples.jar"/>
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="samples-core-*.jar"/>
+         <fileset dir="${ROOT_DIR}/vendor/vmware" includes="vim25.jar"/>
       </copy>
-
-    <!-- third-party libraries -->
-   	<copy file="${ROOT_DIR}/third_party/h2-1.4.192.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/src_bin/esight-api-1.1.5.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/third_party/gson-2.7.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/third_party/jna-4.4.0.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/third_party/wssamples.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/third_party/samples-core-1.0.0.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/third_party/vim25.jar" todir="${CLASSES}"/>
-   	<copy file="${ROOT_DIR}/third_party/spring-core-4.3.9.RELEASE.jar" todir="${CLASSES}"/>
 
       <!-- Create the jar -->
       <jar  destfile="${BUILD_DIR}/${JAR_FILE}"

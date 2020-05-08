@@ -75,7 +75,12 @@ public class ApplicationController {
   @RequestMapping(value = "package/{zipName}", method = RequestMethod.GET)
   public void getPackage(HttpServletResponse response, @PathVariable String zipName)
       throws IOException {
-    File file = new File(zipName + ".zip");
+    File file;    
+    if (zipName.endsWith(".zip")) {
+        file = new File(zipName);
+    } else {
+        file = new File(zipName + ".zip");
+    }    
     response.setContentType("application/zip");
     response.setContentLengthLong(file.length());
     try (OutputStream out = response.getOutputStream();

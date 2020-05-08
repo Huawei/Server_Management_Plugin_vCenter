@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +23,7 @@ import org.springframework.http.HttpMethod;
  */
 public class Validations {
 
-  protected static final Log LOGGER = LogFactory.getLog(Validations.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(Validations.class);
 
   private static final String RESTURL_UNSUBSCRIBE = "https://%s/vsphere-client/vcenterpluginui/rest/services/notification/unsubscribe";
   //private static final String RESTURL_UNSUBSCRIBE = "https://%s:9443/ui/vcenterpluginui/rest/services/notification/unsubscribe";
@@ -77,7 +77,7 @@ public class Validations {
         Map<String, Object> result = JSON_PARSER.parseMap(response);
         String resultCode = (String) result.get("code");
         if ("-99999".equals(resultCode)) {
-          LOGGER.info(result.get("description"));
+          LOGGER.info( (String) result.get("description") );
         } else if ("-1".equals(resultCode)) {
           LOGGER.info("No HA provider can be removed.");
           VcenterRegisterRunner
@@ -139,7 +139,8 @@ public class Validations {
         Map<String, Object> result = JSON_PARSER.parseMap(response);
         String resultCode = (String) result.get("code");
         if ("-99999".equals(resultCode)) {
-          LOGGER.info(result.get("description"));
+         
+          LOGGER.info( (String) result.get("description"));
         } else if ("-1".equals(resultCode)) {
           LOGGER.info("No HA provider can be removed.");
           VcenterRegisterRunner.unRegister(vcenterIP, vcenterPort, vcenterUsername,
@@ -182,7 +183,7 @@ public class Validations {
               HttpMethod.POST, HEADERS, body, String.class).getBody();
       LOGGER.debug("unsubscribe: " + result);
     } catch (Exception e) {
-      LOGGER.debug(e.getMessage(), e);
+      LOGGER.debug( e.getMessage());
     }
     return result;
   }

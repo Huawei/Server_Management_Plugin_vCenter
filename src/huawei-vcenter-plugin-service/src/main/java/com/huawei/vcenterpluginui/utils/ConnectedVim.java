@@ -50,8 +50,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -61,7 +61,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
 
   public static final String HOST_SYSTEM = "HostSystem";
 
-  private static final Log LOGGER = LogFactory.getLog(ConnectedVim.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConnectedVim.class);
 
   private static final String DATA_CENTER = "Datacenter";
   private static final String CLUSTER = "ClusterComputeResource";
@@ -304,7 +304,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
         }
       }
     } catch (Exception e) {
-      LOGGER.error(e.getCause(), e);
+      LOGGER.error(e.getMessage());
     }
     if (!isCompatibleVersion) {
       throw new VersionNotSupportException(vcenterVersion);
@@ -359,7 +359,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
         }
       }
     } catch (Exception e) {
-      LOGGER.warn("Failed to remove provider, " + e.getMessage(), e);
+      LOGGER.warn("Failed to remove provider, " + e.getMessage());
       result = false;
     } finally {
       disconnect();
@@ -671,7 +671,7 @@ public class ConnectedVim extends ConnectedVimServiceBase {
     try {
       TrustAll.trust();
     } catch (NoSuchAlgorithmException | KeyManagementException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error(e.getMessage());
     }
   }
 

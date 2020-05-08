@@ -10,22 +10,38 @@
    </description>
 
    <property environment="env"/>
+   <property name="ROOT_DIR" location="../../" />
    <property name="VSPHERE_SDK_HOME" value="${env.VSPHERE_SDK_HOME}"/>
    <property name="BUILD_DIR" value="${basedir}/target"/>
    <property name="SERVICE_DIR" value="${basedir}/../huawei-vcenter-plugin-service"/>
+   <property name="ESIGHT_API_DIR" value="${basedir}/../huawei-esight-api"/>
+   <property name="DEPLOYER_DIR" value="${basedir}/../huawei-vcenter-deployer"/>
 
-   <target name="build" depends="buildUiWar, buildServiceJar, createPluginPackageDir"/>
+   <target name="build" depends="buildEsightAPIJar, buildDeployer, buildUiWar, buildServiceJar, createPluginPackageDir"/>
 
    <target name="buildUiWar">
       <ant antfile="${basedir}/build-war.xml" dir="${basedir}" inheritAll="false"/>
    </target>
-
+   
+    <target name="buildDeployer">
+      <ant antfile="${DEPLOYER_DIR}/build-deployer.xml" dir="${DEPLOYER_DIR}" inheritAll="false"/>
+   </target>
+   
    <target name="buildServiceJar">
       <ant antfile="${SERVICE_DIR}/build-java.xml" dir="${SERVICE_DIR}" inheritAll="false"/>
    </target>
-
+   
+   <target name="buildEsightAPIJar">
+      <delete dir="${ROOT_DIR}/src_bin" />
+      <mkdir dir="${ROOT_DIR}/src_bin" />
+      <ant antfile="${ESIGHT_API_DIR}/build-esight-api.xml" dir="${ESIGHT_API_DIR}" inheritAll="false"/>
+	  <copy todir="${ROOT_DIR}/src_bin">
+        <fileset dir="${ESIGHT_API_DIR}/target" includes="esight-api-*.jar"/>
+	  </copy>
+   </target>
+   
    <target name="createPluginPackageDir">
-      <mkdir dir="${BUILD_DIR}/vcenterpluginui" />
+	  <mkdir dir="${BUILD_DIR}/vcenterpluginui" />
       <mkdir dir="${BUILD_DIR}/vcenterpluginui/plugins" />
       <copy todir="${BUILD_DIR}/vcenterpluginui" file="plugin-package.xml"/>
       <copy todir="${BUILD_DIR}/vcenterpluginui/plugins" file="${BUILD_DIR}/huawei-vcenter-plugin-ui.war"/>

@@ -160,7 +160,7 @@
     "firmware.error.300402": "驱动升级错误，上传驱动文件失败。可能原因：协议参数输入错误，设备异常重启，网络中断。",
     "firmware.error.300403": "驱动升级错误，脚本执行过程中失败。可能原因：协议参数输入错误，设备异常重启，网络中断。",
     "firmware.error.300404": "驱动升级错误，升级文件错误。",
-
+    "firmware.error.300408": "查询进度失败，可能原因：入参错误，或者设备异常重启，或者网络中断",
     "firmware.error.300501": "大包升级错误，调用工具更新大包失败。",
     "firmware.error.300502": "大包升级错误，下载工具未返回进度。",
     "firmware.error.300503": "大包升级错误，拷贝文件失败。",
@@ -175,7 +175,7 @@
     "firmware.error.20010908": "升级设备参数错误。",
     "firmware.error.20010909": "升级设备超出限制数量。",
     "firmware.error.20010910": "非关联基线包中，同一个设备升级的固件包或驱动包类型不能重复。",
-    "firmware.error.20010911": "存在部分设备没有可用的升级项。可能原因：</br>1.所选升级固件包不支持所选设备。</br>2.所选升级固件没有可用升级包。",
+    "firmware.error.20010911": "存在部分设备没有可用的升级项。可能原因：1.所选升级固件包不支持所选设备。2.所选升级固件没有可用升级包。",
     //###########基线包管理##############
     "firmware.error.200150": "用户没有权限。",
     "firmware.error.200000": "基线包上传成功。",
@@ -561,7 +561,7 @@
     "deploy.error.150316": "静默文件内容非法，请参看联机帮助中生成方法。",
     "deploy.error.150317": "SmartProvisioning工具不存在或其文件名不正确，参考联机帮助中FAQ和典型故障处理中“如何处理部署OS时系统提示Smart Provisioning不存在或其文件名不正确问题”。",
     "deploy.error.150318": "ServiceCD或SmartProvisioning工具不存在或其文件名不正确，参考联机帮助中FAQ和典型故障处理中“如何处理部署OS时系统提示ServiceCD(Smart Provisioning)不存在或其文件名不正确问题”。",
-
+    "deploy.error.10300402": "BIOS配置错误。ATS Support; Parity, Pass Through DMA Support, Enable C6, DCU Streamer Prefetcher, Turbo mode, Power saving(DEMT), Enhanced C-State(C1E), Stop Bits, , Baud Rate, Terminal Type, Quick Boot, Power policy, Boot Type, VT support(VMX), Data Bits, MLC Streamer Prefetcher, Set Boot Order, VT-D Support, Coherency Support, PCIe SR-IOV, OS ACPI Cx, Intel HT technology(Hyper-Threading), WakeOnLan(Wake on PME), Console Serial Redirect, NUMA, EIST support, DCU IP Prefetcher, Quiet Boot, Interrupt Remap 配置项配置失败，可能原因：BIOS版本不支持。",
     //------------------模板管理-------------
 
 }
@@ -1169,6 +1169,7 @@ var errorCode_en = {
     "firmware.error.300200": "Failed to upload the baseline package: XML file format is not correct.",
     "firmware.error.300504": "Failed to create directory.",
     "firmware.error.200141": "Some devices have been associated with baseline package or the device does not exist..",
+    "firmware.error.300408": "Query progress timeout .Possible Causes: The protocol parameters are incorrectly entered , the device restarts abnormally,or ther network is interrupted",
     "firmware.error.300505": "Download condition is empty/ Please select at least one record.",
     "firmware.error.300506": "Failed to download the baseline package: Failed to call the tool.",
     "firmware.error.300507": "Failed to download the baseline package: Failed to query the progress.",
@@ -1204,7 +1205,9 @@ var errorCode_en = {
     "firmware.error.4009": "Failed to start the upgrade.",
     "firmware.error.-10": "The KunLun Device Upgrade is not supported.",
     "firmware.error.-16": "The KunLun Device Upgrade is not supported.",
-    "firmware.error.-18": "The KunLun Device Upgrade is not supported."
+    "firmware.error.-18": "The KunLun Device Upgrade is not supported.",
+    "deploy.error.10300402": "BIOS config error. ATS Support; Parity, Pass Through DMA Support, Enable C6, DCU Streamer Prefetcher, Turbo mode, Power saving(DEMT), Enhanced C-State(C1E), Stop Bits, , Baud Rate, Terminal Type, Quick Boot, Power policy, Boot Type, VT support(VMX), Data Bits, MLC Streamer Prefetcher, Set Boot Order, VT-D Support, Coherency Support, PCIe SR-IOV, OS ACPI Cx, Intel HT technology(Hyper-Threading), WakeOnLan(Wake on PME), Console Serial Redirect, NUMA, EIST support, DCU IP Prefetcher, Quiet Boot, Interrupt Remap configuration item(s) failed to be configured. Possible cause: The BIOS version is not supported.",
+
     //------------------固件升级-----------------------
 
 

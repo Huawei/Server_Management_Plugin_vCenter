@@ -1,0 +1,27 @@
+--- plugin-icons.css	2020-01-04 11:09:54.017000000 +0800
++++ ./css/plugin-icons.css	2019-11-15 09:52:23.577000000 +0800
+@@ -15,19 +15,10 @@
+  *
+  * Follow the SDK doc or other samples for the correct attributes based on the type of icon.
+  */
+-.__bundleName__-addIcon {
+-    background: url("../images/addIcon.png");
+-    width: 16px;
+-    height: 16px;
++.com_huawei_vcenterpluginui-appIcon {
++    background: url("../images/appIcon.png");
++    width: 32px;
++    height: 32px;
+     display: inline-block;
+-    vertical-align: text-bottom;
+-    margin: 1px 4px 0;
+-}
+-.__bundleName__-editIcon {
+-    background: url("../images/editIcon.png");
+-    width: 16px;
+-    height: 16px;
+-    display: inline-block;
+-    vertical-align: text-bottom;
+-    margin: 1px 4px 0;
++    vertical-align: top;
+ }

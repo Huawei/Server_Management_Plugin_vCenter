@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -31,7 +31,7 @@ public class SessionHandlerInterceptor extends HandlerInterceptorAdapter {
   @Autowired
   private VCenterInfoService vCenterInfoService;
 
-  private static final Log LOGGER = LogFactory.getLog(SessionHandlerInterceptor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SessionHandlerInterceptor.class);
 
   private static boolean IS_VIEW_RESOLVER_LOADED = false;
 
@@ -78,7 +78,7 @@ public class SessionHandlerInterceptor extends HandlerInterceptorAdapter {
       viewResolver.setDefaultViews(defaultViews);
       LOGGER.info("View resolver has been loaded");
     } catch (Throwable throwable) {
-      LOGGER.warn(throwable.getMessage(), throwable);
+      LOGGER.warn(throwable.getMessage());
     }
   }
 

@@ -131,7 +131,7 @@ public class ServerApiServiceImpl extends ESightOpenApiService implements Server
 		} catch (Exception e) {
 			LOGGER.error(String.format("get eSight server exception, eSight: %s, serverType: %s, " +
 					"pageNo: %s, pageSize: %s", eSight.getHostIp(), serverType, pageNo, pageSize));
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
@@ -174,7 +174,7 @@ public class ServerApiServiceImpl extends ESightOpenApiService implements Server
                             }
                         }
                     } catch (Exception e) {
-                        LOGGER.error(e.getMessage(), e);
+                        LOGGER.error(e.getMessage());
                     }
                 }
             }

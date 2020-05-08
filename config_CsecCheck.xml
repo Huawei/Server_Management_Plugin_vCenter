@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modulelist>
+	<module name="huawei-vcenter-plugin-service">
+		<filepath>/src/huawei-vcenter-plugin-service</filepath>
+		<owner>qwx240210</owner>
+	</module>
+	<module name="huawei-vcenter-plugin-ui">
+		<filepath>/src/huawei-vcenter-plugin-ui</filepath>
+		<owner>qwx240210</owner>
+	</module>
+	<module name="huawei-vcenter-deployer">
+		<filepath>/src/huawei-vcenter-deployer</filepath>
+		<owner>qwx240210</owner>
+	</module>
+</modulelist>

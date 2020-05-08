@@ -95,6 +95,9 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
         if (isSuccessResponse(map.get("code"))) {
           eSightService.updateSystemKeepAliveStatus(eSight.getHostIp(), "1");
         }
+      }else
+      {
+        LOGGER.info("subscribe result failed  "+response.get("code"));
       }
       return response;
     } catch (VcenterException e) {
@@ -123,14 +126,17 @@ public class NotificationAlarmServiceImpl extends ESightOpenApiService implement
     Map response = new DeleteNotificationCommonAlarm<Map>(eSight, openIdProvider)
         .doCall(eSight.getSystemId(), desc, Map.class);
     LOGGER.info("unsubscribe info: " + response);
+    eSightService.updateHAStatus(eSight.getHostIp(), "2");
     if (isSuccessResponse(response.get("code"))) {
-      eSightService.updateHAStatus(eSight.getHostIp(), "2");
       // unsubscribe system keep alive
       Map map = systemKeepAliveService.unsubscribeSystemKeepAlive(eSight, openIdProvider, desc);
       LOGGER.info("unsubscribe system keep alive info: " + map);
       if (isSuccessResponse(map.get("code"))) {
         eSightService.updateSystemKeepAliveStatus(eSight.getHostIp(), "2");
       }
+    }else
+    {
+      LOGGER.info("unsubscribe result failed  "+response.get("code"));
     }
     return response;
   }

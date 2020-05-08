@@ -8,7 +8,7 @@ I. General Information
 
     Name:     Management Plugin Pack for Huawei Server
     Category: Monitoring and Configuration
-    version : 1.5.111
+    version : 1.6.156
     
 II. Description
 
@@ -38,4 +38,4 @@ VI. Additional Resources
 
 VII. Open Source Software Notice
     
-    https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs/Open_Source_Software_Notice.doc
+    https://github.com/Huawei/Server_Management_Plugin_vCenter/tree/master/docs/Open Source Software Notice.doc

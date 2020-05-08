@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,7 +29,7 @@ import org.springframework.web.client.RestClientException;
 @Controller
 public class BaseController {
 
-  protected static final Log LOGGER = LogFactory.getLog(BaseController.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
   protected static final String CODE_SUCCESS = "0";
 

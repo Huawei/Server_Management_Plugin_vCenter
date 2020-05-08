@@ -12,15 +12,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.UUID;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class H2DataBaseDao {
 
   private String url;
 
-  public final static Log LOGGER = LogFactory.getLog(H2DataBaseDao.class);
+  public final static Logger LOGGER = LoggerFactory.getLogger(H2DataBaseDao.class);
 
   private static final String VMWARE_RUNTIME_DATA_DIR = "VMWARE_RUNTIME_DATA_DIR";
 
@@ -123,7 +123,7 @@ public class H2DataBaseDao {
       try {
         closeable.close();
       } catch (Exception e) {
-        LOGGER.error(e);
+        LOGGER.error(e.getMessage());
       }
     }
   }

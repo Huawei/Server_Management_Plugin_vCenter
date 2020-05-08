@@ -329,7 +329,7 @@ public class NotificationAlarmDao extends H2DataBaseDao {
 
       conn.commit();
     } catch (SQLException e) {
-      LOGGER.error(e.getMessage(), e);
+      LOGGER.error(e.getMessage());
       if (conn != null) {
         conn.rollback();
       }

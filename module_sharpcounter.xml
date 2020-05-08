@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modules>    
+
+  <module name="service-java" language="java" fileexts="*.java">  
+
+              <include path="src"/>
+
+              <!--base path="datacenter-plugin_base/src"/>
+
+           <exclude path="datacenter-plugin/src/main/java/com/huawei/icp/jenkins/datacenter/BuildDataSendDCPublisher.java"/-->
+
+  </module>
+  <module name="service-js" language="javascript" fileexts="*.js">  
+
+              <include path="src"/>
+
+              <!--base path="datacenter-plugin_base/src"/>
+
+           <exclude path="datacenter-plugin/src/main/java/com/huawei/icp/jenkins/datacenter/BuildDataSendDCPublisher.java"/-->
+
+  </module>
+  <module name="service-html" language="javascript" fileexts="*.html">  
+
+              <include path="src"/>
+
+              <!--base path="datacenter-plugin_base/src"/>
+
+           <exclude path="datacenter-plugin/src/main/java/com/huawei/icp/jenkins/datacenter/BuildDataSendDCPublisher.java"/-->
+
+  </module>
+
+
+</modules>

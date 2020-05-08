@@ -6,8 +6,8 @@ import com.huawei.vcenterpluginui.services.NotificationAlarmService;
 import com.huawei.vcenterpluginui.utils.VCClientUtils;
 import java.sql.SQLException;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component("SyncHistoricEventTask")
 public class SyncHistoricEventTask {
 
-  private static final Log LOGGER = LogFactory.getLog(SyncHistoricEventTask.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SyncHistoricEventTask.class);
 
   @Autowired
   private ESightService eSightService;

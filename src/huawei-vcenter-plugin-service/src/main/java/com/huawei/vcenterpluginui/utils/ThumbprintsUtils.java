@@ -13,12 +13,12 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ThumbprintsUtils {
 
-  private static final Log LOGGER = LogFactory.getLog(ThumbprintsUtils.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ThumbprintsUtils.class);
 
   /**
    * read jks from input stream
